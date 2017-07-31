@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Bev Facey</string>
+    <string name="tv_placeholder">TextView</string>
+    <string name="iv_placeholder">ImageView</string>
+    <string name="URL_home">http://www.bevfacey.ca</string>
 </resources>
