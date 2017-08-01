@@ -1,6 +1,7 @@
 package com.jmoore.bevfacey;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,9 +33,8 @@ public class CustomListAdapter extends ArrayAdapter<String> {
         TextView extratxt = (TextView) rowView.findViewById(R.id.itemDesc);
 
         txtTitle.setText(itemname[position]);
-        //imageView.setImageResource(imgid[position]);
-        extratxt.setText("Description "+itemname[position]);
-        System.out.println("WORKEDFROMCUSTOMLISTADAPTER");
+        imageView.setImageURI(Uri.parse(imgid[position]));
+        extratxt.setText(itemdesc[position]);
         return rowView;
 
     }
