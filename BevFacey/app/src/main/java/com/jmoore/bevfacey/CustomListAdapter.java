@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
-class CustomListAdapter extends ArrayAdapter<String>{
+class CustomListAdapter extends ArrayAdapter<String>{ //This class is the list of Information
     private final Activity context;
     private final String[]itemname;
     private final String[]imgid;
@@ -25,11 +25,11 @@ class CustomListAdapter extends ArrayAdapter<String>{
     }
 
     @NonNull
-    public View getView(int position, View view, @NonNull ViewGroup parent){
+    public View getView(int position,View view,@NonNull ViewGroup parent){
         LayoutInflater inflater=context.getLayoutInflater();
         View rowView=inflater.inflate(R.layout.mylist,null,true);
 
-        String s = ",,,";
+        String s=",,,";
         String fixDesc=itemdesc[position].replaceAll(s,"\n\n");
         fixDesc=fixDesc.replaceFirst("\n\n","");
         if(fixDesc.contains(itemname[position])){

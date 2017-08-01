@@ -20,49 +20,49 @@ import org.apache.commons.lang3.*;
 
 public class MainActivity extends AppCompatActivity{
 
-    public static Document docHome;//JSoup Document storing the main webpage
-    public static ArrayList<String>itemTitles=new ArrayList<>();//Array that will store Title values for the Adapter
-    public static ArrayList<String>itemDescs=new ArrayList<>();//Descriptions for Adapter
-    public static ArrayList<String>itemPicURLS=new ArrayList<>();//URLs of images for Adapter
-    public String imgurl="http://www.bevfacey.ca";
+    public static Document docHome; //JSoup Document storing the main webpage
+    public static ArrayList<String>itemTitles=new ArrayList<>(); //Array that will store Title values for the Adapter
+    public static ArrayList<String>itemDescs=new ArrayList<>(); //Descriptions for Adapter
+    public static ArrayList<String>itemPicURLS=new ArrayList<>(); //URLs of images for Adapter
+    public String imgurl="http://www.bevfacey.ca"; //URL prefix for images
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        new GetThePage().execute();
+        new GetThePage().execute(); //Execute the task to retrieve from the website
     }
 
-    public String[]soup2string(Elements elms){//This method converts JSoup Elements into String arrays
-        Object[]objArray=elms.toArray();
-        String[]strArray=new String[objArray.length];
-        for(int i=0;i<strArray.length;i++){
-            strArray[i]=objArray[i].toString();
-        }return strArray;
+    public String[]soup2string(Elements elms){ //This method converts JSoup Elements into String arrays
+        Object[]objArray=elms.toArray(); //First, convert the Elements into an Object array
+        String[]strArray=new String[objArray.length]; //This will hold the String values of the Elements
+        for(int i=0;i<strArray.length;i++){ //For Loop to convert each Object/Element into a String
+            strArray[i]=objArray[i].toString(); //Convert the Object to a String
+        }return strArray; //Return the complete String array
     }
 
     public void CreateArrays(){ //This method creates arrays from the content in the JSoup Document
-        String[]schoolNotice;//If there is no school notice then this is empty...
-        try{//... and we need a try/catch to see if there is a notice
-            Elements schoolNoticeElements = MainActivity.docHome.select("div.school.notice");//Search the doc for a notice
-            schoolNotice=soup2string(schoolNoticeElements);//Convert the Elements into an array
-        }catch(Exception noSchoolNoticeException){schoolNotice=new String[1];schoolNotice[0]="nonotice";}//No notice was found
+        String[]schoolNotice; //If there is no school notice then this is empty...
+        try{ //... and we need a try/catch to see if there is a notice
+            Elements schoolNoticeElements = MainActivity.docHome.select("div.school.notice"); //Search the doc for a notice
+            schoolNotice=soup2string(schoolNoticeElements); //Convert the Elements into an array
+        }catch(Exception noSchoolNoticeException){schoolNotice=new String[1];schoolNotice[0]="noNotice";} //No notice was found
 
-        Elements mainContentsElements=MainActivity.docHome.select("article.content-article");//Elements from the Articles on the main page
-        String[]mainContentS=soup2string(mainContentsElements);//Convert the Elements into a String array
+        Elements mainContentsElements=MainActivity.docHome.select("article.content-article"); //Elements from the Articles on the main page
+        String[]mainContentS=soup2string(mainContentsElements); //Convert the Elements into a String array
 
         //noinspection StatementWithEmptyBody
-        if(schoolNotice[0].equals("nonotice")){//If there is no notice, then ignore it...
-            System.out.println("FAILED: Nonotice");
-        }else{//... or convert the schoolNotice array into the correct display format
-            prepareForDisplay(0,schoolNotice);//Send the array to the prepare method
+        if(schoolNotice[0].equals("noNotice")){ //If there is no notice, then ignore it...
+            System.out.println("FAILED: No Notice");
+        }else{ //... or convert the schoolNotice array into the correct display format
+            prepareForDisplay(0,schoolNotice); //Send the array to the prepare method
             //ID codes for prepareForDisplay: 0=schoolNotice 1=Articles
         }
-        prepareForDisplay(1,mainContentS);
-        showContentMainPage();
+        prepareForDisplay(1,mainContentS); //Convert the Articles into the correct display format
+        showContentMainPage(); //Lastly, display the list on the UI
     }
 
-    public String getFromPattern(String[]patterns,String theText){
+    public String getFromPattern(String[]patterns,String theText){ //This extracts Strings in between two other Strings
         Pattern pattern=Pattern.compile(Pattern.quote(patterns[0])+"(.*?)"+Pattern.quote(patterns[1]));
         Matcher m=pattern.matcher(theText);
         String whatToReturn="";
@@ -71,72 +71,73 @@ public class MainActivity extends AppCompatActivity{
         }return whatToReturn;
     }
 
-    public void prepareForDisplay(int id,String[]prep){//Prepare the raw data arrays into usable formats
-        if(id==0){
-            String[]patternsTitle={"<h3 class=\"notice-subtitle\">","</h3>"};
-            String[]patternsDesc={"<p>","</p>"};
-            String noticeTitle=getFromPattern(patternsTitle,prep[0]);
-            String noticeText=getFromPattern(patternsDesc,prep[0]);
-            noticeText=Jsoup.parse(noticeText).text();
-            MainActivity.itemTitles.add(noticeTitle);
-            MainActivity.itemDescs.add(noticeText);
-            MainActivity.itemPicURLS.add("");
-        }else{
-            String[]patternsTitle={"<h2 class=\"article-title\">","</h2>"};
-            String[]patternsImgURLs={"<img alt=\"\" src=\"","\">"};
-            for(String aPrep:prep){
-                String articleImgURLsArray=getFromPattern(patternsImgURLs,aPrep);
-                String articleTitle=getFromPattern(patternsTitle,aPrep);//Attempt to find a title
-                Elements Elmlinks=Jsoup.parse(aPrep).select("a");
-                List<String>absLinks=new ArrayList<>();
-                for(Element link:Elmlinks){
-                    aPrep=aPrep.replace(link.toString(),link.attr("abs:href"));
-                    absLinks.add(link.attr("abs:href"));
+    public void prepareForDisplay(int id,String[]prep){ //Prepare the raw data arrays into usable formats
+        if(id==0){ //ID 0 is schoolNotice
+            String[]patternsTitle={"<h3 class=\"notice-subtitle\">","</h3>"}; //Pattern to use for finding the Title
+            String[]patternsDesc={"<p>","</p>"}; //Pattern for finding the content of the notice
+            String noticeTitle=getFromPattern(patternsTitle,prep[0]); //Use the pattern above to find the Title
+            String noticeText=getFromPattern(patternsDesc,prep[0]); //Same thing as above but for content
+            noticeText=Jsoup.parse(noticeText).text(); //Remove any HTML tags from the content
+            MainActivity.itemTitles.add(noticeTitle); //Add the Title as the first item in the ArrayList
+            MainActivity.itemDescs.add(noticeText); //Add the Content as the first item the ArrayList
+            MainActivity.itemPicURLS.add(""); //There is no image so this is just blank
+        }else{ //If the ID is not 0, it's the articles
+            String[]patternsTitle={"<h2 class=\"article-title\">","</h2>"}; //Pattern for finding Titles of text-based articles
+            String[]patternsImgURLs={"<img alt=\"\" src=\"","\">"}; //Pattern for finding image URLs
+            for(String aPrep:prep){ //Loop through each Article
+                String articleImgURLs=getFromPattern(patternsImgURLs,aPrep); //First, get the image URL if there is one (we remove this URL later on)
+                String articleTitle=getFromPattern(patternsTitle,aPrep); //Attempt to find a title
+                Elements Elmlinks=Jsoup.parse(aPrep).select("a"); //Elements list to store all the Links in the Article
+                List<String>absLinks=new ArrayList<>(); //This stores the "absolute" link, i.e. "https://www.example.com/website.htm"
+                for(Element link:Elmlinks){ //This loop handles links
+                    aPrep=aPrep.replace(link.toString(),link.attr("abs:href")); //Replace the raw HTML code links (<a href="example></a>) with the absolute link
+                    absLinks.add(link.attr("abs:href")); //Add the absolute link to the ArrayList for later use
                 }
-                for(int i=0;i<absLinks.size();i++){
-                    if(StringUtils.countMatches(aPrep,absLinks.get(i))>1){
-                        aPrep=aPrep.replaceFirst(absLinks.get(i),"");
+                for(int i=0;i<absLinks.size();i++){ //Sort through the links to find duplicates and remove them
+                    if(StringUtils.countMatches(aPrep,absLinks.get(i))>1){ //Checks to see if there is more than one of each link
+                        aPrep=aPrep.replaceFirst(absLinks.get(i),""); //Replace the duplicate (we want to remove the first one) with a blank
                     }
                 }
-                if(articleTitle.isEmpty()){//There is no article title
-                    articleTitle="";
+                if(articleTitle.isEmpty()){ //Check if the article has a Title. If not, then it is an Image article
+                    articleTitle=""; //Just set the title blank. This is further dealt with in CustomListAdapter
                 }
-                aPrep=aPrep.replaceAll("<br>",",,,");
-                String pretty=Jsoup.clean(aPrep,"",Whitelist.none().addTags("br","p"),new Document.OutputSettings().prettyPrint(true));
-                String articleDescs=Jsoup.clean(pretty,"",Whitelist.none(),new Document.OutputSettings().prettyPrint(false));
-                articleDescs=articleDescs.replaceAll("(\\r|\\n|\\r\\n)+",",,,");
-                articleDescs=articleDescs.replaceAll("<br>",",,,");
-                String articleImgURLs=articleImgURLsArray;
-                articleDescs=Jsoup.parse(articleDescs).text();
-                articleImgURLs=imgurl+articleImgURLs;
-                MainActivity.itemTitles.add(articleTitle);
-                MainActivity.itemDescs.add(articleDescs);
-                MainActivity.itemPicURLS.add(articleImgURLs);
+                //",,," is the placeholder for New Lines, which are dealt with in CustomListAdapter
+                aPrep=aPrep.replaceAll("<br>",",,,"); //Replace breaks with a New Line placeholder
+                String pretty=Jsoup.clean(aPrep,"",Whitelist.none().addTags("br","p"),new Document.OutputSettings().prettyPrint(true)); //Use JSoup to clean up the Article
+                String articleDescs=Jsoup.clean(pretty,"",Whitelist.none(),new Document.OutputSettings().prettyPrint(false)); //More cleaning
+                articleDescs=articleDescs.replaceAll("(\\r|\\n|\\r\\n)+",",,,"); //Replace any New Lines with the New Line placeholder
+                articleDescs=articleDescs.replaceAll("<br>",",,,"); //I don't think I need this but I'm too lazy to check
+                articleDescs=Jsoup.parse(articleDescs).text(); //Convert the article into the final usable format
+                articleImgURLs=imgurl+articleImgURLs; //Add any image URLs to the ArrayList
+                MainActivity.itemTitles.add(articleTitle); //Add the Title of the article to the ArrayList
+                MainActivity.itemDescs.add(articleDescs); //Add the content of the article to the ArrayList
+                MainActivity.itemPicURLS.add(articleImgURLs); //Add the Image URLs of the article to the ArrayList
             }
         }
     }
 
-    public void showContentMainPage(){
-        String[]itemTitlesArray=MainActivity.itemTitles.toArray(new String[0]);
-        String[]itemDescsArray=MainActivity.itemDescs.toArray(new String[0]);
-        String[]itemPicURLSarray=MainActivity.itemPicURLS.toArray(new String[0]);
-        CustomListAdapter adapter=new CustomListAdapter(this,itemTitlesArray,itemDescsArray,itemPicURLSarray);
-        ListView list=(ListView)findViewById(R.id.mainlist);
-        list.setAdapter(adapter);
+    public void showContentMainPage(){ //This finalizes the information to display and displays it
+        String[]itemTitlesArray=MainActivity.itemTitles.toArray(new String[0]); //Convert the Title ArrayList into a regular String array
+        String[]itemDescsArray=MainActivity.itemDescs.toArray(new String[0]); //Convert the content ArrayList into a regular String array
+        String[]itemPicURLSarray=MainActivity.itemPicURLS.toArray(new String[0]); //Convert the Image URLs ArrayList into a regular String array
+        CustomListAdapter adapter=new CustomListAdapter(this,itemTitlesArray,itemDescsArray,itemPicURLSarray); //Add the arrays to a custom adapter
+        ListView list=(ListView)findViewById(R.id.mainlist); //Get the ID of our ListView on the main Activity
+        list.setAdapter(adapter); //Set the ListView adapter to our custom adapter, which holds the information
     }
 
-    private class GetThePage extends AsyncTask<String,Integer,String>{
-        @Override
-        protected String doInBackground(String[]params){
-            URL urlHome;
-            try{urlHome=new URL("http://www.bevfacey.ca/");}catch(MalformedURLException ex){return"bad";}
-            try{MainActivity.docHome=Jsoup.parse(urlHome,1500);}catch(IOException ex){return"bad";}
-            return"good";
+    private class GetThePage extends AsyncTask<String,Integer,String>{ //This class downloads the main webpage using JSoup
+        @Override //Required for every networking AsyncTask
+        protected String doInBackground(String[]params){ //Do the task in the background so we don't freeze the UI thread
+            URL urlHome; //Initialize the URL variable
+            try{urlHome=new URL("http://www.bevfacey.ca/");}catch(MalformedURLException ex){return"bad";} //Convert the String URL into an actual URL
+            try{MainActivity.docHome=Jsoup.parse(urlHome,1500);}catch(IOException ex){return"bad";} //Try to download the URL (this only fails if the download is corrupted)
+            return"good"; //Tell the post execution task that it worked
         }
-        protected void onPostExecute(String result){
-            if(result.equals("good")){
-                CreateArrays();
+        protected void onPostExecute(String result){ //This runs after doInBackground has finished
+            if(result.equals("good")){ //If it was successful, then continue
+                CreateArrays(); //Start the manipulation of the website data
             }
+            //// TODO: 8/1/2017 Make an else statement that displays a dialog box
         }
     }
 }
