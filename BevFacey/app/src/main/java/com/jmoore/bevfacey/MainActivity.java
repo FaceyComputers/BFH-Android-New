@@ -6,12 +6,12 @@ import android.os.Bundle;
 import android.widget.ListView;
 import org.jsoup.nodes.Document;
 import org.jsoup.Jsoup;
+import org.jsoup.safety.Whitelist;
 import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity{
         new GetThePage().execute();
     }
 
-    public String[]soup2string(Elements elms){ //This method converts JSoup Elements into String arrays
+    public String[]soup2string(Elements elms){//This method converts JSoup Elements into String arrays
         Object[]objArray=elms.toArray();
         String[]strArray=new String[objArray.length];
         for(int i=0;i<strArray.length;i++){
@@ -60,8 +60,6 @@ public class MainActivity extends AppCompatActivity{
     }
 
     public String getFromPattern(String[]patterns,String theText){
-        System.out.println(theText);
-        System.out.println("");System.out.println("");
         Pattern pattern=Pattern.compile(Pattern.quote(patterns[0])+"(.*?)"+Pattern.quote(patterns[1]));
         Matcher m=pattern.matcher(theText);
         String whatToReturn="";
@@ -74,37 +72,25 @@ public class MainActivity extends AppCompatActivity{
         if(id==0){
             String[]patternsTitle={"<h3 class=\"notice-subtitle\">","</h3>"};
             String[]patternsDesc={"<p>","</p>"};
-            String noticeTitleArray=getFromPattern(patternsTitle,prep[0]);
-            String noticeTextArray=getFromPattern(patternsDesc,prep[0]);
-            String noticeTitle=noticeTitleArray;
-            String noticeText=noticeTextArray;
-            //for(String aNoticeTextArray:noticeTextArray){
-            //    noticeText=noticeText.concat(". "+aNoticeTextArray);
-            //}
+            String noticeTitle=getFromPattern(patternsTitle,prep[0]);
+            String noticeText=getFromPattern(patternsDesc,prep[0]);
             noticeText=Jsoup.parse(noticeText).text();
             MainActivity.itemTitles.add(noticeTitle);
             MainActivity.itemDescs.add(noticeText);
             MainActivity.itemPicURLS.add("");
         }else{
             String[]patternsTitle={"<h2 class=\"article-title\">","</h2>"};
-            String[]patternsDesc={"<p>","</p>"};
             String[]patternsImgURLs={"<img alt=\"\" src=\"","\">"};
             for(String aPrep:prep){
                 String articleTitle=getFromPattern(patternsTitle,aPrep);//Attempt to find a title
                 if(articleTitle.isEmpty()){//There is no article title
-                    articleTitle="Image";
+                    articleTitle="";
                 }
-                String articleDescsArray=getFromPattern(patternsDesc,aPrep);//Get the article text
                 String articleImgURLsArray=getFromPattern(patternsImgURLs,aPrep);
-                //String articleDescs=articleDescsArray;
-                String articleDescs=Jsoup.parse(aPrep).text();
+                String pretty=Jsoup.clean(aPrep,"",Whitelist.none().addTags("br","p"),new Document.OutputSettings().prettyPrint(true));
+                String articleDescs=Jsoup.clean(pretty,"",Whitelist.none(),new Document.OutputSettings().prettyPrint(false));
+                articleDescs=articleDescs.replaceAll("(\\r|\\n|\\r\\n)+",",,,");
                 String articleImgURLs=articleImgURLsArray;
-                /*for(String sectionOfADA:articleDescsArray){
-                    articleDescs=articleDescs.concat(". "+sectionOfADA);
-                }
-                for(String sectionOfAIUA:articleImgURLsArray){
-                    articleImgURLs=articleImgURLs.concat("$"+sectionOfAIUA);
-                }*/
                 articleDescs=Jsoup.parse(articleDescs).text();
                 articleImgURLs=imgurl+articleImgURLs;
                 MainActivity.itemTitles.add(articleTitle);
@@ -121,7 +107,6 @@ public class MainActivity extends AppCompatActivity{
         CustomListAdapter adapter=new CustomListAdapter(this,itemTitlesArray,itemDescsArray,itemPicURLSarray);
         ListView list=(ListView)findViewById(R.id.mainlist);
         list.setAdapter(adapter);
-
     }
 
     private class GetThePage extends AsyncTask<String,Integer,String>{
