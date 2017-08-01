@@ -43,7 +43,12 @@ class CustomListAdapter extends ArrayAdapter<String>{
         TextView txtTitle=rowView.findViewById(R.id.itemTitle);
         TextView extratxt=rowView.findViewById(R.id.itemDesc);
 
-        txtTitle.setText(itemname[position]);
+        if(!itemname[position].isEmpty()){
+            txtTitle.setText(itemname[position]);
+        }else{
+            txtTitle.setTextSize(0);
+            txtTitle.setText("");
+        }
         new ImageLoadTask(imgid[position], imageView).execute();
         extratxt.setText(fixDesc);
         return rowView;
