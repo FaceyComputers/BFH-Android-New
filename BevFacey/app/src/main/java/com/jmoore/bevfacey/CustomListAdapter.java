@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class CustomListAdapter extends ArrayAdapter<String> {
-
     private final Activity context;
     private final String[] itemname;
     private final String[] imgid;
@@ -35,6 +34,7 @@ public class CustomListAdapter extends ArrayAdapter<String> {
         txtTitle.setText(itemname[position]);
         //imageView.setImageResource(imgid[position]);
         extratxt.setText("Description "+itemname[position]);
+        System.out.println("WORKEDFROMCUSTOMLISTADAPTER");
         return rowView;
 
     }
