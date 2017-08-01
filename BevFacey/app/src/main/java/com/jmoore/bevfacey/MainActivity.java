@@ -6,14 +6,17 @@ import android.os.Bundle;
 import android.widget.ListView;
 import org.jsoup.nodes.Document;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
 import org.jsoup.safety.Whitelist;
 import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.lang3.*;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -82,16 +85,26 @@ public class MainActivity extends AppCompatActivity{
             String[]patternsTitle={"<h2 class=\"article-title\">","</h2>"};
             String[]patternsImgURLs={"<img alt=\"\" src=\"","\">"};
             for(String aPrep:prep){
+                String articleImgURLsArray=getFromPattern(patternsImgURLs,aPrep);
                 String articleTitle=getFromPattern(patternsTitle,aPrep);//Attempt to find a title
+                Elements Elmlinks=Jsoup.parse(aPrep).select("a");
+                List<String>absLinks=new ArrayList<>();
+                for(Element link:Elmlinks){
+                    aPrep=aPrep.replace(link.toString(),link.attr("abs:href"));
+                    absLinks.add(link.attr("abs:href"));
+                }
+                for(int i=0;i<absLinks.size();i++){
+                    if(StringUtils.countMatches(aPrep,absLinks.get(i))>1){
+                        aPrep=aPrep.replaceFirst(absLinks.get(i),"");
+                    }
+                }
                 if(articleTitle.isEmpty()){//There is no article title
                     articleTitle="";
                 }
-                String articleImgURLsArray=getFromPattern(patternsImgURLs,aPrep);
                 aPrep=aPrep.replaceAll("<br>",",,,");
                 String pretty=Jsoup.clean(aPrep,"",Whitelist.none().addTags("br","p"),new Document.OutputSettings().prettyPrint(true));
                 String articleDescs=Jsoup.clean(pretty,"",Whitelist.none(),new Document.OutputSettings().prettyPrint(false));
                 articleDescs=articleDescs.replaceAll("(\\r|\\n|\\r\\n)+",",,,");
-                System.out.println(articleDescs);
                 articleDescs=articleDescs.replaceAll("<br>",",,,");
                 String articleImgURLs=articleImgURLsArray;
                 articleDescs=Jsoup.parse(articleDescs).text();
