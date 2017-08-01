@@ -87,9 +87,12 @@ public class MainActivity extends AppCompatActivity{
                     articleTitle="";
                 }
                 String articleImgURLsArray=getFromPattern(patternsImgURLs,aPrep);
+                aPrep=aPrep.replaceAll("<br>",",,,");
                 String pretty=Jsoup.clean(aPrep,"",Whitelist.none().addTags("br","p"),new Document.OutputSettings().prettyPrint(true));
                 String articleDescs=Jsoup.clean(pretty,"",Whitelist.none(),new Document.OutputSettings().prettyPrint(false));
                 articleDescs=articleDescs.replaceAll("(\\r|\\n|\\r\\n)+",",,,");
+                System.out.println(articleDescs);
+                articleDescs=articleDescs.replaceAll("<br>",",,,");
                 String articleImgURLs=articleImgURLsArray;
                 articleDescs=Jsoup.parse(articleDescs).text();
                 articleImgURLs=imgurl+articleImgURLs;
