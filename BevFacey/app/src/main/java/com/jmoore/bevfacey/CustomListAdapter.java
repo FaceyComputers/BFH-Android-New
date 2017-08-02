@@ -16,6 +16,7 @@ class CustomListAdapter extends ArrayAdapter<String>{ //This class is the list o
     private final String[]itemname;
     private final String[]imgid;
     private final String[]itemdesc;
+    private static boolean noticeLoaded=false;
 
     CustomListAdapter(Activity context,String[]itemname,String[]itemdesc,String[]imgid) {
         super(context,R.layout.mylist,itemname);
@@ -43,19 +44,16 @@ class CustomListAdapter extends ArrayAdapter<String>{ //This class is the list o
 
         if(!itemname[position].isEmpty()){
             if(itemname[position].contains(":SCHOOLNOTICE:")){
-                itemname[position]=itemname[position].replaceFirst(":SCHOOLNOTICE:","");
+                String replaceFirst=itemname[position];
+                String replaceNotice=replaceFirst.replaceFirst(":SCHOOLNOTICE:","");
                 txtTitle.setTextColor(ContextCompat.getColor(context,R.color.colorNotice));
-                txtTitle.setText(itemname[position].toUpperCase());
+                txtTitle.setText(replaceNotice.toUpperCase());
                 rowView.setBackgroundColor(ContextCompat.getColor(context,R.color.colorNoticeBkg));
-            }else{
-                txtTitle.setText(itemname[position]);
-            }
+                noticeLoaded=true;
+            }else{txtTitle.setText(itemname[position]);}
         }else{
             txtTitle.setTextSize(0);
             txtTitle.setText("");
-        }
-        if(itemname[position].contains(":SCHOOLNOTICE:")){
-            itemname[position]=itemname[position].replaceFirst(":SCHOOLNOTICE:","");
         }
         try {
             Picasso.with(context).load(imgid[position]).into(imageView);
