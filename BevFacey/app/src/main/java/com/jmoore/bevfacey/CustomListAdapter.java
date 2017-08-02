@@ -2,6 +2,7 @@ package com.jmoore.bevfacey;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,10 +42,19 @@ class CustomListAdapter extends ArrayAdapter<String>{ //This class is the list o
         TextView extratxt=rowView.findViewById(R.id.itemDesc);
 
         if(!itemname[position].isEmpty()){
-            txtTitle.setText(itemname[position]);
+            if(itemname[position].contains(":SCHOOLNOTICE:")){
+                itemname[position]=itemname[position].replaceFirst(":SCHOOLNOTICE:","");
+                txtTitle.setTextColor(ContextCompat.getColor(context,R.color.colorNotice));
+                txtTitle.setText(itemname[position].toUpperCase());
+            }else{
+                txtTitle.setText(itemname[position]);
+            }
         }else{
             txtTitle.setTextSize(0);
             txtTitle.setText("");
+        }
+        if(itemname[position].contains(":SCHOOLNOTICE:")){
+            itemname[position]=itemname[position].replaceFirst(":SCHOOLNOTICE:","");
         }
         try {
             Picasso.with(context).load(imgid[position]).into(imageView);
