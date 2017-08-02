@@ -10,11 +10,11 @@
         android:id="@+id/imageView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:padding="-30dp"
         android:scaleType="centerInside"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/inappbanner"
-        tools:layout_editor_absoluteX="0dp"
-        android:adjustViewBounds="true"/>
+        app:srcCompat="@drawable/inappbanner" />
 
     <ListView
         android:id="@+id/mainlist"
