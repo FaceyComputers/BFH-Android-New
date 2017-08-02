@@ -1,5 +1,6 @@
 package com.jmoore.bevfacey;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity{
     public static ArrayList<String>itemDescs=new ArrayList<>(); //Descriptions for Adapter
     public static ArrayList<String>itemPicURLS=new ArrayList<>(); //URLs of images for Adapter
     public String imgurl="http://www.bevfacey.ca"; //URL prefix for images
+    public static boolean loaded=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -126,6 +128,11 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private class GetThePage extends AsyncTask<String,Integer,String>{ //This class downloads the main webpage using JSoup
+        Intent i;
+        protected void onPreExecute(){
+            i=new Intent(getApplicationContext(),Splash.class);
+            startActivity(i);
+        }
         @Override //Required for every networking AsyncTask
         protected String doInBackground(String[]params){ //Do the task in the background so we don't freeze the UI thread
             URL urlHome; //Initialize the URL variable
@@ -135,6 +142,7 @@ public class MainActivity extends AppCompatActivity{
         }
         protected void onPostExecute(String result){ //This runs after doInBackground has finished
             if(result.equals("good")){ //If it was successful, then continue
+                loaded=true;
                 CreateArrays(); //Start the manipulation of the website data
             }
             //// TODO: 8/1/2017 Make an else statement that displays a dialog box
