@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import org.jsoup.nodes.Document;
@@ -130,6 +131,17 @@ public class MainActivity extends AppCompatActivity{
         int margin=bannerIV.getHeight()+navBIV.getHeight();
         list.setPadding(0,0,0,margin);
         list.setAdapter(adapter); //Set the ListView adapter to our custom adapter, which holds the information
+    }
+
+    public void expandMenu(View view){
+        ListView navView=(ListView)findViewById(R.id.navList);
+        if(view.getId()==(findViewById(R.id.navButton)).getId()){
+            if(navView.getVisibility()==View.GONE){
+                navView.setVisibility(View.VISIBLE);
+            }else{
+                navView.setVisibility(View.GONE);
+            }
+        }
     }
 
     private class GetThePage extends AsyncTask<String,Integer,String>{ //This class downloads the main webpage using JSoup
