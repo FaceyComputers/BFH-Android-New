@@ -2,8 +2,12 @@ package com.jmoore.bevfacey;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.ViewGroup;
+import android.widget.GridLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 import org.jsoup.nodes.Document;
 import org.jsoup.Jsoup;
@@ -124,6 +128,9 @@ public class MainActivity extends AppCompatActivity{
         String[]itemPicURLSarray=MainActivity.itemPicURLS.toArray(new String[0]); //Convert the Image URLs ArrayList into a regular String array
         CustomListAdapter adapter=new CustomListAdapter(this,itemTitlesArray,itemDescsArray,itemPicURLSarray); //Add the arrays to a custom adapter
         ListView list=(ListView)findViewById(R.id.mainlist); //Get the ID of our ListView on the main Activity
+        ImageView iv=(ImageView)findViewById(R.id.bannerImage);
+        int margin=iv.getHeight();
+        list.setPadding(0,0,0,margin);
         list.setAdapter(adapter); //Set the ListView adapter to our custom adapter, which holds the information
     }
 
