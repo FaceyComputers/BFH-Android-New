@@ -46,6 +46,7 @@ class CustomListAdapter extends ArrayAdapter<String>{ //This class is the list o
                 itemname[position]=itemname[position].replaceFirst(":SCHOOLNOTICE:","");
                 txtTitle.setTextColor(ContextCompat.getColor(context,R.color.colorNotice));
                 txtTitle.setText(itemname[position].toUpperCase());
+                rowView.setBackgroundColor(ContextCompat.getColor(context,R.color.colorNoticeBkg));
             }else{
                 txtTitle.setText(itemname[position]);
             }
@@ -59,7 +60,8 @@ class CustomListAdapter extends ArrayAdapter<String>{ //This class is the list o
         try {
             Picasso.with(context).load(imgid[position]).into(imageView);
         }catch(IllegalArgumentException e){e.printStackTrace();}
-        extratxt.setText(fixDesc);
+        String nl=fixDesc+"\n";
+        extratxt.setText(nl);
         return rowView;
     }
 }

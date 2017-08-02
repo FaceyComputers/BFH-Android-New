@@ -2,11 +2,8 @@ package com.jmoore.bevfacey;
 
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.ViewGroup;
-import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import org.jsoup.nodes.Document;
