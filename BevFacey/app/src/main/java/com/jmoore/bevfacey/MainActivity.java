@@ -1,10 +1,11 @@
 package com.jmoore.bevfacey;
 
 import android.content.Intent;
+import android.content.res.AssetManager;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -18,6 +19,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.*;
@@ -31,11 +33,14 @@ public class MainActivity extends AppCompatActivity{
     public String imgurl="http://www.bevfacey.ca"; //URL prefix for images
     public static boolean loaded=false;
     public static int[]imageids={R.drawable.about,R.drawable.eteachers,R.drawable.programs,R.drawable.parents,R.drawable.students,R.drawable.athletics,R.drawable.guidance,R.drawable.sustainability};
+    public static Typeface typeface;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        AssetManager am=getApplicationContext().getAssets();
+        typeface= Typeface.createFromAsset(am,String.format(Locale.CANADA,"fonts/%s","goodtimegrotesk.ttf"));
         new GetThePage().execute(); //Execute the task to retrieve from the website
     }
 

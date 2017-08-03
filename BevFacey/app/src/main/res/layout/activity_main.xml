@@ -31,7 +31,7 @@
         android:padding="-30dp"
         android:layout_row="2"
         app:srcCompat="@drawable/navigation"
-        android:onClick="expandMenu"/>
+        android:onClick="expandMenu" />
 
     <ListView
         android:id="@+id/navList"

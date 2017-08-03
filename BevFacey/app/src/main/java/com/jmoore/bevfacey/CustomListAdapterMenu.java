@@ -1,15 +1,11 @@
 package com.jmoore.bevfacey;
 
 import android.app.Activity;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
-import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
