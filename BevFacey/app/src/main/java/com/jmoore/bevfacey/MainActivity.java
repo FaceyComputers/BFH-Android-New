@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
         AssetManager am=getApplicationContext().getAssets();
         typeface=Typeface.createFromAsset(am,String.format(Locale.CANADA,"fonts/%s","goodtimegrotesk.ttf"));
-        typefaceBody=Typeface.createFromAsset(am,String.format(Locale.CANADA,"fonts/%s","latolight.ttf"));
+        typefaceBody=Typeface.createFromAsset(am,String.format(Locale.CANADA,"fonts/%s","latoregular.ttf"));
         new GetThePage().execute(); //Execute the task to retrieve from the website
     }
 
