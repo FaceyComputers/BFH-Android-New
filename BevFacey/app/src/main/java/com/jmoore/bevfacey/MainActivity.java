@@ -34,13 +34,15 @@ public class MainActivity extends AppCompatActivity{
     public static boolean loaded=false;
     public static int[]imageids={R.drawable.about,R.drawable.eteachers,R.drawable.programs,R.drawable.parents,R.drawable.students,R.drawable.athletics,R.drawable.guidance,R.drawable.sustainability};
     public static Typeface typeface;
+    public static Typeface typefaceBody;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         AssetManager am=getApplicationContext().getAssets();
-        typeface= Typeface.createFromAsset(am,String.format(Locale.CANADA,"fonts/%s","goodtimegrotesk.ttf"));
+        typeface=Typeface.createFromAsset(am,String.format(Locale.CANADA,"fonts/%s","goodtimegrotesk.ttf"));
+        typefaceBody=Typeface.createFromAsset(am,String.format(Locale.CANADA,"fonts/%s","latolight.ttf"));
         new GetThePage().execute(); //Execute the task to retrieve from the website
     }
 

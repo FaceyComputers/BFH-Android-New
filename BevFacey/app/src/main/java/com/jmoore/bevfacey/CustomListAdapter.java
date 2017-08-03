@@ -42,7 +42,7 @@ class CustomListAdapter extends ArrayAdapter<String>{ //This class is the list o
         TextView extratxt=rowView.findViewById(R.id.itemDesc);
 
         txtTitle.setTypeface(MainActivity.typeface);
-        extratxt.setTypeface(MainActivity.typeface);
+        extratxt.setTypeface(MainActivity.typefaceBody);
 
         if(!itemname[position].isEmpty()){
             if(itemname[position].contains(":SCHOOLNOTICE:")){
