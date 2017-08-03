@@ -136,7 +136,18 @@ public class MainActivity extends AppCompatActivity{
     public void expandMenu(View view){
         ListView navView=(ListView)findViewById(R.id.navList);
         if(view.getId()==(findViewById(R.id.navButton)).getId()){
+            int[]imgs={R.drawable.about,R.drawable.eteachers,R.drawable.programs,R.drawable.parents,R.drawable.students,R.drawable.athletics,R.drawable.guidance,R.drawable.sustainability};
             if(navView.getVisibility()==View.GONE){
+                String[]imgstrings=new String[imgs.length];
+                for(int i=0;i<imgs.length;i++){
+                    imgstrings[i]=Integer.toString(imgs[i]);
+                }
+                CustomListAdapterMenu adapter=new CustomListAdapterMenu(this,imgs,imgstrings);
+                ImageView bannerIV=(ImageView)findViewById(R.id.bannerImage);
+                ImageView navBIV=(ImageView)findViewById(R.id.navButton);
+                int margin=bannerIV.getHeight()+navBIV.getHeight();
+                navView.setPadding(0,0,0,margin);
+                navView.setAdapter(adapter);
                 navView.setVisibility(View.VISIBLE);
             }else{
                 navView.setVisibility(View.GONE);

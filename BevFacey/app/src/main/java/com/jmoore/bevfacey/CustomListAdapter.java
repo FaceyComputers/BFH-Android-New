@@ -16,7 +16,6 @@ class CustomListAdapter extends ArrayAdapter<String>{ //This class is the list o
     private final String[]itemname;
     private final String[]imgid;
     private final String[]itemdesc;
-    private static boolean noticeLoaded=false;
 
     CustomListAdapter(Activity context,String[]itemname,String[]itemdesc,String[]imgid) {
         super(context,R.layout.mylist,itemname);
@@ -49,7 +48,6 @@ class CustomListAdapter extends ArrayAdapter<String>{ //This class is the list o
                 txtTitle.setTextColor(ContextCompat.getColor(context,R.color.colorNotice));
                 txtTitle.setText(replaceNotice.toUpperCase());
                 rowView.setBackgroundColor(ContextCompat.getColor(context,R.color.colorNoticeBkg));
-                noticeLoaded=true;
             }else{txtTitle.setText(itemname[position]);}
         }else{
             txtTitle.setTextSize(0);
@@ -57,7 +55,7 @@ class CustomListAdapter extends ArrayAdapter<String>{ //This class is the list o
         }
         try {
             Picasso.with(context).load(imgid[position]).into(imageView);
-        }catch(IllegalArgumentException e){e.printStackTrace();}
+        }catch(IllegalArgumentException ignored){}
         String nl=fixDesc+"\n";
         extratxt.setText(nl);
         return rowView;
