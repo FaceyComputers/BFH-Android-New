@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity{
     public static ArrayList<String>itemPicURLS=new ArrayList<>(); //URLs of images for Adapter
     public String imgurl="http://www.bevfacey.ca"; //URL prefix for images
     public static boolean loaded=false;
+    public static int[]imageids={R.drawable.about,R.drawable.eteachers,R.drawable.programs,R.drawable.parents,R.drawable.students,R.drawable.athletics,R.drawable.guidance,R.drawable.sustainability};
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
