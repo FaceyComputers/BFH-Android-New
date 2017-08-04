@@ -32,9 +32,10 @@ public class MainActivity extends AppCompatActivity{
     public static ArrayList<String>itemPicURLS=new ArrayList<>(); //URLs of images for Adapter
     public String imgurl="http://www.bevfacey.ca"; //URL prefix for images
     public static boolean loaded=false;
-    public static int[]imageids={R.drawable.about,R.drawable.eteachers,R.drawable.programs,R.drawable.parents,R.drawable.students,R.drawable.athletics,R.drawable.guidance,R.drawable.sustainability};
+    public static String[]menuItemTitles={"About","ETeachers","Programs","Parents","Students","Athletics","Guidance","Sustainability"};
     public static Typeface typeface;
     public static Typeface typefaceBody;
+    public static Typeface typefaceMenuItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -43,6 +44,8 @@ public class MainActivity extends AppCompatActivity{
         AssetManager am=getApplicationContext().getAssets();
         typeface=Typeface.createFromAsset(am,String.format(Locale.CANADA,"fonts/%s","goodtimegrotesk.ttf"));
         typefaceBody=Typeface.createFromAsset(am,String.format(Locale.CANADA,"fonts/%s","latoregular.ttf"));
+        typefaceMenuItems=Typeface.createFromAsset(am,String.format(Locale.CANADA,"fonts/%s","goodtimegrotesk.ttf"));
+
         new GetThePage().execute(); //Execute the task to retrieve from the website
     }
 
@@ -145,13 +148,8 @@ public class MainActivity extends AppCompatActivity{
     public void expandMenu(View view){
         ListView navView=(ListView)findViewById(R.id.navList);
         if(view.getId()==(findViewById(R.id.navButton)).getId()){
-            int[]imgs={R.drawable.about,R.drawable.eteachers,R.drawable.programs,R.drawable.parents,R.drawable.students,R.drawable.athletics,R.drawable.guidance,R.drawable.sustainability};
             if(navView.getVisibility()==View.GONE){
-                String[]imgstrings=new String[imgs.length];
-                for(int i=0;i<imgs.length;i++){
-                    imgstrings[i]=Integer.toString(imgs[i]);
-                }
-                CustomListAdapterMenu adapter=new CustomListAdapterMenu(this,imgs,imgstrings);
+                CustomListAdapterMenu adapter=new CustomListAdapterMenu(this,menuItemTitles,menuItemTitles);
                 ImageView bannerIV=(ImageView)findViewById(R.id.bannerImage);
                 ImageView navBIV=(ImageView)findViewById(R.id.navButton);
                 int margin=bannerIV.getHeight()+navBIV.getHeight();
