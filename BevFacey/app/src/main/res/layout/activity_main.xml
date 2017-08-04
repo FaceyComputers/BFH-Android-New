@@ -22,27 +22,31 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/inappbanner" />
 
-    <ImageView
+    <TextView
         android:id="@+id/navButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
+        android:gravity="center"
+
+        android:textSize="25sp"
         android:scaleType="fitXY"
-        android:padding="-30dp"
+        android:padding="15dp"
         android:layout_row="2"
-        app:srcCompat="@drawable/navigation"
-        android:onClick="expandMenu" />
+        android:background="@color/colorMenuBackground"
+        android:onClick="expandMenu"
+        android:textColor="@color/colorWhite"/>
 
     <ListView
         android:id="@+id/navList"
         android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_row="3"
         android:dividerHeight="3dp"
-        android:divider="@color/colorPrimaryDark"
+        android:divider="@color/colorMenuBackground"
         android:animateLayoutChanges="true"
-        android:background="@color/colorPrimaryDark">
+        android:background="@color/colorMenuBackground">
     </ListView>
 
     <ListView

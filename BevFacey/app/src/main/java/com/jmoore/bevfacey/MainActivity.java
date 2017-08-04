@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
+
 import org.jsoup.nodes.Document;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -37,6 +39,9 @@ public class MainActivity extends AppCompatActivity{
     public static Typeface typefaceBody;
     public static Typeface typefaceMenuItems;
 
+    public static List<String>subAboutTitles=new ArrayList<>();
+    public static List<String>subAboutText=new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -55,6 +60,46 @@ public class MainActivity extends AppCompatActivity{
         for(int i=0;i<strArray.length;i++){ //For Loop to convert each Object/Element into a String
             strArray[i]=objArray[i].toString(); //Convert the Object to a String
         }return strArray; //Return the complete String array
+    }
+
+    public String[]getNormalArrays(List<String>list){
+        String[]normalArray;
+        Object[]linksObjArray=list.toArray(); //First, convert the Elements into an Object array
+        String[]linksStrArray=new String[linksObjArray.length]; //This will hold the String values of the Elements
+        for(int i=0;i<linksStrArray.length;i++){ //For Loop to convert each Object/Element into a String
+            linksStrArray[i]=linksObjArray[i].toString(); //Convert the Object to a String
+        }
+        normalArray=linksStrArray;
+        return normalArray;
+    }
+
+    public void CreateSubArrays(){
+        Elements navElms=MainActivity.docHome.select("nav.primary-navigation");
+
+        Elements liElms=navElms.select("li.children"); //All the website expandable menus
+
+        for(Element elm:liElms) {
+            String elmString=elm.toString();
+
+            if(elmString.toLowerCase().contains("about")){
+                Elements aboutClasses=elm.select("li");
+                String[]patternLink={"<a href=\"","\">"};
+                String[]patternTitle={"<b>","</b>"};
+                for(Element el:aboutClasses){
+                    String elString=el.toString();
+                    String link=MainActivity.getFromPatternStatic(patternLink,elString);
+                    String title=MainActivity.getFromPatternStatic(patternTitle,elString);
+                    subAboutTitles.add(title);
+                    subAboutText.add(link);
+                }
+                System.out.println(subAboutTitles.get(1));
+            }
+
+        }
+
+        String[]aboutLinksNormArray=getNormalArrays(subAboutText);
+        String[]aboutTitleNormArray=getNormalArrays(subAboutTitles);
+        System.out.println(aboutLinksNormArray.length);
     }
 
     public void CreateArrays(){ //This method creates arrays from the content in the JSoup Document
@@ -79,6 +124,15 @@ public class MainActivity extends AppCompatActivity{
     }
 
     public String getFromPattern(String[]patterns,String theText){ //This extracts Strings in between two other Strings
+        Pattern pattern=Pattern.compile(Pattern.quote(patterns[0])+"(.*?)"+Pattern.quote(patterns[1]));
+        Matcher m=pattern.matcher(theText);
+        String whatToReturn="";
+        while(m.find()){
+            whatToReturn=(m.group(1));
+        }return whatToReturn;
+    }
+
+    public static String getFromPatternStatic(String[]patterns,String theText){ //This extracts Strings in between two other Strings
         Pattern pattern=Pattern.compile(Pattern.quote(patterns[0])+"(.*?)"+Pattern.quote(patterns[1]));
         Matcher m=pattern.matcher(theText);
         String whatToReturn="";
@@ -139,7 +193,9 @@ public class MainActivity extends AppCompatActivity{
         CustomListAdapter adapter=new CustomListAdapter(this,itemTitlesArray,itemDescsArray,itemPicURLSarray); //Add the arrays to a custom adapter
         ListView list=(ListView)findViewById(R.id.mainlist); //Get the ID of our ListView on the main Activity
         ImageView bannerIV=(ImageView)findViewById(R.id.bannerImage);
-        ImageView navBIV=(ImageView)findViewById(R.id.navButton);
+        TextView navBIV=(TextView)findViewById(R.id.navButton);
+        navBIV.setTypeface(MainActivity.typefaceMenuItems);
+        navBIV.setText(R.string.navigation);
         int margin=bannerIV.getHeight()+navBIV.getHeight();
         list.setPadding(0,0,0,margin);
         list.setAdapter(adapter); //Set the ListView adapter to our custom adapter, which holds the information
@@ -151,7 +207,7 @@ public class MainActivity extends AppCompatActivity{
             if(navView.getVisibility()==View.GONE){
                 CustomListAdapterMenu adapter=new CustomListAdapterMenu(this,menuItemTitles,menuItemTitles);
                 ImageView bannerIV=(ImageView)findViewById(R.id.bannerImage);
-                ImageView navBIV=(ImageView)findViewById(R.id.navButton);
+                TextView navBIV=(TextView)findViewById(R.id.navButton);
                 int margin=bannerIV.getHeight()+navBIV.getHeight();
                 navView.setPadding(0,0,0,margin);
                 navView.setAdapter(adapter);
@@ -179,6 +235,7 @@ public class MainActivity extends AppCompatActivity{
             if(result.equals("good")){ //If it was successful, then continue
                 loaded=true;
                 CreateArrays(); //Start the manipulation of the website data
+                CreateSubArrays();
             }
             //// TODO: 8/1/2017 Make an else statement that displays a dialog box
         }
