@@ -13,7 +13,7 @@ class CustomListAdapterSubMenu extends ArrayAdapter<String>{ //This class is the
     private final String[]subText;
     private final String[]subLink;
 
-    CustomListAdapterSubMenu(Activity context, String[]subText, String[]subLink){
+    CustomListAdapterSubMenu(Activity context,String[]subText,String[]subLink){
         super(context,R.layout.mylistsubmenu,subText);
         this.context=context;
         this.subText=subText;
@@ -28,9 +28,9 @@ class CustomListAdapterSubMenu extends ArrayAdapter<String>{ //This class is the
         TextView tv = rowView.findViewById(R.id.subMenuText);
         tv.setTypeface(MainActivity.typefaceMenuItems);
         tv.setText(subText[position]);
-        tv.setOnClickListener(new View.OnClickListener() {
+        tv.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View view) {
+            public void onClick(View view){
                 TextView tv2=(TextView)view;
 
             }

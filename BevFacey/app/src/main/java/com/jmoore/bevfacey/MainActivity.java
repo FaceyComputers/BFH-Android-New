@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import org.jsoup.nodes.Document;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -39,6 +38,8 @@ public class MainActivity extends AppCompatActivity{
     public static Typeface typefaceBody;
     public static Typeface typefaceMenuItems;
 
+    public static int subAboutLength;
+
     public static List<String>subAboutTitles=new ArrayList<>();
     public static List<String>subAboutText=new ArrayList<>();
 
@@ -62,25 +63,11 @@ public class MainActivity extends AppCompatActivity{
         }return strArray; //Return the complete String array
     }
 
-    public String[]getNormalArrays(List<String>list){
-        String[]normalArray;
-        Object[]linksObjArray=list.toArray(); //First, convert the Elements into an Object array
-        String[]linksStrArray=new String[linksObjArray.length]; //This will hold the String values of the Elements
-        for(int i=0;i<linksStrArray.length;i++){ //For Loop to convert each Object/Element into a String
-            linksStrArray[i]=linksObjArray[i].toString(); //Convert the Object to a String
-        }
-        normalArray=linksStrArray;
-        return normalArray;
-    }
-
     public void CreateSubArrays(){
         Elements navElms=MainActivity.docHome.select("nav.primary-navigation");
-
         Elements liElms=navElms.select("li.children"); //All the website expandable menus
-
-        for(Element elm:liElms) {
+        for(Element elm:liElms){
             String elmString=elm.toString();
-
             if(elmString.toLowerCase().contains("about")){
                 Elements aboutClasses=elm.select("li");
                 String[]patternLink={"<a href=\"","\">"};
@@ -92,14 +79,9 @@ public class MainActivity extends AppCompatActivity{
                     subAboutTitles.add(title);
                     subAboutText.add(link);
                 }
-                System.out.println(subAboutTitles.get(1));
+                subAboutLength=subAboutTitles.size();
             }
-
         }
-
-        String[]aboutLinksNormArray=getNormalArrays(subAboutText);
-        String[]aboutTitleNormArray=getNormalArrays(subAboutTitles);
-        System.out.println(aboutLinksNormArray.length);
     }
 
     public void CreateArrays(){ //This method creates arrays from the content in the JSoup Document
