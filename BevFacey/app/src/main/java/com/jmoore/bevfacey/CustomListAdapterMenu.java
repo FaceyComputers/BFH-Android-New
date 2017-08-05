@@ -62,17 +62,62 @@ class CustomListAdapterMenu extends ArrayAdapter<String>{//This class is the lis
                         lv.setVisibility(View.GONE);
                     }
                 }else if(title.equals(MainActivity.menuItemTitles[1])){
-
+                    //Create a new ETeachers Intent page
                 }else if(title.equals(MainActivity.menuItemTitles[2])){
-
+                    ListView lv=rowView.findViewById(R.id.subMenuItem);
+                    if(lv.getVisibility()==View.GONE) {
+                        int height = tv2.getHeight();
+                        CustomListAdapterSubMenu clasm = new CustomListAdapterSubMenu(context, getNormalArrays(MainActivity.subProgramsTitles), getNormalArrays(MainActivity.subProgramsText));
+                        lv.setAdapter(clasm);
+                        lv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height * MainActivity.subProgramsLength));
+                        lv.setVisibility(View.VISIBLE);
+                    }else{
+                        lv.setVisibility(View.GONE);
+                    }
                 }else if(title.equals(MainActivity.menuItemTitles[3])){
-                    //Parents
+                    ListView lv=rowView.findViewById(R.id.subMenuItem);
+                    if(lv.getVisibility()==View.GONE) {
+                        int height = tv2.getHeight();
+                        CustomListAdapterSubMenu clasm = new CustomListAdapterSubMenu(context, getNormalArrays(MainActivity.subParentsTitles), getNormalArrays(MainActivity.subParentsText));
+                        lv.setAdapter(clasm);
+                        lv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height * MainActivity.subParentsLength));
+                        lv.setVisibility(View.VISIBLE);
+                    }else{
+                        lv.setVisibility(View.GONE);
+                    }
                 }else if(title.equals(MainActivity.menuItemTitles[4])){
-                    //Students
+                    ListView lv=rowView.findViewById(R.id.subMenuItem);
+                    if(lv.getVisibility()==View.GONE) {
+                        int height = tv2.getHeight();
+                        CustomListAdapterSubMenu clasm = new CustomListAdapterSubMenu(context, getNormalArrays(MainActivity.subStudentsTitles), getNormalArrays(MainActivity.subStudentsText));
+                        lv.setAdapter(clasm);
+                        lv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height * MainActivity.subStudentsLength));
+                        lv.setVisibility(View.VISIBLE);
+                    }else{
+                        lv.setVisibility(View.GONE);
+                    }
                 }else if(title.equals(MainActivity.menuItemTitles[5])){
-                    //Athletics
+                    ListView lv=rowView.findViewById(R.id.subMenuItem);
+                    if(lv.getVisibility()==View.GONE) {
+                        int height = tv2.getHeight();
+                        CustomListAdapterSubMenu clasm = new CustomListAdapterSubMenu(context, getNormalArrays(MainActivity.subAthleticsTitles), getNormalArrays(MainActivity.subAthleticsText));
+                        lv.setAdapter(clasm);
+                        lv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height * MainActivity.subAthleticsLength));
+                        lv.setVisibility(View.VISIBLE);
+                    }else{
+                        lv.setVisibility(View.GONE);
+                    }
                 }else if(title.equals(MainActivity.menuItemTitles[6])){
-                    //Guidance
+                    ListView lv=rowView.findViewById(R.id.subMenuItem);
+                    if(lv.getVisibility()==View.GONE) {
+                        int height = tv2.getHeight();
+                        CustomListAdapterSubMenu clasm = new CustomListAdapterSubMenu(context, getNormalArrays(MainActivity.subGuidanceTitles), getNormalArrays(MainActivity.subGuidanceText));
+                        lv.setAdapter(clasm);
+                        lv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height * MainActivity.subGuidanceLength));
+                        lv.setVisibility(View.VISIBLE);
+                    }else{
+                        lv.setVisibility(View.GONE);
+                    }
                 }else if(title.equals(MainActivity.menuItemTitles[7])){
                     //Sustainability
                 }

@@ -1,6 +1,8 @@
 package com.jmoore.bevfacey;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,9 +34,25 @@ class CustomListAdapterSubMenu extends ArrayAdapter<String>{ //This class is the
             @Override
             public void onClick(View view){
                 TextView tv2=(TextView)view;
-
+                if(tv2.getText().toString().toLowerCase().equals("bell times")){
+                    new GetSubPages().execute("about");
+                }
             }
         });
         return rowView;
+    }
+
+    private class GetSubPages extends AsyncTask<String,Integer,String> {
+        Intent i;
+        @Override
+        protected String doInBackground(String[]params){
+            if(params[0].equals("about")){
+
+            }
+            return null;
+        }
+        protected void onPostExecute(String result){
+            //Display the sub page
+        }
     }
 }

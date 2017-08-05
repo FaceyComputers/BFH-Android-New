@@ -28,6 +28,7 @@ import org.apache.commons.lang3.*;
 public class MainActivity extends AppCompatActivity{
 
     public static Document docHome; //JSoup Document storing the main webpage
+    public static Document docETeachers;
     public static ArrayList<String>itemTitles=new ArrayList<>(); //Array that will store Title values for the Adapter
     public static ArrayList<String>itemDescs=new ArrayList<>(); //Descriptions for Adapter
     public static ArrayList<String>itemPicURLS=new ArrayList<>(); //URLs of images for Adapter
@@ -39,9 +40,25 @@ public class MainActivity extends AppCompatActivity{
     public static Typeface typefaceMenuItems;
 
     public static int subAboutLength;
+    public static int subProgramsLength;
+    public static int subParentsLength;
+    public static int subStudentsLength;
+    public static int subAthleticsLength;
+    public static int subGuidanceLength;
+
 
     public static List<String>subAboutTitles=new ArrayList<>();
     public static List<String>subAboutText=new ArrayList<>();
+    public static List<String>subProgramsTitles=new ArrayList<>();
+    public static List<String>subProgramsText=new ArrayList<>();
+    public static List<String>subParentsTitles=new ArrayList<>();
+    public static List<String>subParentsText=new ArrayList<>();
+    public static List<String>subStudentsTitles=new ArrayList<>();
+    public static List<String>subStudentsText=new ArrayList<>();
+    public static List<String>subAthleticsTitles=new ArrayList<>();
+    public static List<String>subAthleticsText=new ArrayList<>();
+    public static List<String>subGuidanceTitles=new ArrayList<>();
+    public static List<String>subGuidanceText=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -79,7 +96,79 @@ public class MainActivity extends AppCompatActivity{
                     subAboutTitles.add(title);
                     subAboutText.add(link);
                 }
+                subAboutTitles.remove(0);
+                subAboutText.remove(0);
                 subAboutLength=subAboutTitles.size();
+            }else if(elmString.toLowerCase().contains("programs")){
+                Elements aboutClasses=elm.select("li");
+                String[]patternLink={"<a href=\"","\">"};
+                String[]patternTitle={"<b>","</b>"};
+                for(Element el:aboutClasses){
+                    String elString=el.toString();
+                    String link=MainActivity.getFromPatternStatic(patternLink,elString);
+                    String title=MainActivity.getFromPatternStatic(patternTitle,elString);
+                    subProgramsTitles.add(Jsoup.parse(title).text());
+                    subProgramsText.add(link);
+                }
+                subProgramsTitles.remove(0);
+                subProgramsText.remove(0);
+                subProgramsLength=subProgramsTitles.size();
+            }else if(elmString.toLowerCase().contains("parents")){
+                Elements aboutClasses=elm.select("li");
+                String[]patternLink={"<a href=\"","\">"};
+                String[]patternTitle={"<b>","</b>"};
+                for(Element el:aboutClasses){
+                    String elString=el.toString();
+                    String link=MainActivity.getFromPatternStatic(patternLink,elString);
+                    String title=MainActivity.getFromPatternStatic(patternTitle,elString);
+                    subParentsTitles.add(Jsoup.parse(title).text());
+                    subParentsText.add(link);
+                }
+                subParentsTitles.remove(0);
+                subParentsText.remove(0);
+                subParentsLength=subParentsTitles.size();
+            }else if(elmString.toLowerCase().contains("students")){
+                Elements aboutClasses=elm.select("li");
+                String[]patternLink={"<a href=\"","\">"};
+                String[]patternTitle={"<b>","</b>"};
+                for(Element el:aboutClasses){
+                    String elString=el.toString();
+                    String link=MainActivity.getFromPatternStatic(patternLink,elString);
+                    String title=MainActivity.getFromPatternStatic(patternTitle,elString);
+                    subStudentsTitles.add(Jsoup.parse(title).text());
+                    subStudentsText.add(link);
+                }
+                subStudentsTitles.remove(0);
+                subStudentsText.remove(0);
+                subStudentsLength=subStudentsTitles.size();
+            }else if(elmString.toLowerCase().contains("athletics")){
+                Elements aboutClasses=elm.select("li");
+                String[]patternLink={"<a href=\"","\">"};
+                String[]patternTitle={"<b>","</b>"};
+                for(Element el:aboutClasses){
+                    String elString=el.toString();
+                    String link=MainActivity.getFromPatternStatic(patternLink,elString);
+                    String title=MainActivity.getFromPatternStatic(patternTitle,elString);
+                    subAthleticsTitles.add(Jsoup.parse(title).text());
+                    subAthleticsText.add(link);
+                }
+                subAthleticsTitles.remove(0);
+                subAthleticsText.remove(0);
+                subAthleticsLength=subAthleticsTitles.size();
+            }else if(elmString.toLowerCase().contains("guidance")){
+                Elements aboutClasses=elm.select("li");
+                String[]patternLink={"<a href=\"","\">"};
+                String[]patternTitle={"<b>","</b>"};
+                for(Element el:aboutClasses){
+                    String elString=el.toString();
+                    String link=MainActivity.getFromPatternStatic(patternLink,elString);
+                    String title=MainActivity.getFromPatternStatic(patternTitle,elString);
+                    subGuidanceTitles.add(Jsoup.parse(title).text());
+                    subGuidanceText.add(link);
+                }
+                subGuidanceTitles.remove(0);
+                subGuidanceText.remove(0);
+                subGuidanceLength=subGuidanceTitles.size();
             }
         }
     }
@@ -209,8 +298,11 @@ public class MainActivity extends AppCompatActivity{
         @Override //Required for every networking AsyncTask
         protected String doInBackground(String[]params){ //Do the task in the background so we don't freeze the UI thread
             URL urlHome; //Initialize the URL variable
+            URL urlETeachers;
             try{urlHome=new URL("http://www.bevfacey.ca/");}catch(MalformedURLException ex){return"bad";} //Convert the String URL into an actual URL
-            try{MainActivity.docHome=Jsoup.parse(urlHome,1500);}catch(IOException ex){return"bad";} //Try to download the URL (this only fails if the download is corrupted)
+            try{urlETeachers=new URL("http://www.bevfacey.ca/");}catch(MalformedURLException ex){return"bad";} //Convert the String URL into an actual URL
+            try{MainActivity.docHome=Jsoup.parse(urlHome,3000);}catch(IOException ex){return"bad";} //Try to download the URL (this only fails if the download is corrupted)
+            try{MainActivity.docETeachers=Jsoup.parse(urlETeachers,3000);}catch(IOException ex){return"bad";} //Try to download the URL (this only fails if the download is corrupted)
             return"good"; //Tell the post execution task that it worked
         }
         protected void onPostExecute(String result){ //This runs after doInBackground has finished
@@ -219,7 +311,6 @@ public class MainActivity extends AppCompatActivity{
                 CreateArrays(); //Start the manipulation of the website data
                 CreateSubArrays();
             }
-            //// TODO: 8/1/2017 Make an else statement that displays a dialog box
         }
     }
 }
