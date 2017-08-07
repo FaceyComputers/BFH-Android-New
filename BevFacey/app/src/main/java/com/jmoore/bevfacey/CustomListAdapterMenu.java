@@ -52,68 +52,77 @@ class CustomListAdapterMenu extends ArrayAdapter<String>{//This class is the lis
                 String title=tv2.getText().toString();
                 if(title.equals(MainActivity.menuItemTitles[0])){
                     ListView lv=rowView.findViewById(R.id.subMenuItem);
-                    if(lv.getVisibility()==View.GONE) {
-                        int height = tv2.getHeight();
-                        CustomListAdapterSubMenu clasm = new CustomListAdapterSubMenu(context, getNormalArrays(MainActivity.subAboutTitles), getNormalArrays(MainActivity.subAboutText));
+                    if(lv.getVisibility()==View.GONE){
+                        int height=tv2.getHeight();
+                        CustomListAdapterSubMenu clasm=new CustomListAdapterSubMenu(context,getNormalArrays(MainActivity.subAboutTitles),getNormalArrays(MainActivity.subAboutText));
                         lv.setAdapter(clasm);
-                        lv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height * MainActivity.subAboutLength));
+                        lv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,(height*MainActivity.subAboutLength)-height/2));
                         lv.setVisibility(View.VISIBLE);
                     }else{
                         lv.setVisibility(View.GONE);
                     }
                 }else if(title.equals(MainActivity.menuItemTitles[1])){
-                    //Create a new ETeachers Intent page
+                    ListView lv=rowView.findViewById(R.id.subMenuItem);
+                    if(lv.getVisibility()==View.GONE){
+                        int height=tv2.getHeight();
+                        CustomListAdapterSubMenu clasm=new CustomListAdapterSubMenu(context,getNormalArrays(MainActivity.subETeachersTitles),getNormalArrays(MainActivity.subETeachersText));
+                        lv.setAdapter(clasm);
+                        lv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,(height*MainActivity.subETeachersLength)-height*2));
+                        lv.setVisibility(View.VISIBLE);
+                    }else{
+                        lv.setVisibility(View.GONE);
+                    }
                 }else if(title.equals(MainActivity.menuItemTitles[2])){
                     ListView lv=rowView.findViewById(R.id.subMenuItem);
-                    if(lv.getVisibility()==View.GONE) {
-                        int height = tv2.getHeight();
-                        CustomListAdapterSubMenu clasm = new CustomListAdapterSubMenu(context, getNormalArrays(MainActivity.subProgramsTitles), getNormalArrays(MainActivity.subProgramsText));
+                    if(lv.getVisibility()==View.GONE){
+                        int height=tv2.getHeight();
+                        CustomListAdapterSubMenu clasm=new CustomListAdapterSubMenu(context,getNormalArrays(MainActivity.subProgramsTitles),getNormalArrays(MainActivity.subProgramsText));
                         lv.setAdapter(clasm);
-                        lv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height * MainActivity.subProgramsLength));
+                        lv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,(height*MainActivity.subProgramsLength)-height/2));
                         lv.setVisibility(View.VISIBLE);
                     }else{
                         lv.setVisibility(View.GONE);
                     }
                 }else if(title.equals(MainActivity.menuItemTitles[3])){
                     ListView lv=rowView.findViewById(R.id.subMenuItem);
-                    if(lv.getVisibility()==View.GONE) {
-                        int height = tv2.getHeight();
-                        CustomListAdapterSubMenu clasm = new CustomListAdapterSubMenu(context, getNormalArrays(MainActivity.subParentsTitles), getNormalArrays(MainActivity.subParentsText));
+                    if(lv.getVisibility()==View.GONE){
+                        int height=tv2.getHeight();
+                        CustomListAdapterSubMenu clasm=new CustomListAdapterSubMenu(context,getNormalArrays(MainActivity.subParentsTitles),getNormalArrays(MainActivity.subParentsText));
                         lv.setAdapter(clasm);
-                        lv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height * MainActivity.subParentsLength));
+                        lv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,(height*MainActivity.subParentsLength)-height/2));
                         lv.setVisibility(View.VISIBLE);
                     }else{
                         lv.setVisibility(View.GONE);
                     }
                 }else if(title.equals(MainActivity.menuItemTitles[4])){
                     ListView lv=rowView.findViewById(R.id.subMenuItem);
-                    if(lv.getVisibility()==View.GONE) {
-                        int height = tv2.getHeight();
-                        CustomListAdapterSubMenu clasm = new CustomListAdapterSubMenu(context, getNormalArrays(MainActivity.subStudentsTitles), getNormalArrays(MainActivity.subStudentsText));
+                    if(lv.getVisibility()==View.GONE){
+                        int height=tv2.getHeight();
+                        CustomListAdapterSubMenu clasm=new CustomListAdapterSubMenu(context,getNormalArrays(MainActivity.subStudentsTitles),getNormalArrays(MainActivity.subStudentsText));
                         lv.setAdapter(clasm);
-                        lv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height * MainActivity.subStudentsLength));
+                        lv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,(height*MainActivity.subStudentsLength)-height/2));
                         lv.setVisibility(View.VISIBLE);
                     }else{
                         lv.setVisibility(View.GONE);
                     }
                 }else if(title.equals(MainActivity.menuItemTitles[5])){
                     ListView lv=rowView.findViewById(R.id.subMenuItem);
-                    if(lv.getVisibility()==View.GONE) {
-                        int height = tv2.getHeight();
-                        CustomListAdapterSubMenu clasm = new CustomListAdapterSubMenu(context, getNormalArrays(MainActivity.subAthleticsTitles), getNormalArrays(MainActivity.subAthleticsText));
+                    if(lv.getVisibility()==View.GONE){
+                        int height=tv2.getHeight();
+                        CustomListAdapterSubMenu clasm=new CustomListAdapterSubMenu(context,getNormalArrays(MainActivity.subAthleticsTitles),getNormalArrays(MainActivity.subAthleticsText));
                         lv.setAdapter(clasm);
-                        lv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height * MainActivity.subAthleticsLength));
+                        lv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,(height*MainActivity.subAthleticsLength)-height/2));
                         lv.setVisibility(View.VISIBLE);
                     }else{
                         lv.setVisibility(View.GONE);
                     }
                 }else if(title.equals(MainActivity.menuItemTitles[6])){
                     ListView lv=rowView.findViewById(R.id.subMenuItem);
-                    if(lv.getVisibility()==View.GONE) {
-                        int height = tv2.getHeight();
-                        CustomListAdapterSubMenu clasm = new CustomListAdapterSubMenu(context, getNormalArrays(MainActivity.subGuidanceTitles), getNormalArrays(MainActivity.subGuidanceText));
+                    if(lv.getVisibility()==View.GONE){
+                        int height=tv2.getHeight();
+                        CustomListAdapterSubMenu clasm=new CustomListAdapterSubMenu(context,getNormalArrays(MainActivity.subGuidanceTitles),getNormalArrays(MainActivity.subGuidanceText));
                         lv.setAdapter(clasm);
-                        lv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height * MainActivity.subGuidanceLength));
+                        lv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,(height*MainActivity.subGuidanceLength)-height/2));
                         lv.setVisibility(View.VISIBLE);
                     }else{
                         lv.setVisibility(View.GONE);

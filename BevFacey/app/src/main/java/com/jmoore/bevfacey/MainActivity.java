@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity{
     public static ArrayList<String>itemTitles=new ArrayList<>(); //Array that will store Title values for the Adapter
     public static ArrayList<String>itemDescs=new ArrayList<>(); //Descriptions for Adapter
     public static ArrayList<String>itemPicURLS=new ArrayList<>(); //URLs of images for Adapter
-    public String imgurl="http://www.bevfacey.ca"; //URL prefix for images
+    public static String globalURL="http://www.bevfacey.ca"; //URL prefix for images
     public static boolean loaded=false;
     public static String[]menuItemTitles={"About","ETeachers","Programs","Parents","Students","Athletics","Guidance","Sustainability"};
     public static Typeface typeface;
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity{
     public static int subStudentsLength;
     public static int subAthleticsLength;
     public static int subGuidanceLength;
-
+    public static int subETeachersLength;
 
     public static List<String>subAboutTitles=new ArrayList<>();
     public static List<String>subAboutText=new ArrayList<>();
@@ -59,6 +59,11 @@ public class MainActivity extends AppCompatActivity{
     public static List<String>subAthleticsText=new ArrayList<>();
     public static List<String>subGuidanceTitles=new ArrayList<>();
     public static List<String>subGuidanceText=new ArrayList<>();
+    public static List<String>subETeachersTitles=new ArrayList<>();
+    public static List<String>subETeachersText=new ArrayList<>();
+
+    public static List<String>globalSubTitles=new ArrayList<>();
+    public static List<String>globalSubText=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -171,6 +176,37 @@ public class MainActivity extends AppCompatActivity{
                 subGuidanceLength=subGuidanceTitles.size();
             }
         }
+        Elements pickElms=MainActivity.docETeachers.select("div.main-content");
+        Elements teachersElms=pickElms.select("option");
+        String[]patternETlink={"value=\"","\">"};
+        String[]patternETtitle={"\">","</option>"};
+        for(Element el:teachersElms){
+            String elString=el.toString();
+            String link=MainActivity.getFromPatternStatic(patternETlink,elString);
+            String title=MainActivity.getFromPatternStatic(patternETtitle,elString);
+            subETeachersTitles.add(title);
+            subETeachersText.add(link);
+        }
+        subETeachersTitles.remove(0);
+        subETeachersText.remove(0);
+        subETeachersLength=subETeachersTitles.size();
+
+        //Populate the Global arrays with the other arrays
+        globalSubTitles.addAll(subAboutTitles);
+        globalSubTitles.addAll(subETeachersTitles);
+        globalSubTitles.addAll(subProgramsTitles);
+        globalSubTitles.addAll(subParentsTitles);
+        globalSubTitles.addAll(subStudentsTitles);
+        globalSubTitles.addAll(subAthleticsTitles);
+        globalSubTitles.addAll(subGuidanceTitles);
+        
+        globalSubText.addAll(subAboutText);
+        globalSubText.addAll(subETeachersText);
+        globalSubText.addAll(subProgramsText);
+        globalSubText.addAll(subParentsText);
+        globalSubText.addAll(subStudentsText);
+        globalSubText.addAll(subAthleticsText);
+        globalSubText.addAll(subGuidanceText);
     }
 
     public void CreateArrays(){ //This method creates arrays from the content in the JSoup Document
@@ -249,7 +285,7 @@ public class MainActivity extends AppCompatActivity{
                 articleDescs=articleDescs.replaceAll("(\\r|\\n|\\r\\n)+",",,,"); //Replace any New Lines with the New Line placeholder
                 articleDescs=articleDescs.replaceAll("<br>",",,,"); //I don't think I need this but I'm too lazy to check
                 articleDescs=Jsoup.parse(articleDescs).text(); //Convert the article into the final usable format
-                articleImgURLs=imgurl+articleImgURLs; //Add any image URLs to the ArrayList
+                articleImgURLs=globalURL+articleImgURLs; //Add any image URLs to the ArrayList
                 MainActivity.itemTitles.add(articleTitle); //Add the Title of the article to the ArrayList
                 MainActivity.itemDescs.add(articleDescs); //Add the content of the article to the ArrayList
                 MainActivity.itemPicURLS.add(articleImgURLs); //Add the Image URLs of the article to the ArrayList
@@ -300,7 +336,7 @@ public class MainActivity extends AppCompatActivity{
             URL urlHome; //Initialize the URL variable
             URL urlETeachers;
             try{urlHome=new URL("http://www.bevfacey.ca/");}catch(MalformedURLException ex){return"bad";} //Convert the String URL into an actual URL
-            try{urlETeachers=new URL("http://www.bevfacey.ca/");}catch(MalformedURLException ex){return"bad";} //Convert the String URL into an actual URL
+            try{urlETeachers=new URL("http://www.bevfacey.ca/eteachers");}catch(MalformedURLException ex){return"bad";} //Convert the String URL into an actual URL
             try{MainActivity.docHome=Jsoup.parse(urlHome,3000);}catch(IOException ex){return"bad";} //Try to download the URL (this only fails if the download is corrupted)
             try{MainActivity.docETeachers=Jsoup.parse(urlETeachers,3000);}catch(IOException ex){return"bad";} //Try to download the URL (this only fails if the download is corrupted)
             return"good"; //Tell the post execution task that it worked

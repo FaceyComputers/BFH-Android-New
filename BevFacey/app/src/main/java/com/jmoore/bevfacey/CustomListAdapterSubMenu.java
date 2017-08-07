@@ -10,6 +10,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import org.jsoup.Jsoup;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 class CustomListAdapterSubMenu extends ArrayAdapter<String>{ //This class is the list of Information
     private final Activity context;
     private final String[]subText;
@@ -34,25 +40,32 @@ class CustomListAdapterSubMenu extends ArrayAdapter<String>{ //This class is the
             @Override
             public void onClick(View view){
                 TextView tv2=(TextView)view;
-                if(tv2.getText().toString().toLowerCase().equals("bell times")){
-                    new GetSubPages().execute("about");
-                }
+                String value=tv2.getText().toString();
+                int pos=MainActivity.globalSubTitles.indexOf(value);
+                String subURL=MainActivity.globalSubText.get(pos);
+                getSubPages(subURL);
             }
         });
         return rowView;
+    }
+
+    private void getSubPages(String url){
+        new GetSubPages().execute(url);
     }
 
     private class GetSubPages extends AsyncTask<String,Integer,String> {
         Intent i;
         @Override
         protected String doInBackground(String[]params){
-            if(params[0].equals("about")){
-
-            }
-            return null;
+            String urlStr=MainActivity.globalURL+params[0];
+            URL url;
+            try{url=new URL(urlStr);}catch(MalformedURLException ex){return"bad";} //Convert the String URL into an actual URL
+            try{MainActivity.docHome= Jsoup.parse(url,3000);}catch(IOException ex){return"bad";} //Try to download the URL (this only fails if the download is corrupted)
+            return"good"; //Tell the post execution task that it worked
         }
         protected void onPostExecute(String result){
-            //Display the sub page
+            i=new Intent(context,SubPageActivity.class);
+            context.startActivity(i);
         }
     }
 }
