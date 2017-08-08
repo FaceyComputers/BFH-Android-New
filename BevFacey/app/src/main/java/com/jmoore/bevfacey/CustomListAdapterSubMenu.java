@@ -9,9 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-
 import org.jsoup.Jsoup;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -19,13 +17,11 @@ import java.net.URL;
 class CustomListAdapterSubMenu extends ArrayAdapter<String>{ //This class is the list of Information
     private final Activity context;
     private final String[]subText;
-    private final String[]subLink;
 
-    CustomListAdapterSubMenu(Activity context,String[]subText,String[]subLink){
+    CustomListAdapterSubMenu(Activity context,String[]subText){
         super(context,R.layout.mylistsubmenu,subText);
         this.context=context;
         this.subText=subText;
-        this.subLink=subLink;
     }
 
     @NonNull
@@ -54,17 +50,19 @@ class CustomListAdapterSubMenu extends ArrayAdapter<String>{ //This class is the
     }
 
     private class GetSubPages extends AsyncTask<String,Integer,String> {
+        String urlStr;
         Intent i;
         @Override
         protected String doInBackground(String[]params){
-            String urlStr=MainActivity.globalURL+params[0];
+            urlStr=MainActivity.globalURL+params[0];
             URL url;
             try{url=new URL(urlStr);}catch(MalformedURLException ex){return"bad";} //Convert the String URL into an actual URL
-            try{MainActivity.docHome= Jsoup.parse(url,3000);}catch(IOException ex){return"bad";} //Try to download the URL (this only fails if the download is corrupted)
+            try{MainActivity.docSub= Jsoup.parse(url,3000);}catch(IOException ex){return"bad";} //Try to download the URL (this only fails if the download is corrupted)
             return"good"; //Tell the post execution task that it worked
         }
         protected void onPostExecute(String result){
             i=new Intent(context,SubPageActivity.class);
+            i.putExtra("url",urlStr);
             context.startActivity(i);
         }
     }

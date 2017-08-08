@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity{
 
     public static Document docHome; //JSoup Document storing the main webpage
     public static Document docETeachers;
+    public static Document docSub;
     public static ArrayList<String>itemTitles=new ArrayList<>(); //Array that will store Title values for the Adapter
     public static ArrayList<String>itemDescs=new ArrayList<>(); //Descriptions for Adapter
     public static ArrayList<String>itemPicURLS=new ArrayList<>(); //URLs of images for Adapter

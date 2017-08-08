@@ -1,22 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.widget.GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.jmoore.bevfacey.SubPageActivity">
+    tools:context="com.jmoore.bevfacey.SubPageActivity"
+    android:id="@+id/subLayout"
+    android:columnCount="1">
 
     <ImageView
-        android:id="@+id/bannerImage"
+        android:id="@+id/bannerImage2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_row="1"
+        android:layout_row="0"
         android:adjustViewBounds="true"
         android:padding="-30dp"
         android:scaleType="fitXY"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/inappbanner" />
 
-</android.support.constraint.ConstraintLayout>
+    <ListView
+        android:id="@+id/subContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_row="1"
+        android:dividerHeight="10dp"
+        android:clipToPadding="true"/>
+
+
+</android.widget.GridLayout>
