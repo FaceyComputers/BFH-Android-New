@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.annotation.Px;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +40,15 @@ class CustomListAdapterSubPage_TitleText extends ArrayAdapter<String>{ //This cl
         titleTV.setTypeface(MainActivity.typefaceMenuItems);
         textTV.setTypeface(MainActivity.typefaceBody);
         titleTV.setText(title[position]);
-        textTV.setText(text[position]);
+        textTV.setText(text[position].replaceAll(",,,","\n\n"));
+
+        int dp=10;
+        float d=context.getResources().getDisplayMetrics().density;
+        int margin=(int)(dp*d);
+        LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lp.setMargins(margin,0,margin,0);
+        titleTV.setLayoutParams(lp);
+        textTV.setLayoutParams(lp);
 
         LinearLayout ll=rowView.findViewById(R.id.subPageTitleTextLinearLayout);
         ll.addView(titleTV);

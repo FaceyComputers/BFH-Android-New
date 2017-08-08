@@ -2,19 +2,19 @@ package com.jmoore.bevfacey;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
+
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class SubPageActivity extends AppCompatActivity {
 
@@ -41,7 +41,6 @@ public class SubPageActivity extends AppCompatActivity {
             ImageView bannerIV=(ImageView)findViewById(R.id.bannerImage2);
             int margin=bannerIV.getHeight();
             list.setPadding(0,0,0,margin);
-            list.setDivider(list.getBackground());
         }
     }
 
@@ -64,6 +63,27 @@ public class SubPageActivity extends AppCompatActivity {
         }else if(url.toLowerCase().contains("calendar")){
             calendar();
         }
+
+        else{
+            other();
+        }
+    }
+
+    public void other(){
+        Elements mainElms=doc.select("div.content-container");
+        String str=mainElms.toString().replace("\n","");
+        String[]patternH2title={"<h2 class=\"article-title\">","</h2>"};
+        String[]patternNewLine={"</p>","<p>"};
+        String[]patternNewLine2={"",""};
+        str=str.replaceAll(Pattern.quote(MainActivity.getFromPatternStatic(patternNewLine,str)),"");
+        str=str.replaceAll("</p><p>",",,,");
+        str=str.replaceAll("<br>",",,,");
+        System.out.println(str);
+
+        String[]titles={MainActivity.getFromPatternStatic(patternH2title,str)};
+        String[]text={Jsoup.parse(str).text()};
+
+        list.setAdapter(new CustomListAdapterSubPage_TitleText(this,titles,text));
     }
 
     public void bellTimes(){
@@ -77,15 +97,11 @@ public class SubPageActivity extends AppCompatActivity {
         List<String>dates=new ArrayList<>();
         List<String>events=new ArrayList<>();
         for(Element elm:eventsElms){
-            String str=elm.toString();
-            str=str.replace("\n","");
-            String date=MainActivity.getFromPatternStatic(patternDate,str);
-            String event=MainActivity.getFromPatternStatic(patternEvent,str);
-            dates.add(date);
-            events.add(event);
+            String str=elm.toString().replace("\n","");
+            dates.add(MainActivity.getFromPatternStatic(patternDate,str));
+            events.add(MainActivity.getFromPatternStatic(patternEvent,str));
         }
-        CustomListAdapterSubPage_TitleText clasm=new CustomListAdapterSubPage_TitleText(this,getNormalArrays(dates),getNormalArrays(events));
-        list.setAdapter(clasm);
+        list.setAdapter(new CustomListAdapterSubPage_TitleText(this,getNormalArrays(dates),getNormalArrays(events)));
     }
 }
 

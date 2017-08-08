@@ -10,4 +10,5 @@
     <color name="colorMenuBackground">#004a82</color>
     <color name="colorSubMenuForeground">#0092fd</color>
     <color name="colorWhite">#ffffff</color>
+    <color name="colorOffWhite">#f9f9f9</color>
 </resources>
