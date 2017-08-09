@@ -27,5 +27,4 @@
         android:divider="@color/colorOffWhite"
         android:clipToPadding="true"/>
 
-
 </android.widget.GridLayout>

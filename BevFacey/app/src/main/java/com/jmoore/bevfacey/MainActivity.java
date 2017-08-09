@@ -256,7 +256,7 @@ public class MainActivity extends AppCompatActivity{
             String noticeTitle=getFromPattern(patternsTitle,prep[0]); //Use the pattern above to find the Title
             String noticeText=getFromPattern(patternsDesc,prep[0]); //Same thing as above but for content
             noticeText=Jsoup.parse(noticeText).text(); //Remove any HTML tags from the content
-            MainActivity.itemTitles.add(":SCHOOLNOTICE:"+noticeTitle); //Add the Title as the first item in the ArrayList
+            MainActivity.itemTitles.add(Jsoup.parse(":SCHOOLNOTICE:"+noticeTitle).text()); //Add the Title as the first item in the ArrayList
             MainActivity.itemDescs.add(noticeText); //Add the Content as the first item the ArrayList
             MainActivity.itemPicURLS.add(""); //There is no image so this is just blank
         }else{ //If the ID is not 0, it's the articles
