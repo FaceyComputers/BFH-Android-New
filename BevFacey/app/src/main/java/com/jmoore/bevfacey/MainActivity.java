@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity{
         }return strArray; //Return the complete String array
     }
 
-    public void CreateSubArrays(){
+    public void createSubArrays(){
         Elements navElms=MainActivity.docHome.select("nav.primary-navigation");
         Elements liElms=navElms.select("li.children"); //All the website expandable menus
         for(Element elm:liElms){
@@ -210,7 +210,7 @@ public class MainActivity extends AppCompatActivity{
         globalSubText.addAll(subGuidanceText);
     }
 
-    public void CreateArrays(){ //This method creates arrays from the content in the JSoup Document
+    public void createArrays(){ //This method creates arrays from the content in the JSoup Document
         String[]schoolNotice; //If there is no school notice then this is empty...
         try{ //... and we need a try/catch to see if there is a notice
             Elements schoolNoticeElements = MainActivity.docHome.select("div.school.notice"); //Search the doc for a notice
@@ -253,12 +253,14 @@ public class MainActivity extends AppCompatActivity{
         if(id==0){ //ID 0 is schoolNotice
             String[]patternsTitle={"<h3 class=\"notice-subtitle\">","</h3>"}; //Pattern to use for finding the Title
             String[]patternsDesc={"<p>","</p>"}; //Pattern for finding the content of the notice
-            String noticeTitle=getFromPattern(patternsTitle,prep[0]); //Use the pattern above to find the Title
-            String noticeText=getFromPattern(patternsDesc,prep[0]); //Same thing as above but for content
-            noticeText=Jsoup.parse(noticeText).text(); //Remove any HTML tags from the content
-            MainActivity.itemTitles.add(Jsoup.parse(":SCHOOLNOTICE:"+noticeTitle).text()); //Add the Title as the first item in the ArrayList
-            MainActivity.itemDescs.add(noticeText); //Add the Content as the first item the ArrayList
-            MainActivity.itemPicURLS.add(""); //There is no image so this is just blank
+            for(String aPrep:prep){
+                String noticeTitle=getFromPattern(patternsTitle,aPrep); //Use the pattern above to find the Title
+                String noticeText=getFromPattern(patternsDesc,aPrep); //Same thing as above but for content
+                noticeText=Jsoup.parse(noticeText).text(); //Remove any HTML tags from the content
+                MainActivity.itemTitles.add(Jsoup.parse(":SCHOOLNOTICE:" + noticeTitle).text()); //Add the Title as the first item in the ArrayList
+                MainActivity.itemDescs.add(noticeText); //Add the Content as the first item the ArrayList
+                MainActivity.itemPicURLS.add(""); //There is no image so this is just blank
+            }
         }else{ //If the ID is not 0, it's the articles
             String[]patternsTitle={"<h2 class=\"article-title\">","</h2>"}; //Pattern for finding Titles of text-based articles
             String[]patternsImgURLs={"<img alt=\"\" src=\"","\">"}; //Pattern for finding image URLs
@@ -327,7 +329,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private class GetThePage extends AsyncTask<String,Integer,String>{ //This class downloads the main webpage using JSoup
-        Intent i;
+        private Intent i=null;
         protected void onPreExecute(){
             i=new Intent(getApplicationContext(),Splash.class);
             startActivity(i);
@@ -343,10 +345,10 @@ public class MainActivity extends AppCompatActivity{
             return"good"; //Tell the post execution task that it worked
         }
         protected void onPostExecute(String result){ //This runs after doInBackground has finished
-            if(result.equals("good")){ //If it was successful, then continue
+            if("good".equals(result)){ //If it was successful, then continue
                 loaded=true;
-                CreateArrays(); //Start the manipulation of the website data
-                CreateSubArrays();
+                createArrays(); //Start the manipulation of the website data
+                createSubArrays();
             }
         }
     }

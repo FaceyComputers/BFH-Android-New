@@ -49,9 +49,9 @@ class CustomListAdapterSubMenu extends ArrayAdapter<String>{ //This class is the
         new GetSubPages().execute(url);
     }
 
-    private class GetSubPages extends AsyncTask<String,Integer,String> {
-        String urlStr;
-        Intent i;
+    private class GetSubPages extends AsyncTask<String,Integer,String>{
+        private String urlStr;
+        private Intent i;
         @Override
         protected String doInBackground(String[]params){
             urlStr=MainActivity.globalURL+params[0];

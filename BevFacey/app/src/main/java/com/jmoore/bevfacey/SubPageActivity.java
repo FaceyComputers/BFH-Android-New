@@ -18,11 +18,11 @@ import java.util.regex.Pattern;
 
 public class SubPageActivity extends AppCompatActivity {
 
-    Document doc=MainActivity.docSub;
-    Intent intent;
-    Context context;
-    GridLayout grid;
-    ListView list;
+    public Document doc=MainActivity.docSub;
+    public Intent intent;
+    public Context context;
+    public GridLayout grid;
+    public ListView list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -21,7 +21,7 @@ public class Splash extends AppCompatActivity{
             return "done";
         }
         protected void onPostExecute(String result){
-            if(result.equals("done")){
+            if("done".equals(result)){
                 Splash.this.finish();
             }
         }

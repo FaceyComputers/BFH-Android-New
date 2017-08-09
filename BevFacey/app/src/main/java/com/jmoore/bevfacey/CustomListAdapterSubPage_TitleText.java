@@ -1,22 +1,13 @@
 package com.jmoore.bevfacey;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.support.annotation.Px;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import org.jsoup.Jsoup;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 class CustomListAdapterSubPage_TitleText extends ArrayAdapter<String>{ //This class is the list of Information
     private final Activity context;
@@ -35,12 +26,18 @@ class CustomListAdapterSubPage_TitleText extends ArrayAdapter<String>{ //This cl
         LayoutInflater inflater=context.getLayoutInflater();
         View rowView=inflater.inflate(R.layout.mylistsubpage,null,true);
 
+        String fixDesc=text[position];
+        fixDesc=fixDesc.replaceFirst("\n\n","");
+        if(fixDesc.contains(title[position])){
+            fixDesc=fixDesc.replaceAll(title[position],"");
+        }
+
         TextView titleTV=new TextView(context);
         TextView textTV=new TextView(context);
         titleTV.setTypeface(MainActivity.typefaceMenuItems);
         textTV.setTypeface(MainActivity.typefaceBody);
         titleTV.setText(title[position]);
-        textTV.setText(text[position].replaceAll(",,,","\n\n"));
+        textTV.setText(fixDesc.replaceAll(",,,","\n\n"));
 
         int dp=10;
         float d=context.getResources().getDisplayMetrics().density;
