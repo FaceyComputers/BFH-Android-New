@@ -1,2 +1,1 @@
-update notes:
-- added support for multiple Notices (district and school)
+loading circle when opening new page

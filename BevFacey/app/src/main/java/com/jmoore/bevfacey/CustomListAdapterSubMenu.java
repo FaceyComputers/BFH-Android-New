@@ -1,6 +1,7 @@
 package com.jmoore.bevfacey;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -8,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import org.jsoup.Jsoup;
 import java.io.IOException;
@@ -49,21 +51,34 @@ class CustomListAdapterSubMenu extends ArrayAdapter<String>{ //This class is the
         new GetSubPages().execute(url);
     }
 
+    @SuppressWarnings("deprecation")
     private class GetSubPages extends AsyncTask<String,Integer,String>{
         private String urlStr;
         private Intent i;
+        private ProgressDialog progress=new ProgressDialog(context);
+        protected void onPreExecute(){
+            progress.setIndeterminate(true);
+            progress.setTitle("Loading...");
+            progress.setMessage("Please wait");
+            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progress.setCancelable(false);
+            progress.show();
+        }
         @Override
         protected String doInBackground(String[]params){
             urlStr=MainActivity.globalURL+params[0];
             URL url;
             try{url=new URL(urlStr);}catch(MalformedURLException ex){return"bad";} //Convert the String URL into an actual URL
-            try{MainActivity.docSub= Jsoup.parse(url,3000);}catch(IOException ex){return"bad";} //Try to download the URL (this only fails if the download is corrupted)
+            try{MainActivity.docSub=Jsoup.parse(url,3000);}catch(IOException ex){return"bad";} //Try to download the URL (this only fails if the download is corrupted)
             return"good"; //Tell the post execution task that it worked
         }
         protected void onPostExecute(String result){
-            i=new Intent(context,SubPageActivity.class);
-            i.putExtra("url",urlStr);
-            context.startActivity(i);
+            if("good".equals(result)){
+                progress.dismiss();
+                i=new Intent(context,SubPageActivity.class);
+                i.putExtra("url",urlStr);
+                context.startActivity(i);
+            }
         }
     }
 }
