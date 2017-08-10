@@ -29,7 +29,18 @@ class CustomListAdapterSubPage_TitleText extends ArrayAdapter<String>{ //This cl
         String fixDesc=text[position];
         fixDesc=fixDesc.replaceFirst("\n\n","");
         if(fixDesc.contains(title[position])){
-            fixDesc=fixDesc.replaceAll(title[position],"");
+            fixDesc=fixDesc.replaceFirst(title[position],"");
+        }
+
+        String findStr=".,.";
+        int lastIndex=0;
+        int h3TitleCount=0;
+        while(lastIndex!=-1){
+            lastIndex=text[position].indexOf(findStr,lastIndex);
+            if(lastIndex!=-1){
+                h3TitleCount++;
+                lastIndex+=findStr.length();
+            }
         }
 
         TextView titleTV=new TextView(context);
@@ -50,7 +61,6 @@ class CustomListAdapterSubPage_TitleText extends ArrayAdapter<String>{ //This cl
         LinearLayout ll=rowView.findViewById(R.id.subPageTitleTextLinearLayout);
         ll.addView(titleTV);
         ll.addView(textTV);
-
         return rowView;
     }
 }

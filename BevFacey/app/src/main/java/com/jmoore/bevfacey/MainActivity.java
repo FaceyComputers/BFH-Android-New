@@ -248,6 +248,16 @@ public class MainActivity extends AppCompatActivity{
             whatToReturn=(m.group(1));
         }return whatToReturn;
     }
+    public static String getFromPatternStaticArray(String[]patterns,String theText){ //This extracts Strings in between two other Strings
+        Pattern pattern=Pattern.compile(Pattern.quote(patterns[0])+"(.*?)"+Pattern.quote(patterns[1]));
+        Matcher m=pattern.matcher(theText);
+        String whatToReturn="";
+        while(m.find()){
+            whatToReturn=whatToReturn+",.,"+(m.group(1));
+        }
+        whatToReturn=whatToReturn.replaceFirst(",.,","");
+        return whatToReturn;
+    }
 
     public void prepareForDisplay(int id,String[]prep){ //Prepare the raw data arrays into usable formats
         if(id==0){ //ID 0 is schoolNotice

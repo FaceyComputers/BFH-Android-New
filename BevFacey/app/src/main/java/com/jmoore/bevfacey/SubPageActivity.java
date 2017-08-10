@@ -23,6 +23,7 @@ public class SubPageActivity extends AppCompatActivity {
     public Context context;
     public GridLayout grid;
     public ListView list;
+    public static List<String>h3titles=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +58,6 @@ public class SubPageActivity extends AppCompatActivity {
 
     public void analyze(){//Determine what type of page it is
         String url=intent.getStringExtra("url");
-        System.out.println(url);
         if(url.toLowerCase().contains("bell-times")){
             bellTimes();
         }else if(url.toLowerCase().contains("calendar")){
@@ -70,20 +70,36 @@ public class SubPageActivity extends AppCompatActivity {
     }
 
     public void other(){
-        Elements mainElms=doc.select("div.content-container");
-        String str=mainElms.toString().replace("\n","");
+        Elements sectionsElms=doc.select("article.content-article");
+        List<String>secTitles=new ArrayList<>();
+        List<String>secItems=new ArrayList<>();
         String[]patternH2title={"<h2 class=\"article-title\">","</h2>"};
+        String[]patternH3title={"<h3>","</h3>"};
         String[]patternNewLine={"</p>","<p>"};
-        String[]patternNewLine2={"",""};
-        str=str.replaceAll(Pattern.quote(MainActivity.getFromPatternStatic(patternNewLine,str)),"");
-        str=str.replaceAll("</p><p>",",,,");
-        str=str.replaceAll("<br>",",,,");
-        System.out.println(str);
+        for(Element elm:sectionsElms){
+            String str=elm.toString().replace("\n","");
+            //String newLinesToReplace=MainActivity.getFromPatternStaticArray(patternNewLine,str);
 
-        String[]titles={MainActivity.getFromPatternStatic(patternH2title,str)};
-        String[]text={Jsoup.parse(str).text()};
+            String subTitle=MainActivity.getFromPatternStaticArray(patternH3title,str);
+            String[]subTitleArray=subTitle.split(",.,");
+            for(String s:subTitleArray){
+                if(!s.equals("")){
+                    str=str.replaceFirst(s,".,.");
+                    h3titles.add(s);
+                }
+            }
 
-        list.setAdapter(new CustomListAdapterSubPage_TitleText(this,titles,text));
+            str=str.replaceAll(Pattern.quote(MainActivity.getFromPatternStatic(patternNewLine,str)),"");
+            str=str.replaceAll("</p><p>",",,,");
+            str=str.replaceAll("<br>",",,,");
+            String title=MainActivity.getFromPatternStatic(patternH2title,str);
+            secTitles.add(Jsoup.parse(title).text());
+            String items=Jsoup.parse(str).text();
+            secItems.add(items);
+        }
+        String[]titles=getNormalArrays(secTitles);
+        String[]items=getNormalArrays(secItems);
+        list.setAdapter(new CustomListAdapterSubPage_TitleText(this,titles,items));
     }
 
     public void bellTimes(){
