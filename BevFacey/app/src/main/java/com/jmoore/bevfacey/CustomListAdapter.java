@@ -17,7 +17,7 @@ class CustomListAdapter extends ArrayAdapter<String>{ //This class is the list o
     private final String[]imgid;
     private final String[]itemdesc;
 
-    CustomListAdapter(Activity context,String[]itemname,String[]itemdesc,String[]imgid){
+    CustomListAdapter(Activity context,String[]itemname,String[]itemdesc,String[]imgid){ //Constructor
         super(context,R.layout.mylist,itemname);
         this.context=context;
         this.itemname=itemname;
@@ -60,6 +60,9 @@ class CustomListAdapter extends ArrayAdapter<String>{ //This class is the list o
             Picasso.with(context).load(imgid[position]).into(imageView);
         }catch(IllegalArgumentException ignored){}
         String nl=fixDesc+"\n";
+        if(!itemname[position].isEmpty()){
+            nl=nl.replaceFirst(" ","");
+        }
         extratxt.setText(nl);
         return rowView;
     }

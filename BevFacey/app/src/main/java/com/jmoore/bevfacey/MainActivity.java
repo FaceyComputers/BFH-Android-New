@@ -35,21 +35,22 @@ import org.apache.commons.lang3.*;
 public class MainActivity extends AppCompatActivity{
 
     public static Document docHome; //JSoup Document storing the main webpage
-    public static Document docETeachers;
-    public static Document docSub;
+    public static Document docETeachers; //JSoup Document storing the ETeacher links
+    public static Document docSub; //JSoup Document for other classes to write to (declaring here allows for it to be reused)
     public static ArrayList<String>itemTitles=new ArrayList<>(); //Array that will store Title values for the Adapter
     public static ArrayList<String>itemDescs=new ArrayList<>(); //Descriptions for Adapter
     public static ArrayList<String>itemPicURLS=new ArrayList<>(); //URLs of images for Adapter
     public static String globalURL="http://www.bevfacey.ca"; //URL prefix for images
-    public static boolean loaded=false;
-    public static String[]menuItemTitles={"About","ETeachers","Programs","Parents","Students","Athletics","Guidance","Sustainability"};
+    public static boolean loaded=false; //Is the app finished loading the Main page and ETeacher page
+    public static String[]menuItemTitles={"About","ETeachers","Programs","Parents","Students","Athletics","Guidance","Sustainability"}; //Items to use in the Nav menu
     public static Typeface typeface; //Default typeface
     public static Typeface typefaceBody; //Typeface for body sections
     public static Typeface typefaceMenuItems; //Typeface for menu items
 
-    public static int subAboutLength; //Length of how many sections are in the about page (grabbed from website)
-    public static int subProgramsLength; //Same as about but for programs
-    public static int subParentsLength; //Same
+    //Length of how many sections are in each page (grabbed from website)
+    public static int subAboutLength;
+    public static int subProgramsLength;
+    public static int subParentsLength;
     public static int subStudentsLength;
     public static int subAthleticsLength;
     public static int subGuidanceLength;
@@ -102,7 +103,7 @@ public class MainActivity extends AppCompatActivity{
         Elements liElms=navElms.select("li.children"); //Store all the website expandable menus
         for(Element elm:liElms){
             String elmString=elm.toString(); //Convert the current Element into a String for easier handling
-            if(elmString.toLowerCase().contains("about")){
+            if(elmString.toLowerCase().contains("about")){ //All of these just add the items to each submenu
                 aboutSub(elm);
             }else if(elmString.toLowerCase().contains("programs")){
                 programsSub(elm);
@@ -116,8 +117,8 @@ public class MainActivity extends AppCompatActivity{
                 guidanceSub(elm);
             }
         }
-        eTeachersSub();
-        addGlobal();
+        eTeachersSub(); //This adds all the teachers to the ETeacher sub menu
+        addGlobal(); //Add all the items to the global arrays
     }
 
     public void aboutSub(Element elm){
@@ -304,11 +305,14 @@ public class MainActivity extends AppCompatActivity{
     public void prepareForDisplay(int id,String[]prep){ //Prepare the raw data arrays into usable formats
         if(id==0){ //ID 0 is schoolNotice
             String[]patternsTitle={"<h3 class=\"notice-subtitle\">","</h3>"}; //Pattern to use for finding the Title
-            String[]patternsDesc={"<p>","</p>"}; //Pattern for finding the content of the notice
+            //DEPRECATED//String[]patternsDesc={"<p>","</p>"}; //Pattern for finding the content of the notice
             for(String aPrep:prep){
                 String noticeTitle=getFromPattern(patternsTitle,aPrep); //Use the pattern above to find the Title
-                String noticeText=getFromPattern(patternsDesc,aPrep); //Same thing as above but for content
-                noticeText=Jsoup.parse(noticeText).text(); //Remove any HTML tags from the content
+                //DEPRECATED//String noticeText=getFromPattern(patternsDesc,aPrep); //Same thing as above but for content
+                String noticeText=Jsoup.parse(aPrep).text(); //Remove any HTML tags from the content
+                noticeText=noticeText.replace(noticeTitle,""); //Remove the title from the paragraph
+                noticeText=noticeText.replace("District Notice",""); //Remove District Notice from the paragraph
+                noticeText=noticeText.replace("School Notice",""); //Remove School Notice from the paragraph
                 MainActivity.itemTitles.add(Jsoup.parse(":SCHOOLNOTICE:" + noticeTitle).text()); //Add the Title as the first item in the ArrayList
                 MainActivity.itemDescs.add(noticeText); //Add the Content as the first item the ArrayList
                 MainActivity.itemPicURLS.add(""); //There is no image so this is just blank
@@ -340,6 +344,7 @@ public class MainActivity extends AppCompatActivity{
                 articleDescs=articleDescs.replaceAll("(\\r|\\n|\\r\\n)+",",,,"); //Replace any New Lines with the New Line placeholder
                 articleDescs=articleDescs.replaceAll("<br>",",,,"); //I don't think I need this but I'm too lazy to check
                 articleDescs=Jsoup.parse(articleDescs).text(); //Convert the article into the final usable format
+                articleTitle=Jsoup.parse(articleTitle).text(); //Remove any HTML tags from the title
                 articleImgURLs=globalURL+articleImgURLs; //Add any image URLs to the ArrayList
                 MainActivity.itemTitles.add(articleTitle); //Add the Title of the article to the ArrayList
                 MainActivity.itemDescs.add(articleDescs); //Add the content of the article to the ArrayList
@@ -355,7 +360,7 @@ public class MainActivity extends AppCompatActivity{
         CustomListAdapter adapter=new CustomListAdapter(this,itemTitlesArray,itemDescsArray,itemPicURLSarray); //Add the arrays to a custom adapter
         ListView list=(ListView)findViewById(R.id.mainlist); //Get the ID of our ListView on the main Activity
         ImageView bannerIV=(ImageView)findViewById(R.id.bannerImage); //Get the ID of our Banner image
-        TextView navBIV=(TextView)findViewById(R.id.navButton); //Get the ID of the navigation button (which is ironically not a button but a textview
+        TextView navBIV=(TextView)findViewById(R.id.navButton); //Get the ID of the navigation button (which is ironically not a button but a textview)
         navBIV.setTypeface(MainActivity.typefaceMenuItems); //Set the navigation button typeface to the menu typeface
         navBIV.setText(R.string.navigation); //I dearly hope this doesn't need explaining
         //We don't want our ListView height to be more than the screen since that causes for items to be cut off.
@@ -365,33 +370,33 @@ public class MainActivity extends AppCompatActivity{
         list.setAdapter(adapter); //Set the ListView adapter to our custom adapter, which holds the information
     }
 
-    public void expandMenu(View view){ //
-        ListView navView=(ListView)findViewById(R.id.navList);
-        if(view.getId()==(findViewById(R.id.navButton)).getId()){
-            if(navView.getVisibility()==View.GONE){
-                CustomListAdapterMenu adapter=new CustomListAdapterMenu(this,menuItemTitles,menuItemTitles);
-                ImageView bannerIV=(ImageView)findViewById(R.id.bannerImage);
-                TextView navBIV=(TextView)findViewById(R.id.navButton);
-                int margin=bannerIV.getHeight()+navBIV.getHeight();
-                navView.setPadding(0,0,0,margin);
-                navView.setAdapter(adapter);
-                navView.setVisibility(View.VISIBLE);
-            }else{
-                navView.setVisibility(View.GONE);
+    public void expandMenu(View view){ //This method expands the navigation menu
+        ListView navView=(ListView)findViewById(R.id.navList); //Access the ListView so we can add a CustomListAdapter
+        if(view.getId()==(findViewById(R.id.navButton)).getId()){ //Check if the view is the Nav button
+            if(navView.getVisibility()==View.GONE){ //Is the menu visible?
+                CustomListAdapterMenu adapter=new CustomListAdapterMenu(this,menuItemTitles,menuItemTitles); //Create the items to add to the menu
+                ImageView bannerIV=(ImageView)findViewById(R.id.bannerImage); //This is meant for getting the height of the banner so we can make the menu fit on screen
+                TextView navBIV=(TextView)findViewById(R.id.navButton); //Same as above but for the navigation button
+                int margin=bannerIV.getHeight()+navBIV.getHeight(); //The margin is used to make sure the menu isn't cut off at the bottom of the screen
+                navView.setPadding(0,0,0,margin); //Apply the margin to the menu
+                navView.setAdapter(adapter); //Add all the items from the adapter to the menu
+                navView.setVisibility(View.VISIBLE); //Make it visible
+            }else{ //The menu is already visible...
+                navView.setVisibility(View.GONE); //... so make it invisible
             }
         }
     }
 
     private class GetThePage extends AsyncTask<String,Integer,String>{ //This class downloads the main webpage using JSoup
-        private Intent i=null;
-        protected void onPreExecute(){
-            i=new Intent(getApplicationContext(),Splash.class);
-            startActivity(i);
+        private Intent splashIntent=null; //The Intent for the splash page
+        protected void onPreExecute(){ //This is done before the background task executes
+            splashIntent=new Intent(getApplicationContext(),Splash.class); //First create the Intent for the splash page...
+            startActivity(splashIntent); //... Then display it
         }
         @Override //Required for every networking AsyncTask
         protected String doInBackground(String[]params){ //Do the task in the background so we don't freeze the UI thread
             URL urlHome; //Initialize the URL variable
-            URL urlETeachers;
+            URL urlETeachers; //Initialize the ETeachers URL
             try{urlHome=new URL("http://www.bevfacey.ca/");}catch(MalformedURLException ex){return"bad";} //Convert the String URL into an actual URL
             try{urlETeachers=new URL("http://www.bevfacey.ca/eteachers");}catch(MalformedURLException ex){return"bad";} //Convert the String URL into an actual URL
             try{MainActivity.docHome=Jsoup.parse(urlHome,3000);}catch(IOException ex){return"bad";} //Try to download the URL (this only fails if the download is corrupted)

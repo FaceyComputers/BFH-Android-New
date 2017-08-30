@@ -83,7 +83,7 @@ public class SubPageActivity extends AppCompatActivity{
             String subTitle=MainActivity.getFromPatternStaticArray(patternH3title,str);
             String[]subTitleArray=subTitle.split(",.,");
             for(String s:subTitleArray){
-                if(!s.equals("")){
+                if(!"".equals(s)){
                     str=str.replaceFirst(s,".,.");
                     h3titles.add(s);
                 }

@@ -69,14 +69,14 @@ class CustomListAdapterSubMenu extends ArrayAdapter<String>{ //This class is the
             URL url;
             try{url=new URL(urlStr);}catch(MalformedURLException ex){return"bad";} //Convert the String URL into an actual URL
             try{MainActivity.docSub=Jsoup.parse(url,3000);}catch(IOException ex){return"bad";} //Try to download the URL (this only fails if the download is corrupted)
+            i=new Intent(context,SubPageActivity.class);
+            i.putExtra("url",urlStr);
+            context.startActivity(i);
             return"good"; //Tell the post execution task that it worked
         }
         protected void onPostExecute(String result){
             if("good".equals(result)){
                 progress.dismiss();
-                i=new Intent(context,SubPageActivity.class);
-                i.putExtra("url",urlStr);
-                context.startActivity(i);
             }
         }
     }
