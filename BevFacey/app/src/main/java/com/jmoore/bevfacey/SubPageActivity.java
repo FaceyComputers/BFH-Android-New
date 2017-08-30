@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class SubPageActivity extends AppCompatActivity {
+public class SubPageActivity extends AppCompatActivity{
 
     public Document doc=MainActivity.docSub;
     public Intent intent;
@@ -26,7 +26,7 @@ public class SubPageActivity extends AppCompatActivity {
     public static List<String>h3titles=new ArrayList<>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sub_page);
         context=getApplicationContext();
@@ -120,7 +120,6 @@ public class SubPageActivity extends AppCompatActivity {
         list.setAdapter(new CustomListAdapterSubPage_TitleText(this,getNormalArrays(dates),getNormalArrays(events)));
     }
 }
-
 /*
  GridLayout gv=(GridLayout)findViewById(R.id.subLayout);
  TextView tv=new TextView(context);

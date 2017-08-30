@@ -25,6 +25,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.*;
 
+
+/** Bev Facey High School official app
+ *
+ * @author Joshua Moore
+ */
+
+
 public class MainActivity extends AppCompatActivity{
 
     public static Document docHome; //JSoup Document storing the main webpage
@@ -36,18 +43,19 @@ public class MainActivity extends AppCompatActivity{
     public static String globalURL="http://www.bevfacey.ca"; //URL prefix for images
     public static boolean loaded=false;
     public static String[]menuItemTitles={"About","ETeachers","Programs","Parents","Students","Athletics","Guidance","Sustainability"};
-    public static Typeface typeface;
-    public static Typeface typefaceBody;
-    public static Typeface typefaceMenuItems;
+    public static Typeface typeface; //Default typeface
+    public static Typeface typefaceBody; //Typeface for body sections
+    public static Typeface typefaceMenuItems; //Typeface for menu items
 
-    public static int subAboutLength;
-    public static int subProgramsLength;
-    public static int subParentsLength;
+    public static int subAboutLength; //Length of how many sections are in the about page (grabbed from website)
+    public static int subProgramsLength; //Same as about but for programs
+    public static int subParentsLength; //Same
     public static int subStudentsLength;
     public static int subAthleticsLength;
     public static int subGuidanceLength;
     public static int subETeachersLength;
 
+    //These hold the information for Titles and Links of submenu items
     public static List<String>subAboutTitles=new ArrayList<>();
     public static List<String>subAboutText=new ArrayList<>();
     public static List<String>subProgramsTitles=new ArrayList<>();
@@ -63,22 +71,25 @@ public class MainActivity extends AppCompatActivity{
     public static List<String>subETeachersTitles=new ArrayList<>();
     public static List<String>subETeachersText=new ArrayList<>();
 
+    //These hold the info for every sub menu. For example, when a sub item is pressed it gets
+    //the text value and finds the index of that value in this list. Then it gets the link for
+    //the item at that same index.
     public static List<String>globalSubTitles=new ArrayList<>();
     public static List<String>globalSubText=new ArrayList<>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        AssetManager am=getApplicationContext().getAssets();
-        typeface=Typeface.createFromAsset(am,String.format(Locale.CANADA,"fonts/%s","goodtimegrotesk.ttf"));
-        typefaceBody=Typeface.createFromAsset(am,String.format(Locale.CANADA,"fonts/%s","latoregular.ttf"));
-        typefaceMenuItems=Typeface.createFromAsset(am,String.format(Locale.CANADA,"fonts/%s","goodtimegrotesk.ttf"));
+    protected void onCreate(Bundle savedInstanceState){ //Android default method
+        super.onCreate(savedInstanceState); //Android default statement
+        setContentView(R.layout.activity_main); //Android default statement
+        AssetManager am=getApplicationContext().getAssets(); //Allows for creating Typefaces using Assets
+        typeface=Typeface.createFromAsset(am,String.format(Locale.CANADA,"fonts/%s","goodtimegrotesk.ttf")); //Default Typeface
+        typefaceBody=Typeface.createFromAsset(am,String.format(Locale.CANADA,"fonts/%s","latoregular.ttf")); //Typeface for body items
+        typefaceMenuItems=Typeface.createFromAsset(am,String.format(Locale.CANADA,"fonts/%s","goodtimegrotesk.ttf")); //Typeface for menu items
 
-        new GetThePage().execute(); //Execute the task to retrieve from the website
+        new GetThePage().execute(); //Execute the AsyncTask used to retrieve info from the website
     }
 
-    public String[]soup2string(Elements elms){ //This method converts JSoup Elements into String arrays
+    public String[]soup2string(Elements elms){ //Converts JSoup Elements into String arrays
         Object[]objArray=elms.toArray(); //First, convert the Elements into an Object array
         String[]strArray=new String[objArray.length]; //This will hold the String values of the Elements
         for(int i=0;i<strArray.length;i++){ //For Loop to convert each Object/Element into a String
@@ -86,97 +97,126 @@ public class MainActivity extends AppCompatActivity{
         }return strArray; //Return the complete String array
     }
 
-    public void createSubArrays(){
-        Elements navElms=MainActivity.docHome.select("nav.primary-navigation");
-        Elements liElms=navElms.select("li.children"); //All the website expandable menus
+    public void createSubArrays(){ //Creates the sub menus
+        Elements navElms=MainActivity.docHome.select("nav.primary-navigation"); //Find the website navigation bar
+        Elements liElms=navElms.select("li.children"); //Store all the website expandable menus
         for(Element elm:liElms){
-            String elmString=elm.toString();
+            String elmString=elm.toString(); //Convert the current Element into a String for easier handling
             if(elmString.toLowerCase().contains("about")){
-                Elements aboutClasses=elm.select("li");
-                String[]patternLink={"<a href=\"","\">"};
-                String[]patternTitle={"<b>","</b>"};
-                for(Element el:aboutClasses){
-                    String elString=el.toString();
-                    String link=MainActivity.getFromPatternStatic(patternLink,elString);
-                    String title=MainActivity.getFromPatternStatic(patternTitle,elString);
-                    subAboutTitles.add(title);
-                    subAboutText.add(link);
-                }
-                subAboutTitles.remove(0);
-                subAboutText.remove(0);
-                subAboutLength=subAboutTitles.size();
+                aboutSub(elm);
             }else if(elmString.toLowerCase().contains("programs")){
-                Elements aboutClasses=elm.select("li");
-                String[]patternLink={"<a href=\"","\">"};
-                String[]patternTitle={"<b>","</b>"};
-                for(Element el:aboutClasses){
-                    String elString=el.toString();
-                    String link=MainActivity.getFromPatternStatic(patternLink,elString);
-                    String title=MainActivity.getFromPatternStatic(patternTitle,elString);
-                    subProgramsTitles.add(Jsoup.parse(title).text());
-                    subProgramsText.add(link);
-                }
-                subProgramsTitles.remove(0);
-                subProgramsText.remove(0);
-                subProgramsLength=subProgramsTitles.size();
+                programsSub(elm);
             }else if(elmString.toLowerCase().contains("parents")){
-                Elements aboutClasses=elm.select("li");
-                String[]patternLink={"<a href=\"","\">"};
-                String[]patternTitle={"<b>","</b>"};
-                for(Element el:aboutClasses){
-                    String elString=el.toString();
-                    String link=MainActivity.getFromPatternStatic(patternLink,elString);
-                    String title=MainActivity.getFromPatternStatic(patternTitle,elString);
-                    subParentsTitles.add(Jsoup.parse(title).text());
-                    subParentsText.add(link);
-                }
-                subParentsTitles.remove(0);
-                subParentsText.remove(0);
-                subParentsLength=subParentsTitles.size();
+                parentsSub(elm);
             }else if(elmString.toLowerCase().contains("students")){
-                Elements aboutClasses=elm.select("li");
-                String[]patternLink={"<a href=\"","\">"};
-                String[]patternTitle={"<b>","</b>"};
-                for(Element el:aboutClasses){
-                    String elString=el.toString();
-                    String link=MainActivity.getFromPatternStatic(patternLink,elString);
-                    String title=MainActivity.getFromPatternStatic(patternTitle,elString);
-                    subStudentsTitles.add(Jsoup.parse(title).text());
-                    subStudentsText.add(link);
-                }
-                subStudentsTitles.remove(0);
-                subStudentsText.remove(0);
-                subStudentsLength=subStudentsTitles.size();
+                studentsSub(elm);
             }else if(elmString.toLowerCase().contains("athletics")){
-                Elements aboutClasses=elm.select("li");
-                String[]patternLink={"<a href=\"","\">"};
-                String[]patternTitle={"<b>","</b>"};
-                for(Element el:aboutClasses){
-                    String elString=el.toString();
-                    String link=MainActivity.getFromPatternStatic(patternLink,elString);
-                    String title=MainActivity.getFromPatternStatic(patternTitle,elString);
-                    subAthleticsTitles.add(Jsoup.parse(title).text());
-                    subAthleticsText.add(link);
-                }
-                subAthleticsTitles.remove(0);
-                subAthleticsText.remove(0);
-                subAthleticsLength=subAthleticsTitles.size();
+                athleticsSub(elm);
             }else if(elmString.toLowerCase().contains("guidance")){
-                Elements aboutClasses=elm.select("li");
-                String[]patternLink={"<a href=\"","\">"};
-                String[]patternTitle={"<b>","</b>"};
-                for(Element el:aboutClasses){
-                    String elString=el.toString();
-                    String link=MainActivity.getFromPatternStatic(patternLink,elString);
-                    String title=MainActivity.getFromPatternStatic(patternTitle,elString);
-                    subGuidanceTitles.add(Jsoup.parse(title).text());
-                    subGuidanceText.add(link);
-                }
-                subGuidanceTitles.remove(0);
-                subGuidanceText.remove(0);
-                subGuidanceLength=subGuidanceTitles.size();
+                guidanceSub(elm);
             }
         }
+        eTeachersSub();
+        addGlobal();
+    }
+
+    public void aboutSub(Element elm){
+        Elements aboutClasses=elm.select("li");
+        String[]patternLink={"<a href=\"","\">"};
+        String[]patternTitle={"<b>","</b>"};
+        for(Element el:aboutClasses){
+            String elString=el.toString();
+            String link=MainActivity.getFromPatternStatic(patternLink,elString);
+            String title=MainActivity.getFromPatternStatic(patternTitle,elString);
+            subAboutTitles.add(title);
+            subAboutText.add(link);
+        }
+        subAboutTitles.remove(0);
+        subAboutText.remove(0);
+        subAboutLength=subAboutTitles.size();
+    }
+
+    public void programsSub(Element elm){
+        Elements aboutClasses=elm.select("li");
+        String[]patternLink={"<a href=\"","\">"};
+        String[]patternTitle={"<b>","</b>"};
+        for(Element el:aboutClasses){
+            String elString=el.toString();
+            String link=MainActivity.getFromPatternStatic(patternLink,elString);
+            String title=MainActivity.getFromPatternStatic(patternTitle,elString);
+            subProgramsTitles.add(Jsoup.parse(title).text());
+            subProgramsText.add(link);
+        }
+        subProgramsTitles.remove(0);
+        subProgramsText.remove(0);
+        subProgramsLength=subProgramsTitles.size();
+    }
+
+    public void parentsSub(Element elm){
+        Elements aboutClasses=elm.select("li");
+        String[]patternLink={"<a href=\"","\">"};
+        String[]patternTitle={"<b>","</b>"};
+        for(Element el:aboutClasses){
+            String elString=el.toString();
+            String link=MainActivity.getFromPatternStatic(patternLink,elString);
+            String title=MainActivity.getFromPatternStatic(patternTitle,elString);
+            subParentsTitles.add(Jsoup.parse(title).text());
+            subParentsText.add(link);
+        }
+        subParentsTitles.remove(0);
+        subParentsText.remove(0);
+        subParentsLength=subParentsTitles.size();
+    }
+
+    public void studentsSub(Element elm){
+        Elements aboutClasses=elm.select("li");
+        String[]patternLink={"<a href=\"","\">"};
+        String[]patternTitle={"<b>","</b>"};
+        for(Element el:aboutClasses){
+            String elString=el.toString();
+            String link=MainActivity.getFromPatternStatic(patternLink,elString);
+            String title=MainActivity.getFromPatternStatic(patternTitle,elString);
+            subStudentsTitles.add(Jsoup.parse(title).text());
+            subStudentsText.add(link);
+        }
+        subStudentsTitles.remove(0);
+        subStudentsText.remove(0);
+        subStudentsLength=subStudentsTitles.size();
+    }
+
+    public void athleticsSub(Element elm){
+        Elements aboutClasses=elm.select("li");
+        String[]patternLink={"<a href=\"","\">"};
+        String[]patternTitle={"<b>","</b>"};
+        for(Element el:aboutClasses){
+            String elString=el.toString();
+            String link=MainActivity.getFromPatternStatic(patternLink,elString);
+            String title=MainActivity.getFromPatternStatic(patternTitle,elString);
+            subAthleticsTitles.add(Jsoup.parse(title).text());
+            subAthleticsText.add(link);
+        }
+        subAthleticsTitles.remove(0);
+        subAthleticsText.remove(0);
+        subAthleticsLength=subAthleticsTitles.size();
+    }
+
+    public void guidanceSub(Element elm){
+        Elements aboutClasses=elm.select("li");
+        String[]patternLink={"<a href=\"","\">"};
+        String[]patternTitle={"<b>","</b>"};
+        for(Element el:aboutClasses){
+            String elString=el.toString();
+            String link=MainActivity.getFromPatternStatic(patternLink,elString);
+            String title=MainActivity.getFromPatternStatic(patternTitle,elString);
+            subGuidanceTitles.add(Jsoup.parse(title).text());
+            subGuidanceText.add(link);
+        }
+        subGuidanceTitles.remove(0);
+        subGuidanceText.remove(0);
+        subGuidanceLength=subGuidanceTitles.size();
+    }
+
+    public void eTeachersSub(){
         Elements pickElms=MainActivity.docETeachers.select("div.main-content");
         Elements teachersElms=pickElms.select("option");
         String[]patternETlink={"value=\"","\">"};
@@ -191,8 +231,10 @@ public class MainActivity extends AppCompatActivity{
         subETeachersTitles.remove(0);
         subETeachersText.remove(0);
         subETeachersLength=subETeachersTitles.size();
+    }
 
-        //Populate the Global arrays with the other arrays
+    public void addGlobal(){ //Populate the Global arrays with the other arrays
+        //Titles
         globalSubTitles.addAll(subAboutTitles);
         globalSubTitles.addAll(subETeachersTitles);
         globalSubTitles.addAll(subProgramsTitles);
@@ -200,7 +242,7 @@ public class MainActivity extends AppCompatActivity{
         globalSubTitles.addAll(subStudentsTitles);
         globalSubTitles.addAll(subAthleticsTitles);
         globalSubTitles.addAll(subGuidanceTitles);
-        
+        //Text (links in this case)
         globalSubText.addAll(subAboutText);
         globalSubText.addAll(subETeachersText);
         globalSubText.addAll(subProgramsText);
@@ -312,16 +354,18 @@ public class MainActivity extends AppCompatActivity{
         String[]itemPicURLSarray=MainActivity.itemPicURLS.toArray(new String[0]); //Convert the Image URLs ArrayList into a regular String array
         CustomListAdapter adapter=new CustomListAdapter(this,itemTitlesArray,itemDescsArray,itemPicURLSarray); //Add the arrays to a custom adapter
         ListView list=(ListView)findViewById(R.id.mainlist); //Get the ID of our ListView on the main Activity
-        ImageView bannerIV=(ImageView)findViewById(R.id.bannerImage);
-        TextView navBIV=(TextView)findViewById(R.id.navButton);
-        navBIV.setTypeface(MainActivity.typefaceMenuItems);
-        navBIV.setText(R.string.navigation);
+        ImageView bannerIV=(ImageView)findViewById(R.id.bannerImage); //Get the ID of our Banner image
+        TextView navBIV=(TextView)findViewById(R.id.navButton); //Get the ID of the navigation button (which is ironically not a button but a textview
+        navBIV.setTypeface(MainActivity.typefaceMenuItems); //Set the navigation button typeface to the menu typeface
+        navBIV.setText(R.string.navigation); //I dearly hope this doesn't need explaining
+        //We don't want our ListView height to be more than the screen since that causes for items to be cut off.
+        //To counter this, we get the height of the banner and the nav button and set the ListView padding to that value.
         int margin=bannerIV.getHeight()+navBIV.getHeight();
         list.setPadding(0,0,0,margin);
         list.setAdapter(adapter); //Set the ListView adapter to our custom adapter, which holds the information
     }
 
-    public void expandMenu(View view){
+    public void expandMenu(View view){ //
         ListView navView=(ListView)findViewById(R.id.navList);
         if(view.getId()==(findViewById(R.id.navButton)).getId()){
             if(navView.getVisibility()==View.GONE){

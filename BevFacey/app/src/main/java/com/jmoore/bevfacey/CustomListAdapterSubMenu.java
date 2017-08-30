@@ -30,7 +30,7 @@ class CustomListAdapterSubMenu extends ArrayAdapter<String>{ //This class is the
         LayoutInflater inflater=context.getLayoutInflater();
         View rowView=inflater.inflate(R.layout.mylistsubmenu,null,true);
 
-        TextView tv = rowView.findViewById(R.id.subMenuText);
+        TextView tv=rowView.findViewById(R.id.subMenuText);
         tv.setTypeface(MainActivity.typefaceMenuItems);
         tv.setText(subText[position]);
         tv.setOnClickListener(new View.OnClickListener(){

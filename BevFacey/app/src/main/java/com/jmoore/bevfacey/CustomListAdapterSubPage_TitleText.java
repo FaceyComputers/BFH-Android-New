@@ -2,6 +2,8 @@ package com.jmoore.bevfacey;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +47,9 @@ class CustomListAdapterSubPage_TitleText extends ArrayAdapter<String>{ //This cl
 
         TextView titleTV=new TextView(context);
         TextView textTV=new TextView(context);
+        textTV.setLinksClickable(true);
+        textTV.setAutoLinkMask(Linkify.ALL);
+        textTV.setLinkTextColor(ContextCompat.getColor(context,R.color.colorLinks));
         titleTV.setTypeface(MainActivity.typefaceMenuItems);
         textTV.setTypeface(MainActivity.typefaceBody);
         titleTV.setText(title[position]);
@@ -53,7 +58,7 @@ class CustomListAdapterSubPage_TitleText extends ArrayAdapter<String>{ //This cl
         int dp=10;
         float d=context.getResources().getDisplayMetrics().density;
         int margin=(int)(dp*d);
-        LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
         lp.setMargins(margin,0,margin,0);
         titleTV.setLayoutParams(lp);
         textTV.setLayoutParams(lp);

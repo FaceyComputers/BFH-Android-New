@@ -16,7 +16,7 @@
         android:adjustViewBounds="true"
         android:padding="-30dp"
         android:scaleType="fitXY"
-        app:srcCompat="@drawable/inappbanner" />
+        app:srcCompat="@drawable/inappbanner"/>
 
     <ListView
         android:id="@+id/subContent"
@@ -26,5 +26,4 @@
         android:dividerHeight="15dp"
         android:divider="@color/colorOffWhite"
         android:clipToPadding="true"/>
-
 </android.widget.GridLayout>

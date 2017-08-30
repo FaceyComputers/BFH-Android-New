@@ -17,7 +17,7 @@ class CustomListAdapter extends ArrayAdapter<String>{ //This class is the list o
     private final String[]imgid;
     private final String[]itemdesc;
 
-    CustomListAdapter(Activity context,String[]itemname,String[]itemdesc,String[]imgid) {
+    CustomListAdapter(Activity context,String[]itemname,String[]itemdesc,String[]imgid){
         super(context,R.layout.mylist,itemname);
         this.context=context;
         this.itemname=itemname;
@@ -37,7 +37,7 @@ class CustomListAdapter extends ArrayAdapter<String>{ //This class is the list o
             fixDesc=fixDesc.replaceAll(itemname[position],"");
         }
 
-        ImageView imageView = rowView.findViewById(R.id.icon);
+        ImageView imageView=rowView.findViewById(R.id.icon);
         TextView txtTitle=rowView.findViewById(R.id.itemTitle);
         TextView extratxt=rowView.findViewById(R.id.itemDesc);
 
