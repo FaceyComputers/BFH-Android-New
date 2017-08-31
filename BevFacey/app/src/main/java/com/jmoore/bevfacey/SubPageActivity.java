@@ -63,11 +63,16 @@ public class SubPageActivity extends AppCompatActivity{
             bellTimes();
         }else if(url.toLowerCase().contains("calendar")){
             calendar();
+        }else if(url.toLowerCase().contains("facey-sustain")){
+            sustain();
         }
-
         else{
             other();
         }
+    }
+
+    public void sustain(){
+        
     }
 
     public void other(){
