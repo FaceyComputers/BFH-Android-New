@@ -72,7 +72,7 @@ public class SubPageActivity extends AppCompatActivity{
     }
 
     public void sustain(){
-        
+
     }
 
     public void other(){
