@@ -59,7 +59,7 @@ public class SubPageActivity extends AppCompatActivity{
 
     public void analyze(){//Determine what type of page it is
         String url=intent.getStringExtra("url");
-        if(url.toLowerCase().contains("bell-times")){
+        if(url.toLowerCase().contains("bell")){
             bellTimes();
         }else if(url.toLowerCase().contains("calendar")){
             calendar();

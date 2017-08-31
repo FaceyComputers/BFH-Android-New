@@ -1,1 +1,0 @@
-loading circle when opening new page
