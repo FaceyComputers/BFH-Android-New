@@ -13,6 +13,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -103,7 +104,14 @@ public class SubPageActivity extends AppCompatActivity{
     }
 
     public void bellTimes(){
-
+        List<String>titles=new ArrayList<>();
+        List<String>items=new ArrayList<>();
+        String[]times={"8:30","8:35 - 9:59","9:59 - 10:07","10:07 - 11:31","   ","11:31 - 12:16","12:16","   ","12:21 - 1:45","1:45 - 1:53","1:53 - 3:17"};
+        String[]events={"Warning Bell","Block 1","Break (8 min)","Block 2","   ","Lunch (45 min)","Warning Bell","   ","Block 3","Break (8 min)","Block 4"};
+        System.out.println(times.length + "  " + events.length);
+        Collections.addAll(items,times);
+        Collections.addAll(titles,events);
+        list.setAdapter(new CustomListAdapterSubPage_TitleText(this,getNormalArrays(titles),getNormalArrays(items)));
     }
 
     public void calendar(){
