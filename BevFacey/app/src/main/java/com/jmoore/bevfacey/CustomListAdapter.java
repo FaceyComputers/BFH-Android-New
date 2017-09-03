@@ -59,10 +59,8 @@ class CustomListAdapter extends ArrayAdapter<String>{ //This class is the list o
         try {
             Picasso.with(context).load(imgid[position]).into(imageView);
         }catch(IllegalArgumentException ignored){}
+        fixDesc=fixDesc.trim();
         String nl=fixDesc+"\n";
-        if(!itemname[position].isEmpty()){
-            nl=nl.replaceFirst(" ","");
-        }
         extratxt.setText(nl);
         return rowView;
     }

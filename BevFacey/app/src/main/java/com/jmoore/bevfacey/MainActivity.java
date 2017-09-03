@@ -289,7 +289,16 @@ public class MainActivity extends AppCompatActivity{
         String whatToReturn="";
         while(m.find()){
             whatToReturn=(m.group(1));
-        }return whatToReturn;
+        }
+        if(!whatToReturn.isEmpty()){
+            if(patterns[0].contains("p")){
+                return"DONOTREPLACE";
+            }else{
+                return whatToReturn;
+            }
+        }else{
+            return whatToReturn;
+        }
     }
     public static String getFromPatternStaticArray(String[]patterns,String theText){ //This extracts Strings in between two other Strings
         Pattern pattern=Pattern.compile(Pattern.quote(patterns[0])+"(.*?)"+Pattern.quote(patterns[1]));
@@ -309,7 +318,10 @@ public class MainActivity extends AppCompatActivity{
             for(String aPrep:prep){
                 String noticeTitle=getFromPattern(patternsTitle,aPrep); //Use the pattern above to find the Title
                 //DEPRECATED//String noticeText=getFromPattern(patternsDesc,aPrep); //Same thing as above but for content
-                String noticeText=Jsoup.parse(aPrep).text(); //Remove any HTML tags from the content
+                String noticeText=aPrep.replaceAll("(\\r|\\n|\\r\\n)+",",,,"); //Replace any New Lines with the New Line placeholder
+                noticeText=noticeText.replaceFirst(",,,","");
+                noticeText=noticeText.replaceFirst(",,,","");
+                noticeText=Jsoup.parse(noticeText).text(); //Remove any HTML tags from the content
                 noticeText=noticeText.replace(noticeTitle,""); //Remove the title from the paragraph
                 noticeText=noticeText.replace("District Notice",""); //Remove District Notice from the paragraph
                 noticeText=noticeText.replace("School Notice",""); //Remove School Notice from the paragraph
@@ -326,12 +338,18 @@ public class MainActivity extends AppCompatActivity{
                 Elements Elmlinks=Jsoup.parse(aPrep).select("a"); //Elements list to store all the Links in the Article
                 List<String>absLinks=new ArrayList<>(); //This stores the "absolute" link, i.e. "https://www.example.com/website.htm"
                 for(Element link:Elmlinks){ //This loop handles links
-                    aPrep=aPrep.replace(link.toString(),link.attr("abs:href")); //Replace the raw HTML code links (<a href="example></a>) with the absolute link
-                    absLinks.add(link.attr("abs:href")); //Add the absolute link to the ArrayList for later use
+                    String tmpLink=link.attr("abs:href");
+                    if(tmpLink.isEmpty()){
+                        tmpLink=globalURL + link.attr("href");
+                    }
+                    aPrep=aPrep.replace(link.toString(),tmpLink); //Replace the raw HTML code links (<a href="example></a>) with the absolute link
+                    absLinks.add(tmpLink); //Add the absolute link to the ArrayList for later use
                 }
-                for(int i=0;i<absLinks.size();i++){ //Sort through the links to find duplicates and remove them
-                    if(StringUtils.countMatches(aPrep,absLinks.get(i))>1){ //Checks to see if there is more than one of each link
-                        aPrep=aPrep.replaceFirst(absLinks.get(i),""); //Replace the duplicate (we want to remove the first one) with a blank
+                if(absLinks.size()>1) {
+                    for (int i = 0; i < absLinks.size(); i++) { //Sort through the links to find duplicates and remove them
+                        if (StringUtils.countMatches(aPrep, absLinks.get(i)) > 1) { //Checks to see if there is more than one of each link
+                            aPrep = aPrep.replaceFirst(absLinks.get(i), ""); //Replace the duplicate (we want to remove the first one) with a blank
+                        }
                     }
                 }
                 if(articleTitle.isEmpty()){ //Check if the article has a Title. If not, then it is an Image article

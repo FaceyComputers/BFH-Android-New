@@ -63,19 +63,15 @@ public class SubPageActivity extends AppCompatActivity{
             bellTimes();
         }else if(url.toLowerCase().contains("calendar")){
             calendar();
-        }else if(url.toLowerCase().contains("facey-sustain")){
-            sustain();
+        }else if(url.toLowerCase().contains("contact")){
+            contact();
         }
         else{
             other();
         }
     }
 
-    public void sustain(){
-
-    }
-
-    public void other(){
+    public void contact(){
         Elements sectionsElms=doc.select("article.content-article");
         List<String>secTitles=new ArrayList<>();
         List<String>secItems=new ArrayList<>();
@@ -83,7 +79,7 @@ public class SubPageActivity extends AppCompatActivity{
         String[]patternH3title={"<h3>","</h3>"};
         String[]patternNewLine={"</p>","<p>"};
         for(Element elm:sectionsElms){
-            String str=elm.toString().replace("\n","");
+            String str=elm.toString().replace("\n",",,,");
             //String newLinesToReplace=MainActivity.getFromPatternStaticArray(patternNewLine,str);
 
             String subTitle=MainActivity.getFromPatternStaticArray(patternH3title,str);
@@ -95,9 +91,74 @@ public class SubPageActivity extends AppCompatActivity{
                 }
             }
 
-            str=str.replaceAll(Pattern.quote(MainActivity.getFromPatternStatic(patternNewLine,str)),"");
+            Elements Elmlinks=Jsoup.parse(str).select("a"); //Elements list to store all the Links in the Article
+            List<String>absLinks=new ArrayList<>(); //This stores the "absolute" link, i.e. "https://www.example.com/website.htm"
+            for(Element link:Elmlinks){ //This loop handles links
+                String tmpLink=link.attr("href");
+                tmpLink=tmpLink.replace("mailto:","");
+                tmpLink=tmpLink.replace("%20","");
+                String contactName=link.text();
+
+                String finalLink=contactName+",,snl,,"+tmpLink;
+                str=str.replace(link.toString(),finalLink); //Replace the raw HTML code links (<a href="example></a>) with the absolute link
+                absLinks.add(tmpLink); //Add the absolute link to the ArrayList for later use
+            }
+
+            ///String checkNewLineParagraph=Pattern.quote(MainActivity.getFromPatternStatic(patternNewLine,str));
+            ///if(!checkNewLineParagraph.contains("DONOTREPLACE")){
+            ///    str=str.replaceAll(checkNewLineParagraph,",,,");
+            ///}
             str=str.replaceAll("</p><p>",",,,");
             str=str.replaceAll("<br>",",,,");
+            str=str.replaceAll("<li>",",,p,,");
+            String title=MainActivity.getFromPatternStatic(patternH2title,str);
+            secTitles.add(Jsoup.parse(title).text());
+            String items=Jsoup.parse(str).text();
+            secItems.add(items);
+        }
+        String[]titles=getNormalArrays(secTitles);
+        String[]items=getNormalArrays(secItems);
+        list.setAdapter(new CustomListAdapterSubPage_TitleText(this,titles,items));
+    }
+
+    public void other(){
+        Elements sectionsElms=doc.select("article.content-article");
+        List<String>secTitles=new ArrayList<>();
+        List<String>secItems=new ArrayList<>();
+        String[]patternH2title={"<h2 class=\"article-title\">","</h2>"};
+        String[]patternH3title={"<h3>","</h3>"};
+        String[]patternNewLine={"</p>","<p>"};
+        for(Element elm:sectionsElms){
+            String str=elm.toString().replaceAll("\n",",,,");
+            //String newLinesToReplace=MainActivity.getFromPatternStaticArray(patternNewLine,str);
+
+            String subTitle=MainActivity.getFromPatternStaticArray(patternH3title,str);
+            String[]subTitleArray=subTitle.split(",.,");
+            for(String s:subTitleArray){
+                if(!"".equals(s)){
+                    str=str.replaceFirst(s,".,.");
+                    h3titles.add(s);
+                }
+            }
+
+            Elements Elmlinks=Jsoup.parse(str).select("a"); //Elements list to store all the Links in the Article
+            List<String>absLinks=new ArrayList<>(); //This stores the "absolute" link, i.e. "https://www.example.com/website.htm"
+            for(Element link:Elmlinks){ //This loop handles links
+                String tmpLink=link.attr("abs:href");
+                if(tmpLink.isEmpty()){
+                    tmpLink=MainActivity.globalURL + link.attr("href");
+                }
+                str=str.replace(link.toString(),tmpLink); //Replace the raw HTML code links (<a href="example></a>) with the absolute link
+                absLinks.add(tmpLink); //Add the absolute link to the ArrayList for later use
+            }
+
+            String checkNewLineParagraph=Pattern.quote(MainActivity.getFromPatternStatic(patternNewLine,str));
+            if(!checkNewLineParagraph.contains("DONOTREPLACE")){
+                str=str.replaceAll(checkNewLineParagraph,"");
+            }
+            str=str.replaceAll("</p><p>",",,,");
+            str=str.replaceAll("<br>",",,,");
+            str=str.replaceAll("<li>",",,p,,");
             String title=MainActivity.getFromPatternStatic(patternH2title,str);
             secTitles.add(Jsoup.parse(title).text());
             String items=Jsoup.parse(str).text();
@@ -113,7 +174,6 @@ public class SubPageActivity extends AppCompatActivity{
         List<String>items=new ArrayList<>();
         String[]times={"8:30","8:35 - 9:59","9:59 - 10:07","10:07 - 11:31","   ","11:31 - 12:16","12:16","   ","12:21 - 1:45","1:45 - 1:53","1:53 - 3:17"};
         String[]events={"Warning Bell","Block 1","Break (8 min)","Block 2","   ","Lunch (45 min)","Warning Bell","   ","Block 3","Break (8 min)","Block 4"};
-        System.out.println(times.length + "  " + events.length);
         Collections.addAll(items,times);
         Collections.addAll(titles,events);
         list.setAdapter(new CustomListAdapterSubPage_TitleText(this,getNormalArrays(titles),getNormalArrays(items)));

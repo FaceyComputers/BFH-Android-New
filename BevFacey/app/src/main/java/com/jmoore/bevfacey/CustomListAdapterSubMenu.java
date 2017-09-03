@@ -46,7 +46,7 @@ class CustomListAdapterSubMenu extends ArrayAdapter<String>{ //This class is the
         return rowView;
     }
 
-    private void getSubPages(String url){
+    public void getSubPages(String url){
         new GetSubPages().execute(url);
     }
 

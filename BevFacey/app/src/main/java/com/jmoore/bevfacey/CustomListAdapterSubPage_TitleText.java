@@ -36,11 +36,11 @@ class CustomListAdapterSubPage_TitleText extends ArrayAdapter<String>{ //This cl
 
         String findStr=".,.";
         int lastIndex=0;
-        int h3TitleCount=0;
+        //int h3TitleCount=0;
         while(lastIndex!=-1){
             lastIndex=text[position].indexOf(findStr,lastIndex);
             if(lastIndex!=-1){
-                h3TitleCount++;
+                //h3TitleCount++;
                 lastIndex+=findStr.length();
             }
         }
@@ -52,8 +52,12 @@ class CustomListAdapterSubPage_TitleText extends ArrayAdapter<String>{ //This cl
         textTV.setLinkTextColor(ContextCompat.getColor(context,R.color.colorLinks));
         titleTV.setTypeface(MainActivity.typefaceMenuItems);
         textTV.setTypeface(MainActivity.typefaceBody);
-        titleTV.setText(title[position]);
-        textTV.setText(fixDesc.replaceAll(",,,","\n\n"));
+        titleTV.setText(title[position].trim());
+        fixDesc=fixDesc.replaceAll(",,snl,,","\n");//CONTACT PAGE ONLY
+        String nl=fixDesc.replaceAll(",,,","\n\n");
+        nl=nl.replaceAll(",,p,,","- ");
+        nl=nl.trim()+"\n";
+        textTV.setText(nl);
 
         int dp=10;
         float d=context.getResources().getDisplayMetrics().density;
