@@ -172,8 +172,8 @@ public class SubPageActivity extends AppCompatActivity{
     public void bellTimes(){
         List<String>titles=new ArrayList<>();
         List<String>items=new ArrayList<>();
-        String[]times={"8:30","8:35 - 9:59","9:59 - 10:07","10:07 - 11:31","   ","11:31 - 12:16","12:16","   ","12:21 - 1:45","1:45 - 1:53","1:53 - 3:17"};
-        String[]events={"Warning Bell","Block 1","Break (8 min)","Block 2","   ","Lunch (45 min)","Warning Bell","   ","Block 3","Break (8 min)","Block 4"};
+        String[]times={"   ","8:30","8:35 - 9:59","9:59 - 10:07","10:07 - 11:31","11:31 - 12:16","12:16","12:21 - 1:45","1:45 - 1:53","1:53 - 3:17","   ","   ","8:30","8:35 - 9:44","9:44 - 9:52","9:52 - 11:01","11:01 - 11:46","11:46","11:51 - 1:00","1:00 - 1:08","1:08 - 2:17"};
+        String[]events={"Regular Day","Warning Bell","Block 1","Break (8 min)","Block 2","Lunch (45 min)","Warning Bell","Block 3","Break (8 min)","Block 4","   ","Early Dismissal Day","Warning Bell","Block 1","Break (8 min)","Block 2","Lunch Break (45 min)","Warning Bell","Block 3","Break (8 min)","Block 4"};
         Collections.addAll(items,times);
         Collections.addAll(titles,events);
         list.setAdapter(new CustomListAdapterSubPage_TitleText(this,getNormalArrays(titles),getNormalArrays(items)));
