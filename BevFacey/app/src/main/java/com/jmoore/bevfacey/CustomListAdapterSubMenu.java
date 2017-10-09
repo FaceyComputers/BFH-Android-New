@@ -2,6 +2,7 @@ package com.jmoore.bevfacey;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -18,6 +19,7 @@ import java.net.URL;
 class CustomListAdapterSubMenu extends ArrayAdapter<String>{ //This class is the list of Information
     private final Activity context;
     private final String[]subText;
+    private GetSubPages gsp;
 
     CustomListAdapterSubMenu(Activity context,String[]subText){
         super(context,R.layout.mylistsubmenu,subText);
@@ -46,8 +48,14 @@ class CustomListAdapterSubMenu extends ArrayAdapter<String>{ //This class is the
         return rowView;
     }
 
-    public void getSubPages(String url){
-        new GetSubPages().execute(url);
+    private void getSubPages(String url){
+        gsp = new GetSubPages();
+        gsp.execute(url);
+    }
+
+    private void stopSubPages(){
+        gsp.cancel(true);
+        gsp.isCancelled = true;
     }
 
     @SuppressWarnings("deprecation")
@@ -55,12 +63,21 @@ class CustomListAdapterSubMenu extends ArrayAdapter<String>{ //This class is the
         private String urlStr;
         private Intent i;
         private ProgressDialog progress=new ProgressDialog(context);
+        private boolean isCancelled = false;
         protected void onPreExecute(){
             progress.setIndeterminate(true);
             progress.setTitle("Loading...");
             progress.setMessage("Please wait");
             progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progress.setCancelable(false);
+            progress.setCancelable(true);
+            progress.setCanceledOnTouchOutside(true);
+            progress.setInverseBackgroundForced(true);
+            progress.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    stopSubPages();
+                }
+            });
             progress.show();
         }
         @Override
@@ -71,6 +88,10 @@ class CustomListAdapterSubMenu extends ArrayAdapter<String>{ //This class is the
             try{MainActivity.docSub=Jsoup.parse(url,3000);}catch(IOException ex){return"bad";} //Try to download the URL (this only fails if the download is corrupted)
             i=new Intent(context,SubPageActivity.class);
             i.putExtra("url",urlStr);
+            if(isCancelled){
+                i = null;
+                return "bad";
+            }
             context.startActivity(i);
             return"good"; //Tell the post execution task that it worked
         }

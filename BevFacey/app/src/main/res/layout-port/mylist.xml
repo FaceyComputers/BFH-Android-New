@@ -37,7 +37,13 @@
             android:maxLines="50"
             android:layout_marginLeft="10dp"
             android:autoLink="all"
+            android:clickable="true"
             android:linksClickable="true"
             android:textColorLink="@color/colorLinks"/>
     </LinearLayout>
 </LinearLayout>
+<!--
+android:autoLink="all"
+            android:clickable="true"
+            android:linksClickable="true"
+-->

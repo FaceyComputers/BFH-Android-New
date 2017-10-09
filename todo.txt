@@ -1,0 +1,3 @@
+- check if the discrict or school notices are empty, and add a generic title (or get administration to update the website properly)
+
+- change the fonts. ask miss k what Ward or administration wants to use

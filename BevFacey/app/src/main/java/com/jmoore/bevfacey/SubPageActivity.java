@@ -24,7 +24,7 @@ public class SubPageActivity extends AppCompatActivity{
     public Context context;
     public GridLayout grid;
     public ListView list;
-    public static List<String>h3titles=new ArrayList<>();
+    public List<String>h3titles=new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -77,7 +77,7 @@ public class SubPageActivity extends AppCompatActivity{
         List<String>secItems=new ArrayList<>();
         String[]patternH2title={"<h2 class=\"article-title\">","</h2>"};
         String[]patternH3title={"<h3>","</h3>"};
-        String[]patternNewLine={"</p>","<p>"};
+        //String[]patternNewLine={"</p>","<p>"};
         for(Element elm:sectionsElms){
             String str=elm.toString().replace("\n",",,,");
             //String newLinesToReplace=MainActivity.getFromPatternStaticArray(patternNewLine,str);
@@ -118,7 +118,8 @@ public class SubPageActivity extends AppCompatActivity{
         }
         String[]titles=getNormalArrays(secTitles);
         String[]items=getNormalArrays(secItems);
-        list.setAdapter(new CustomListAdapterSubPage_TitleText(this,titles,items));
+        String[]h3Titles=getNormalArrays(h3titles);
+        list.setAdapter(new CustomListAdapterSubPage_TitleText(this,titles,items,h3Titles));
     }
 
     public void other(){
@@ -140,6 +141,8 @@ public class SubPageActivity extends AppCompatActivity{
                     h3titles.add(s);
                 }
             }
+
+
 
             Elements Elmlinks=Jsoup.parse(str).select("a"); //Elements list to store all the Links in the Article
             List<String>absLinks=new ArrayList<>(); //This stores the "absolute" link, i.e. "https://www.example.com/website.htm"
@@ -166,7 +169,8 @@ public class SubPageActivity extends AppCompatActivity{
         }
         String[]titles=getNormalArrays(secTitles);
         String[]items=getNormalArrays(secItems);
-        list.setAdapter(new CustomListAdapterSubPage_TitleText(this,titles,items));
+        String[]h3Titles=getNormalArrays(h3titles);
+        list.setAdapter(new CustomListAdapterSubPage_TitleText(this,titles,items,h3Titles));
     }
 
     public void bellTimes(){

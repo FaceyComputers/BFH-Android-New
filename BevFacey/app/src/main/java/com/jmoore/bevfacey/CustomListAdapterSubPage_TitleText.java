@@ -3,6 +3,7 @@ package com.jmoore.bevfacey;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.text.Html;
 import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,10 +12,21 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.regex.Pattern;
+
 class CustomListAdapterSubPage_TitleText extends ArrayAdapter<String>{ //This class is the list of Information
     private final Activity context;
     private final String[]title;
     private final String[]text;
+    private String[]h3Titles=null;
+
+    CustomListAdapterSubPage_TitleText(Activity context,String[]title,String[]text,String[]h3Titles){
+        super(context,R.layout.mylistsubmenu,title);
+        this.context=context;
+        this.title=title;
+        this.text=text;
+        this.h3Titles=h3Titles;
+    }
 
     CustomListAdapterSubPage_TitleText(Activity context,String[]title,String[]text){
         super(context,R.layout.mylistsubmenu,title);
@@ -45,6 +57,12 @@ class CustomListAdapterSubPage_TitleText extends ArrayAdapter<String>{ //This cl
             }
         }
 
+        System.out.println(h3Titles.length);
+        for(String h3title : h3Titles){
+            System.out.println("H3TITLE: "+h3title);
+            fixDesc = fixDesc.replaceFirst(Pattern.quote(findStr),"<h3>"+h3title+"</h3>");
+        }
+
         TextView titleTV=new TextView(context);
         TextView textTV=new TextView(context);
         textTV.setLinksClickable(true);
@@ -52,12 +70,21 @@ class CustomListAdapterSubPage_TitleText extends ArrayAdapter<String>{ //This cl
         textTV.setLinkTextColor(ContextCompat.getColor(context,R.color.colorLinks));
         titleTV.setTypeface(MainActivity.typefaceMenuItems);
         textTV.setTypeface(MainActivity.typefaceBody);
-        titleTV.setText(title[position].trim());
+        //noinspection deprecation
+        titleTV.setText(Html.fromHtml("<h2>"+title[position].trim()+"</h2>"));
         fixDesc=fixDesc.replaceAll(",,snl,,","\n");//CONTACT PAGE ONLY
         String nl=fixDesc.replaceAll(",,,","\n\n");
         nl=nl.replaceAll(",,p,,","- ");
         nl=nl.trim()+"\n";
-        textTV.setText(nl);
+        if(nl.contains("mailto:")){
+            nl=nl.replace("mailto:","");
+            nl=nl.replace("http://www.bevfacey.ca","");
+            nl=nl.replace("%20","");
+        }
+
+        //noinspection deprecation
+        textTV.setText(Html.fromHtml(nl.replace("\n","<br />")));
+        //textTV.setText(nl);
 
         int dp=10;
         float d=context.getResources().getDisplayMetrics().density;

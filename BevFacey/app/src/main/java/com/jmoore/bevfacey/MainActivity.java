@@ -28,7 +28,8 @@ import org.apache.commons.lang3.*;
 
 /** Bev Facey High School official app
  *
- * @author Joshua Moore
+ * @author Joshua Moore (https://github.com/supamonkey2000)
+ * https://github.com/FaceyComputers/BFH-Android-New
  */
 
 
@@ -235,7 +236,6 @@ public class MainActivity extends AppCompatActivity{
     }
 
     public void addGlobal(){ //Populate the Global arrays with the other arrays
-        //Titles
         globalSubTitles.addAll(subAboutTitles);
         globalSubTitles.addAll(subETeachersTitles);
         globalSubTitles.addAll(subProgramsTitles);
@@ -363,6 +363,11 @@ public class MainActivity extends AppCompatActivity{
                 articleDescs=articleDescs.replaceAll("<br>",",,,"); //I don't think I need this but I'm too lazy to check
                 articleDescs=Jsoup.parse(articleDescs).text(); //Convert the article into the final usable format
                 articleTitle=Jsoup.parse(articleTitle).text(); //Remove any HTML tags from the title
+                /*if(absLinks.size()>1){
+                    for(int i = 0; i < absLinks.size(); i++) {
+                        articleDescs = articleDescs.replace(absLinks.get(i),"<a href=\""+absLinks.get(i)+"\">link</a>");
+                    }
+                }*/
                 articleImgURLs=globalURL+articleImgURLs; //Add any image URLs to the ArrayList
                 MainActivity.itemTitles.add(articleTitle); //Add the Title of the article to the ArrayList
                 MainActivity.itemDescs.add(articleDescs); //Add the content of the article to the ArrayList

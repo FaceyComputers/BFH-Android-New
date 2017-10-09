@@ -29,6 +29,7 @@ class CustomListAdapter extends ArrayAdapter<String>{ //This class is the list o
     public View getView(int position,View view,@NonNull ViewGroup parent){
         LayoutInflater inflater=context.getLayoutInflater();
         View rowView=inflater.inflate(R.layout.mylist,null,true);
+        parent.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
 
         String s=",,,";
         String fixDesc=itemdesc[position].replaceAll(s,"\n\n");
@@ -60,7 +61,16 @@ class CustomListAdapter extends ArrayAdapter<String>{ //This class is the list o
             Picasso.with(context).load(imgid[position]).into(imageView);
         }catch(IllegalArgumentException ignored){}
         fixDesc=fixDesc.trim();
+        String[]fixDescSplit=fixDesc.split(" ");
+        for(String line : fixDescSplit){
+            if(line.contains("mailto:")){
+                String[]lineSplit=line.split(":");
+                fixDesc=fixDesc.replace(line,lineSplit[lineSplit.length-1]);
+            }
+        }
         String nl=fixDesc+"\n";
+        //extratxt.setMovementMethod(LinkMovementMethod.getInstance());
+        //extratxt.setText(Html.fromHtml(nl));
         extratxt.setText(nl);
         return rowView;
     }

@@ -138,7 +138,7 @@ class CustomListAdapterMenu extends ArrayAdapter<String>{//This class is the lis
         return rowView;
     }
 
-    public void getSubPages(String url){
+    private void getSubPages(String url){
         new GetSubPages().execute(url);
     }
 

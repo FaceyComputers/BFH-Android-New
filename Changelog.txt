@@ -1,0 +1,13 @@
+###############################################
+#                                             #
+#        Bev Facey Android App Changelog      #
+#                                             #
+###############################################
+
+v0.0.35
+- Added changelog
+- Fixed "http://bevfacey.ca", "%20", and "mailto:" issue where they would appear in regular email links
+- Loading dialogs for sub pages are now cancellable
+- Improved look of subpages using HTML based formatting
+- Added <h3> tag functionality instead of displaying .,.
+- Minor bug fixes
