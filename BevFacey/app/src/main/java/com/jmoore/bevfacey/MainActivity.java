@@ -1,5 +1,7 @@
 package com.jmoore.bevfacey;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
@@ -263,7 +265,6 @@ public class MainActivity extends AppCompatActivity{
         Elements mainContentsElements=MainActivity.docHome.select("article.content-article"); //Elements from the Articles on the main page
         String[]mainContentS=soup2string(mainContentsElements); //Convert the Elements into a String array
 
-        //noinspection StatementWithEmptyBody
         if(schoolNotice[0].equals("noNotice")){ //If there is no notice, then ignore it...
             System.out.println("FAILED: No Notice");
         }else{ //... or convert the schoolNotice array into the correct display format
@@ -323,8 +324,24 @@ public class MainActivity extends AppCompatActivity{
                 noticeText=noticeText.replaceFirst(",,,","");
                 noticeText=Jsoup.parse(noticeText).text(); //Remove any HTML tags from the content
                 noticeText=noticeText.replace(noticeTitle,""); //Remove the title from the paragraph
+                if(noticeTitle.isEmpty()){ //Handles if the notice title is empty
+                    if(noticeText.toLowerCase().contains("district notice")){
+                        noticeTitle = "District Notice";
+                    }else if(noticeText.toLowerCase().contains("school notice")){
+                        noticeTitle = "School Notice";
+                    }
+                }
                 noticeText=noticeText.replace("District Notice",""); //Remove District Notice from the paragraph
                 noticeText=noticeText.replace("School Notice",""); //Remove School Notice from the paragraph
+                /*// Replace HTML Tags with cTags for the CustomListAdapter to deal with
+                noticeText=noticeText.replace("<b>",",,b,,");
+                noticeText=noticeText.replace("</b>",",,bb,,");
+                noticeText=noticeText.replace("<strong>",",,b,,");
+                noticeText=noticeText.replace("</strong>",",,bb,,");
+                noticeText=noticeText.replace("<i>",",,i,,");
+                noticeText=noticeText.replace("</i>",",,ii,,");
+                noticeText=noticeText.replace("<u>",",,u,,");
+                noticeText=noticeText.replace("</u>",",,uu,,");*/
                 MainActivity.itemTitles.add(Jsoup.parse(":SCHOOLNOTICE:" + noticeTitle).text()); //Add the Title as the first item in the ArrayList
                 MainActivity.itemDescs.add(noticeText); //Add the Content as the first item the ArrayList
                 MainActivity.itemPicURLS.add(""); //There is no image so this is just blank
@@ -357,6 +374,15 @@ public class MainActivity extends AppCompatActivity{
                 }
                 //",,," is the placeholder for New Lines, which are dealt with in CustomListAdapter
                 aPrep=aPrep.replaceAll("<br>",",,,"); //Replace breaks with a New Line placeholder
+                /*// Replace HTML Tags with cTags for the CustomListAdapter to deal with
+                aPrep=aPrep.replace("<b>",",,b,,");
+                aPrep=aPrep.replace("</b>",",,bb,,");
+                aPrep=aPrep.replace("<strong>",",,b,,");
+                aPrep=aPrep.replace("</strong>",",,bb,,");
+                aPrep=aPrep.replace("<i>",",,i,,");
+                aPrep=aPrep.replace("</i>",",,ii,,");
+                aPrep=aPrep.replace("<u>",",,u,,");
+                aPrep=aPrep.replace("</u>",",,uu,,");*/
                 String pretty=Jsoup.clean(aPrep,"",Whitelist.none().addTags("br","p"),new Document.OutputSettings().prettyPrint(true)); //Use JSoup to clean up the Article
                 String articleDescs=Jsoup.clean(pretty,"",Whitelist.none(),new Document.OutputSettings().prettyPrint(false)); //More cleaning
                 articleDescs=articleDescs.replaceAll("(\\r|\\n|\\r\\n)+",",,,"); //Replace any New Lines with the New Line placeholder
@@ -422,8 +448,8 @@ public class MainActivity extends AppCompatActivity{
             URL urlETeachers; //Initialize the ETeachers URL
             try{urlHome=new URL("http://www.bevfacey.ca/");}catch(MalformedURLException ex){return"bad";} //Convert the String URL into an actual URL
             try{urlETeachers=new URL("http://www.bevfacey.ca/eteachers");}catch(MalformedURLException ex){return"bad";} //Convert the String URL into an actual URL
-            try{MainActivity.docHome=Jsoup.parse(urlHome,3000);}catch(IOException ex){return"bad";} //Try to download the URL (this only fails if the download is corrupted)
-            try{MainActivity.docETeachers=Jsoup.parse(urlETeachers,3000);}catch(IOException ex){return"bad";} //Try to download the URL (this only fails if the download is corrupted)
+            try{MainActivity.docHome=Jsoup.parse(urlHome,15000);}catch(IOException ex){return"bad";} //Try to download the URL (this only fails if the download is corrupted)
+            try{MainActivity.docETeachers=Jsoup.parse(urlETeachers,15000);}catch(IOException ex){return"bad";} //Try to download the URL (this only fails if the download is corrupted)
             return"good"; //Tell the post execution task that it worked
         }
         protected void onPostExecute(String result){ //This runs after doInBackground has finished
@@ -431,6 +457,17 @@ public class MainActivity extends AppCompatActivity{
                 loaded=true;
                 createArrays(); //Start the manipulation of the website data
                 createSubArrays();
+            }else{
+                AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(getApplicationContext());
+                dlgAlert.setMessage("There was an error during loading. Try again later.");
+                dlgAlert.setTitle("Oops! Sorry about that...");
+                dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                dlgAlert.setCancelable(true);
+                //dlgAlert.create().show(); // Need to fix this. Crashes app if no internet connectivity
             }
         }
     }

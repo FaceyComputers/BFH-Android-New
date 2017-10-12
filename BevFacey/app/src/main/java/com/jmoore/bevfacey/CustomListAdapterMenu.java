@@ -1,7 +1,9 @@
 package com.jmoore.bevfacey;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -28,6 +30,7 @@ import java.util.List;
 class CustomListAdapterMenu extends ArrayAdapter<String>{//This class is the list of Information
     private final Activity context;
     private final String[]menuText;
+    private GetSubPages gsp;
 
     CustomListAdapterMenu(Activity context,String[]menuText,String[]menuText2){
         super(context,R.layout.mylistmenu,menuText2);
@@ -139,7 +142,13 @@ class CustomListAdapterMenu extends ArrayAdapter<String>{//This class is the lis
     }
 
     private void getSubPages(String url){
-        new GetSubPages().execute(url);
+        gsp = new GetSubPages();
+        gsp.execute(url);
+    }
+
+    private void stopSubPages(){
+        gsp.cancel(true);
+        gsp.isCancelled = true;
     }
 
     @SuppressWarnings("deprecation")
@@ -147,12 +156,21 @@ class CustomListAdapterMenu extends ArrayAdapter<String>{//This class is the lis
         private String urlStr;
         private Intent i;
         private ProgressDialog progress=new ProgressDialog(context);
+        private boolean isCancelled = false;
         protected void onPreExecute(){
             progress.setIndeterminate(true);
             progress.setTitle("Loading...");
             progress.setMessage("Please wait");
             progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progress.setCancelable(false);
+            progress.setCancelable(true);
+            progress.setCanceledOnTouchOutside(true);
+            progress.setInverseBackgroundForced(true);
+            progress.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    stopSubPages();
+                }
+            });
             progress.show();
         }
         @Override
@@ -160,15 +178,31 @@ class CustomListAdapterMenu extends ArrayAdapter<String>{//This class is the lis
             urlStr=MainActivity.globalURL+params[0];
             URL url;
             try{url=new URL(urlStr);}catch(MalformedURLException ex){return"bad";} //Convert the String URL into an actual URL
-            try{MainActivity.docSub= Jsoup.parse(url,3000);}catch(IOException ex){return"bad";} //Try to download the URL (this only fails if the download is corrupted)
+            try{MainActivity.docSub= Jsoup.parse(url,15000);}catch(IOException ex){return"bad";} //Try to download the URL (this only fails if the download is corrupted)
             i=new Intent(context,SubPageActivity.class);
             i.putExtra("url",urlStr);
+            if(isCancelled){
+                i = null;
+                return "bad";
+            }
             context.startActivity(i);
             return"good"; //Tell the post execution task that it worked
         }
         protected void onPostExecute(String result){
             if("good".equals(result)){
                 progress.dismiss();
+            }else{
+                progress.dismiss();
+                AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(context);
+                dlgAlert.setMessage("There was an error during loading. Try again later.");
+                dlgAlert.setTitle("Oops! Sorry about that...");
+                dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                dlgAlert.setCancelable(true);
+                dlgAlert.create().show();
             }
         }
     }

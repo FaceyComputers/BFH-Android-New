@@ -3,6 +3,7 @@ package com.jmoore.bevfacey;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,7 +60,10 @@ class CustomListAdapter extends ArrayAdapter<String>{ //This class is the list o
         }
         try {
             Picasso.with(context).load(imgid[position]).into(imageView);
-        }catch(IllegalArgumentException ignored){}
+            rowView.refreshDrawableState();
+        }catch(Exception ignored){
+            //We failed to load the image
+        }
         fixDesc=fixDesc.trim();
         String[]fixDescSplit=fixDesc.split(" ");
         for(String line : fixDescSplit){
@@ -69,9 +73,18 @@ class CustomListAdapter extends ArrayAdapter<String>{ //This class is the list o
             }
         }
         String nl=fixDesc+"\n";
+        nl=nl.replace("\n","<br />");
+        /*nl=nl.replace(",,b,,","<b>");
+        nl=nl.replace(",,bb,,","<b />");
+        nl=nl.replace(",,i,,","<i>");
+        nl=nl.replace(",,ii,,","<i />");
+        nl=nl.replace(",,u,,","<u>");
+        nl=nl.replace(",,uu,,","<u />");*/
         //extratxt.setMovementMethod(LinkMovementMethod.getInstance());
-        //extratxt.setText(Html.fromHtml(nl));
-        extratxt.setText(nl);
+        //noinspection deprecation
+        extratxt.setText(Html.fromHtml(nl));
+        System.out.println(imageView.getHeight());
+        //extratxt.setText(nl);
         return rowView;
     }
 }

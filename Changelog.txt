@@ -4,6 +4,11 @@
 #                                             #
 ###############################################
 
+v0.0.36
+- Changed timeout for loading the app and subpages to 15 seconds instead of 3 seconds.
+- Added Error dialog if loading the page times out.
+- Tried some other stuff, but none of it worked.
+
 v0.0.35
 - Added changelog
 - Fixed "http://bevfacey.ca", "%20", and "mailto:" issue where they would appear in regular email links

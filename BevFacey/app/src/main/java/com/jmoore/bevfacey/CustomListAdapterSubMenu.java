@@ -1,6 +1,7 @@
 package com.jmoore.bevfacey;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -85,7 +86,7 @@ class CustomListAdapterSubMenu extends ArrayAdapter<String>{ //This class is the
             urlStr=MainActivity.globalURL+params[0];
             URL url;
             try{url=new URL(urlStr);}catch(MalformedURLException ex){return"bad";} //Convert the String URL into an actual URL
-            try{MainActivity.docSub=Jsoup.parse(url,3000);}catch(IOException ex){return"bad";} //Try to download the URL (this only fails if the download is corrupted)
+            try{MainActivity.docSub=Jsoup.parse(url,15000);}catch(IOException ex){return"bad";} //Try to download the URL (this only fails if the download is corrupted)
             i=new Intent(context,SubPageActivity.class);
             i.putExtra("url",urlStr);
             if(isCancelled){
@@ -98,6 +99,18 @@ class CustomListAdapterSubMenu extends ArrayAdapter<String>{ //This class is the
         protected void onPostExecute(String result){
             if("good".equals(result)){
                 progress.dismiss();
+            }else{
+                progress.dismiss();
+                AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(context);
+                dlgAlert.setMessage("There was an error during loading. Try again later.");
+                dlgAlert.setTitle("Oops! Sorry about that...");
+                dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                dlgAlert.setCancelable(true);
+                dlgAlert.create().show();
             }
         }
     }
