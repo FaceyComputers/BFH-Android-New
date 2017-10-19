@@ -3,6 +3,8 @@
 #        Bev Facey Android App Changelog      #
 #                                             #
 ###############################################
+v0.0.37
+- I don't even know what I did but it doesn't crash anymore
 
 v0.0.36
 - Changed timeout for loading the app and subpages to 15 seconds instead of 3 seconds.

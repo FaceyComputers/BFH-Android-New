@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity{
     public static Typeface typeface; //Default typeface
     public static Typeface typefaceBody; //Typeface for body sections
     public static Typeface typefaceMenuItems; //Typeface for menu items
+    public static CustomListAdapter adapter;
 
     //Length of how many sections are in each page (grabbed from website)
     public static int subAboutLength;
@@ -260,7 +261,14 @@ public class MainActivity extends AppCompatActivity{
         try{ //... and we need a try/catch to see if there is a notice
             Elements schoolNoticeElements = MainActivity.docHome.select("div.school.notice"); //Search the doc for a notice
             schoolNotice=soup2string(schoolNoticeElements); //Convert the Elements into an array
-        }catch(Exception noSchoolNoticeException){schoolNotice=new String[1];schoolNotice[0]="noNotice";} //No notice was found
+            if(schoolNotice.length == 0){
+                throw new Exception();
+            }
+        }catch(Exception noSchoolNoticeException){
+            System.out.println("NO NOTICE");
+            schoolNotice=new String[1];
+            schoolNotice[0]="noNotice";
+        } //No notice was found
 
         Elements mainContentsElements=MainActivity.docHome.select("article.content-article"); //Elements from the Articles on the main page
         String[]mainContentS=soup2string(mainContentsElements); //Convert the Elements into a String array
@@ -406,7 +414,7 @@ public class MainActivity extends AppCompatActivity{
         String[]itemTitlesArray=MainActivity.itemTitles.toArray(new String[0]); //Convert the Title ArrayList into a regular String array
         String[]itemDescsArray=MainActivity.itemDescs.toArray(new String[0]); //Convert the content ArrayList into a regular String array
         String[]itemPicURLSarray=MainActivity.itemPicURLS.toArray(new String[0]); //Convert the Image URLs ArrayList into a regular String array
-        CustomListAdapter adapter=new CustomListAdapter(this,itemTitlesArray,itemDescsArray,itemPicURLSarray); //Add the arrays to a custom adapter
+        adapter=new CustomListAdapter(this,itemTitlesArray,itemDescsArray,itemPicURLSarray); //Add the arrays to a custom adapter
         ListView list=(ListView)findViewById(R.id.mainlist); //Get the ID of our ListView on the main Activity
         ImageView bannerIV=(ImageView)findViewById(R.id.bannerImage); //Get the ID of our Banner image
         TextView navBIV=(TextView)findViewById(R.id.navButton); //Get the ID of the navigation button (which is ironically not a button but a textview)
@@ -417,6 +425,10 @@ public class MainActivity extends AppCompatActivity{
         int margin=bannerIV.getHeight()+navBIV.getHeight();
         list.setPadding(0,0,0,margin);
         list.setAdapter(adapter); //Set the ListView adapter to our custom adapter, which holds the information
+    }
+
+    public static void updateItem(int position){
+        adapter.notifyDataSetChanged();
     }
 
     public void expandMenu(View view){ //This method expands the navigation menu

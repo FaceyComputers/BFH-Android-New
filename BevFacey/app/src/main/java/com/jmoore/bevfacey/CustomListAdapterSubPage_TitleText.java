@@ -57,10 +57,11 @@ class CustomListAdapterSubPage_TitleText extends ArrayAdapter<String>{ //This cl
             }
         }
 
-        System.out.println(h3Titles.length);
-        for(String h3title : h3Titles){
-            System.out.println("H3TITLE: "+h3title);
-            fixDesc = fixDesc.replaceFirst(Pattern.quote(findStr),"<h3>"+h3title+"</h3>");
+        if(h3Titles!=null) {
+            for (String h3title : h3Titles) {
+                System.out.println("H3TITLE: " + h3title);
+                fixDesc = fixDesc.replaceFirst(Pattern.quote(findStr), "<h3>" + h3title + "</h3>");
+            }
         }
 
         TextView titleTV=new TextView(context);

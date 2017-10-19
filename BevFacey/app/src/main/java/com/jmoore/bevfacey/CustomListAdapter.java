@@ -17,6 +17,7 @@ class CustomListAdapter extends ArrayAdapter<String>{ //This class is the list o
     private final String[]itemname;
     private final String[]imgid;
     private final String[]itemdesc;
+    private boolean loaded = false;
 
     CustomListAdapter(Activity context,String[]itemname,String[]itemdesc,String[]imgid){ //Constructor
         super(context,R.layout.mylist,itemname);
@@ -27,7 +28,7 @@ class CustomListAdapter extends ArrayAdapter<String>{ //This class is the list o
     }
 
     @NonNull
-    public View getView(int position,View view,@NonNull ViewGroup parent){
+    public View getView(final int position, View view, @NonNull ViewGroup parent){
         LayoutInflater inflater=context.getLayoutInflater();
         View rowView=inflater.inflate(R.layout.mylist,null,true);
         parent.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
@@ -58,12 +59,7 @@ class CustomListAdapter extends ArrayAdapter<String>{ //This class is the list o
             txtTitle.setTextSize(0);
             txtTitle.setText("");
         }
-        try {
-            Picasso.with(context).load(imgid[position]).into(imageView);
-            rowView.refreshDrawableState();
-        }catch(Exception ignored){
-            //We failed to load the image
-        }
+
         fixDesc=fixDesc.trim();
         String[]fixDescSplit=fixDesc.split(" ");
         for(String line : fixDescSplit){
@@ -85,6 +81,25 @@ class CustomListAdapter extends ArrayAdapter<String>{ //This class is the list o
         extratxt.setText(Html.fromHtml(nl));
         System.out.println(imageView.getHeight());
         //extratxt.setText(nl);
+        try {
+            Picasso.with(context).load(imgid[position]).into(imageView, new com.squareup.picasso.Callback(){
+                @Override
+                public void onSuccess(){
+                    if(!loaded){
+                        //MainActivity.updateItem(position);
+                        loaded = true;
+                    }
+                }
+                @Override
+                public void onError(){
+                    System.err.println("error");
+                    loaded = true;
+                }
+            });
+            rowView.refreshDrawableState();
+        }catch(Exception ignored){
+            //We failed to load the image
+        }
         return rowView;
     }
 }
