@@ -8,6 +8,8 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -49,7 +51,7 @@ public class MainActivity extends AppCompatActivity{
     public static Typeface typeface; //Default typeface
     public static Typeface typefaceBody; //Typeface for body sections
     public static Typeface typefaceMenuItems; //Typeface for menu items
-    public static CustomListAdapter adapter;
+    public CustomListAdapter adapter;
 
     //Length of how many sections are in each page (grabbed from website)
     public static int subAboutLength;
@@ -415,7 +417,7 @@ public class MainActivity extends AppCompatActivity{
         String[]itemDescsArray=MainActivity.itemDescs.toArray(new String[0]); //Convert the content ArrayList into a regular String array
         String[]itemPicURLSarray=MainActivity.itemPicURLS.toArray(new String[0]); //Convert the Image URLs ArrayList into a regular String array
         adapter=new CustomListAdapter(this,itemTitlesArray,itemDescsArray,itemPicURLSarray); //Add the arrays to a custom adapter
-        ListView list=(ListView)findViewById(R.id.mainlist); //Get the ID of our ListView on the main Activity
+        RecyclerView list=(RecyclerView)findViewById(R.id.mainlist); //Get the ID of our ListView on the main Activity
         ImageView bannerIV=(ImageView)findViewById(R.id.bannerImage); //Get the ID of our Banner image
         TextView navBIV=(TextView)findViewById(R.id.navButton); //Get the ID of the navigation button (which is ironically not a button but a textview)
         navBIV.setTypeface(MainActivity.typefaceMenuItems); //Set the navigation button typeface to the menu typeface
@@ -423,12 +425,16 @@ public class MainActivity extends AppCompatActivity{
         //We don't want our ListView height to be more than the screen since that causes for items to be cut off.
         //To counter this, we get the height of the banner and the nav button and set the ListView padding to that value.
         int margin=bannerIV.getHeight()+navBIV.getHeight();
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        int verticalSpacing = 20;
+        VerticalSpaceItemDecorator itemDecorator = new VerticalSpaceItemDecorator(verticalSpacing);
+        ShadowVerticalSpaceItemDecorator shadowItemDecorator = new ShadowVerticalSpaceItemDecorator(this, R.drawable.drop_shadow);
+        list.setLayoutManager(layoutManager);
+        list.addItemDecoration(itemDecorator);
+        list.addItemDecoration(shadowItemDecorator);
+        list.setHasFixedSize(false);
         list.setPadding(0,0,0,margin);
         list.setAdapter(adapter); //Set the ListView adapter to our custom adapter, which holds the information
-    }
-
-    public static void updateItem(int position){
-        adapter.notifyDataSetChanged();
     }
 
     public void expandMenu(View view){ //This method expands the navigation menu

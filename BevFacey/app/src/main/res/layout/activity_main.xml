@@ -48,7 +48,7 @@
         android:background="@color/colorMenuBackground">
     </ListView>
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/mainlist"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -60,5 +60,5 @@
         android:dividerHeight="3dp"
         android:footerDividersEnabled="true"
         android:overScrollMode="always">
-    </ListView>
+    </android.support.v7.widget.RecyclerView>
 </android.widget.GridLayout>
