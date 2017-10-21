@@ -6,8 +6,7 @@
     android:layout_height="match_parent"
     android:columnCount="1"
     tools:context="com.jmoore.bevfacey.MainActivity"
-    android:id="@+id/gridid"
-    android:animateLayoutChanges="true">
+    android:id="@+id/gridid">
 
     <ImageView
         android:id="@+id/bannerImage"
@@ -56,7 +55,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="0dp"
         android:layout_row="4"
-        android:animateLayoutChanges="true"
+        android:focusableInTouchMode="true"
         android:dividerHeight="3dp"
         android:footerDividersEnabled="true"
         android:overScrollMode="always">
