@@ -426,7 +426,7 @@ public class MainActivity extends AppCompatActivity{
         //To counter this, we get the height of the banner and the nav button and set the ListView padding to that value.
         int margin=bannerIV.getHeight()+navBIV.getHeight();
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        int verticalSpacing = 20;
+        int verticalSpacing = 5;
         VerticalSpaceItemDecorator itemDecorator = new VerticalSpaceItemDecorator(verticalSpacing);
         ShadowVerticalSpaceItemDecorator shadowItemDecorator = new ShadowVerticalSpaceItemDecorator(this, R.drawable.drop_shadow);
         list.setLayoutManager(layoutManager);
