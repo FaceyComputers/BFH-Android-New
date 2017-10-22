@@ -3,6 +3,10 @@
 #        Bev Facey Android App Changelog      #
 #                                             #
 ###############################################
+v0.0.38
+- Switched from using a ListView to a RecyclerView
+- Images are now guaranteed to display correctly in articles
+
 v0.0.37
 - I don't even know what I did but it doesn't crash anymore
 
