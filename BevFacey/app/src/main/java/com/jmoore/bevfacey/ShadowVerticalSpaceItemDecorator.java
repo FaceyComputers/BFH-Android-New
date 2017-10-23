@@ -7,15 +7,15 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-public class ShadowVerticalSpaceItemDecorator extends RecyclerView.ItemDecoration {
+class ShadowVerticalSpaceItemDecorator extends RecyclerView.ItemDecoration {
     private Drawable divider;
 
-    public ShadowVerticalSpaceItemDecorator(Context context, int resId){
-        this.divider = ContextCompat.getDrawable(context,resId);
+    ShadowVerticalSpaceItemDecorator(Context context, int resId){
+        this.divider = ContextCompat.getDrawable(context, resId);
     }
 
     @Override
-    public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state){
+    public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
         int left = parent.getPaddingLeft();
         int right = parent.getWidth() - parent.getPaddingRight();
         for (int childIdx = 0; childIdx < parent.getChildCount(); childIdx++) {

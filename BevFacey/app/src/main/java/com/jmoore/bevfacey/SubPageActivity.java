@@ -17,90 +17,90 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class SubPageActivity extends AppCompatActivity{
+public class SubPageActivity extends AppCompatActivity {
 
-    public Document doc=MainActivity.docSub;
+    public Document doc = MainActivity.docSub;
     public Intent intent;
     public Context context;
     public GridLayout grid;
     public ListView list;
-    public List<String>h3titles=new ArrayList<>();
+    public List<String> h3titles = new ArrayList<>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sub_page);
-        context=getApplicationContext();
-        intent=getIntent();
-        grid=(GridLayout)findViewById(R.id.subLayout);
-        list=(ListView)findViewById(R.id.subContent);
+        context = getApplicationContext();
+        intent = getIntent();
+        grid = (GridLayout)findViewById(R.id.subLayout);
+        list = (ListView)findViewById(R.id.subContent);
         analyze();
     }
 
-    public void onWindowFocusChanged(boolean hasFocus){
+    public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if(hasFocus){
-            ImageView bannerIV=(ImageView)findViewById(R.id.bannerImage2);
-            int margin=bannerIV.getHeight();
-            list.setPadding(0,0,0,margin);
+        if(hasFocus) {
+            ImageView bannerIV = (ImageView)findViewById(R.id.bannerImage2);
+            int margin = bannerIV.getHeight();
+            list.setPadding(0, 0, 0, margin);
         }
     }
 
-    private String[]getNormalArrays(List<String>list){
-        String[]normalArray;
-        Object[]linksObjArray=list.toArray(); //First, convert the Elements into an Object array
-        String[]linksStrArray=new String[linksObjArray.length]; //This will hold the String values of the Elements
-        for(int i=0;i<linksStrArray.length;i++){ //For Loop to convert each Object/Element into a String
-            linksStrArray[i]=linksObjArray[i].toString(); //Convert the Object to a String
+    private String[] getNormalArrays(List<String> list) {
+        String[] normalArray;
+        Object[] linksObjArray = list.toArray(); //First, convert the Elements into an Object array
+        String[] linksStrArray = new String[linksObjArray.length]; //This will hold the String values of the Elements
+        for(int i = 0; i < linksStrArray.length; i++) { //For Loop to convert each Object/Element into a String
+            linksStrArray[i] = linksObjArray[i].toString(); //Convert the Object to a String
         }
-        normalArray=linksStrArray;
+        normalArray = linksStrArray;
         return normalArray;
     }
 
-    public void analyze(){//Determine what type of page it is
-        String url=intent.getStringExtra("url");
-        if(url.toLowerCase().contains("bell")){
+    public void analyze() {//Determine what type of page it is
+        String url = intent.getStringExtra("url");
+        if(url.toLowerCase().contains("bell")) {
             bellTimes();
-        }else if(url.toLowerCase().contains("calendar")){
+        } else if(url.toLowerCase().contains("calendar") || url.toLowerCase().contains("athletics/athletics")) {
             calendar();
-        }else if(url.toLowerCase().contains("contact")){
+        } else if(url.toLowerCase().contains("contact")) {
             contact();
         }
-        else{
+        else {
             other();
         }
     }
 
-    public void contact(){
-        Elements sectionsElms=doc.select("article.content-article");
-        List<String>secTitles=new ArrayList<>();
-        List<String>secItems=new ArrayList<>();
-        String[]patternH2title={"<h2 class=\"article-title\">","</h2>"};
-        String[]patternH3title={"<h3>","</h3>"};
+    public void contact() {
+        Elements sectionsElms = doc.select("article.content-article");
+        List<String> secTitles = new ArrayList<>();
+        List<String> secItems = new ArrayList<>();
+        String[] patternH2title = {"<h2 class=\"article-title\">", "</h2>"};
+        String[] patternH3title = {"<h3>", "</h3>"};
         //String[]patternNewLine={"</p>","<p>"};
-        for(Element elm:sectionsElms){
-            String str=elm.toString().replace("\n",",,,");
+        for(Element elm : sectionsElms) {
+            String str = elm.toString().replace("\n", ",,,");
             //String newLinesToReplace=MainActivity.getFromPatternStaticArray(patternNewLine,str);
 
-            String subTitle=MainActivity.getFromPatternStaticArray(patternH3title,str);
-            String[]subTitleArray=subTitle.split(",.,");
-            for(String s:subTitleArray){
-                if(!"".equals(s)){
-                    str=str.replaceFirst(s,".,.");
+            String subTitle = MainActivity.getFromPatternStaticArray(patternH3title, str);
+            String[] subTitleArray = subTitle.split(",.,");
+            for(String s : subTitleArray) {
+                if(!"".equals(s)) {
+                    str = str.replaceFirst(s, ".,.");
                     h3titles.add(s);
                 }
             }
 
-            Elements Elmlinks=Jsoup.parse(str).select("a"); //Elements list to store all the Links in the Article
-            List<String>absLinks=new ArrayList<>(); //This stores the "absolute" link, i.e. "https://www.example.com/website.htm"
-            for(Element link:Elmlinks){ //This loop handles links
-                String tmpLink=link.attr("href");
-                tmpLink=tmpLink.replace("mailto:","");
-                tmpLink=tmpLink.replace("%20","");
-                String contactName=link.text();
+            Elements Elmlinks = Jsoup.parse(str).select("a"); //Elements list to store all the Links in the Article
+            List<String> absLinks = new ArrayList<>(); //This stores the "absolute" link, i.e. "https://www.example.com/website.htm"
+            for(Element link : Elmlinks) { //This loop handles links
+                String tmpLink = link.attr("href");
+                tmpLink = tmpLink.replace("mailto:", "");
+                tmpLink = tmpLink.replace("%20", "");
+                String contactName = link.text();
 
-                String finalLink=contactName+",,snl,,"+tmpLink;
-                str=str.replace(link.toString(),finalLink); //Replace the raw HTML code links (<a href="example></a>) with the absolute link
+                String finalLink = contactName + ",,snl,," + tmpLink;
+                str = str.replace(link.toString(), finalLink); //Replace the raw HTML code links (<a href="example></a>) with the absolute link
                 absLinks.add(tmpLink); //Add the absolute link to the ArrayList for later use
             }
 
@@ -108,101 +108,95 @@ public class SubPageActivity extends AppCompatActivity{
             ///if(!checkNewLineParagraph.contains("DONOTREPLACE")){
             ///    str=str.replaceAll(checkNewLineParagraph,",,,");
             ///}
-            str=str.replaceAll("</p><p>",",,,");
-            str=str.replaceAll("<br>",",,,");
-            str=str.replaceAll("<li>",",,p,,");
-            String title=MainActivity.getFromPatternStatic(patternH2title,str);
+            str = str.replaceAll("</p><p>", ",,,");
+            str = str.replaceAll("<br>", ",,,");
+            str = str.replaceAll("<li>", ",,p,,");
+            String title = MainActivity.getFromPatternStatic(patternH2title, str);
             secTitles.add(Jsoup.parse(title).text());
-            String items=Jsoup.parse(str).text();
+            String items = Jsoup.parse(str).text();
             secItems.add(items);
         }
-        String[]titles=getNormalArrays(secTitles);
-        String[]items=getNormalArrays(secItems);
-        String[]h3Titles=getNormalArrays(h3titles);
-        list.setAdapter(new CustomListAdapterSubPage_TitleText(this,titles,items,h3Titles));
+        String[] titles = getNormalArrays(secTitles);
+        String[] items = getNormalArrays(secItems);
+        String[] h3Titles = getNormalArrays(h3titles);
+        list.setAdapter(new CustomListAdapterSubPage_TitleText(this, titles, items, h3Titles));
     }
 
-    public void other(){
-        Elements sectionsElms=doc.select("article.content-article");
-        List<String>secTitles=new ArrayList<>();
-        List<String>secItems=new ArrayList<>();
-        String[]patternH2title={"<h2 class=\"article-title\">","</h2>"};
-        String[]patternH3title={"<h3>","</h3>"};
-        String[]patternNewLine={"</p>","<p>"};
-        for(Element elm:sectionsElms){
-            String str=elm.toString().replaceAll("\n",",,,");
+    public void other() {
+        Elements sectionsElms = doc.select("article.content-article");
+        List<String> secTitles = new ArrayList<>();
+        List<String> secItems = new ArrayList<>();
+        String[] patternH2title = {"<h2 class=\"article-title\">", "</h2>"};
+        String[] patternH3title = {"<h3>", "</h3>"};
+        String[] patternNewLine = {"</p>", "<p>"};
+        for(Element elm : sectionsElms) {
+            String str = elm.toString().replaceAll("\n", ",,,");
             //String newLinesToReplace=MainActivity.getFromPatternStaticArray(patternNewLine,str);
-
-            String subTitle=MainActivity.getFromPatternStaticArray(patternH3title,str);
-            String[]subTitleArray=subTitle.split(",.,");
-            for(String s:subTitleArray){
-                if(!"".equals(s)){
-                    str=str.replaceFirst(s,".,.");
+            String subTitle = MainActivity.getFromPatternStaticArray(patternH3title, str);
+            String[] subTitleArray = subTitle.split(",.,");
+            for(String s : subTitleArray) {
+                if(!"".equals(s)) {
+                    str = str.replaceFirst(s, ".,.");
                     h3titles.add(s);
                 }
             }
 
-
-
-            Elements Elmlinks=Jsoup.parse(str).select("a"); //Elements list to store all the Links in the Article
-            List<String>absLinks=new ArrayList<>(); //This stores the "absolute" link, i.e. "https://www.example.com/website.htm"
-            for(Element link:Elmlinks){ //This loop handles links
-                String tmpLink=link.attr("abs:href");
-                if(tmpLink.isEmpty()){
-                    tmpLink=MainActivity.globalURL + link.attr("href");
+            Elements Elmlinks = Jsoup.parse(str).select("a"); //Elements list to store all the Links in the Article
+            List<String> absLinks = new ArrayList<>(); //This stores the "absolute" link, i.e. "https://www.example.com/website.htm"
+            for(Element link : Elmlinks) { //This loop handles links
+                String tmpLink = link.attr("abs:href");
+                if(tmpLink.isEmpty()) {
+                    tmpLink = MainActivity.globalURL + link.attr("href");
                 }
-                str=str.replace(link.toString(),tmpLink); //Replace the raw HTML code links (<a href="example></a>) with the absolute link
+                str = str.replace(link.toString(), tmpLink); //Replace the raw HTML code links (<a href="example></a>) with the absolute link
                 absLinks.add(tmpLink); //Add the absolute link to the ArrayList for later use
             }
 
-            String checkNewLineParagraph=Pattern.quote(MainActivity.getFromPatternStatic(patternNewLine,str));
-            if(!checkNewLineParagraph.contains("DONOTREPLACE")){
-                str=str.replaceAll(checkNewLineParagraph,"");
+            String checkNewLineParagraph = Pattern.quote(MainActivity.getFromPatternStatic(patternNewLine, str));
+            if(!checkNewLineParagraph.contains("DONOTREPLACE")) {
+                str = str.replaceAll(checkNewLineParagraph, "");
             }
-            str=str.replaceAll("</p><p>",",,,");
-            str=str.replaceAll("<br>",",,,");
-            str=str.replaceAll("<li>",",,p,,");
-            String title=MainActivity.getFromPatternStatic(patternH2title,str);
+            str = str.replaceAll("</p><p>", ",,,");
+            str = str.replaceAll("<br>", ",,,");
+            str = str.replaceAll("<li>", ",,p,,");
+            String title = MainActivity.getFromPatternStatic(patternH2title, str);
             secTitles.add(Jsoup.parse(title).text());
-            String items=Jsoup.parse(str).text();
+            String items = Jsoup.parse(str).text();
             secItems.add(items);
         }
-        String[]titles=getNormalArrays(secTitles);
-        String[]items=getNormalArrays(secItems);
-        String[]h3Titles=getNormalArrays(h3titles);
-        list.setAdapter(new CustomListAdapterSubPage_TitleText(this,titles,items,h3Titles));
+        String[] titles = getNormalArrays(secTitles);
+        String[] items = getNormalArrays(secItems);
+        String[] h3Titles = getNormalArrays(h3titles);
+        list.setAdapter(new CustomListAdapterSubPage_TitleText(this, titles, items, h3Titles));
     }
 
-    public void bellTimes(){
-        List<String>titles=new ArrayList<>();
-        List<String>items=new ArrayList<>();
-        String[]times={"   ","8:30","8:35 - 9:59","9:59 - 10:07","10:07 - 11:31","11:31 - 12:16","12:16","12:21 - 1:45","1:45 - 1:53","1:53 - 3:17","   ","   ","8:30","8:35 - 9:44","9:44 - 9:52","9:52 - 11:01","11:01 - 11:46","11:46","11:51 - 1:00","1:00 - 1:08","1:08 - 2:17"};
-        String[]events={"Regular Day","Warning Bell","Block 1","Break (8 min)","Block 2","Lunch (45 min)","Warning Bell","Block 3","Break (8 min)","Block 4","   ","Early Dismissal Day","Warning Bell","Block 1","Break (8 min)","Block 2","Lunch Break (45 min)","Warning Bell","Block 3","Break (8 min)","Block 4"};
-        Collections.addAll(items,times);
-        Collections.addAll(titles,events);
-        list.setAdapter(new CustomListAdapterSubPage_TitleText(this,getNormalArrays(titles),getNormalArrays(items)));
+    public void bellTimes() {
+        List<String> titles = new ArrayList<>();
+        List<String> items = new ArrayList<>();
+        String[] times = {"   ","8:30","8:35 - 9:59","9:59 - 10:07","10:07 - 11:31","11:31 - 12:16",
+                "12:16","12:21 - 1:45","1:45 - 1:53","1:53 - 3:17","   ","   ","8:30","8:35 - 9:44",
+                "9:44 - 9:52","9:52 - 11:01","11:01 - 11:46","11:46","11:51 - 1:00","1:00 - 1:08",
+                "1:08 - 2:17"};
+        String[] events = {"Regular Day","Warning Bell","Block 1","Break (8 min)","Block 2","Lunch" +
+                " (45 min)","Warning Bell","Block 3","Break (8 min)","Block 4","   ","Early Dismissal" +
+                " Day","Warning Bell","Block 1","Break (8 min)","Block 2","Lunch Break (45 min)","Warning" +
+                " Bell","Block 3","Break (8 min)","Block 4"};
+        Collections.addAll(items, times);
+        Collections.addAll(titles, events);
+        list.setAdapter(new CustomListAdapterSubPage_TitleText(this, getNormalArrays(titles), getNormalArrays(items)));
     }
 
-    public void calendar(){
-        Elements eventsElms=(doc.select("div.event_details"));
-        String[]patternDate={"<div class=\"dates\">","</div>"};
-        String[]patternEvent={"<div class=\"name\">","</div>"};
-        List<String>dates=new ArrayList<>();
-        List<String>events=new ArrayList<>();
-        for(Element elm:eventsElms){
-            String str=elm.toString().replace("\n","");
-            dates.add(MainActivity.getFromPatternStatic(patternDate,str));
-            events.add(MainActivity.getFromPatternStatic(patternEvent,str));
+    public void calendar() {
+        Elements eventsElms = (doc.select("div.event_details"));
+        String[] patternDate = {"<div class=\"dates\">","</div>"};
+        String[] patternEvent = {"<div class=\"name\">","</div>"};
+        List<String> dates = new ArrayList<>();
+        List<String> events = new ArrayList<>();
+        for(Element elm : eventsElms) {
+            String str = elm.toString().replace("\n", "");
+            dates.add(MainActivity.getFromPatternStatic(patternDate, str));
+            events.add(MainActivity.getFromPatternStatic(patternEvent, str));
         }
-        list.setAdapter(new CustomListAdapterSubPage_TitleText(this,getNormalArrays(dates),getNormalArrays(events)));
+        list.setAdapter(new CustomListAdapterSubPage_TitleText(this, getNormalArrays(dates), getNormalArrays(events)));
     }
 }
-/*
- GridLayout gv=(GridLayout)findViewById(R.id.subLayout);
- TextView tv=new TextView(context);
- tv.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP);
- tv.setText(doc.text());
- GridLayout.LayoutParams params=new GridLayout.LayoutParams(GridLayout.spec(1),GridLayout.spec(0));
- tv.setLayoutParams(params);
- gv.addView(tv);
- */

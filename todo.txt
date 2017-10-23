@@ -1,3 +1,27 @@
-- check if the discrict or school notices are empty, and add a generic title (or get administration to update the website properly)
-
 - change the fonts. ask miss k what Ward or administration wants to use
+- implement photo gallery
+- principles message page has an image, need to display it in app
+- Programs/art also has an image
+- Programs/drama-musical-theatre also has lots of images
+- Programs/english has an image at the top, and images throughout the page
+- Programs/facey-leadership-initiative has an image, and youtube videos that should be linked to. Another image at the bottom of the page
+- ***** Aboriginal Studies page MUST be fixed by site admin
+- Programs/library has an image
+- Programs/mathematics has an image
+- Programs/music-programs has a youtube video, as well as a photo gallery
+- Programs/personal-fitness-health-wellness has multiple images
+- Programs/physical-education has multiple images
+- Programs/sciences has an image
+- Programs/social-studies has an image
+- Daily Bulletin should have a quick link (and the inapp page should display the titles as well)
+- Students/grad-2016 has an image
+- Students/MyPass has an image
+- Quicklink to powerschool app or website
+- Students/student-groups has multiple images
+- Athletics Calendar should default to "calendar" page setup
+- Athletics/athletics2 (Athletics Info / Athletics Overview) has multiple images
+- Athletics: Badminton, Cross-country, Curling, Football, Golf, Handball, Rugby ALL have an image(s)
+
+- When clicking a link, check if the link has a page in the app
+- Any link that has .png, .jpg, or .jpeg in it should open in a new Intent
+- Add twitter and facebook to quicklinks

@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -17,55 +18,55 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-class CustomListAdapterSubMenu extends ArrayAdapter<String>{ //This class is the list of Information
+class CustomListAdapterSubMenu extends ArrayAdapter<String> { //This class is the list of Information
     private final Activity context;
-    private final String[]subText;
+    private final String[] subText;
     private GetSubPages gsp;
 
-    CustomListAdapterSubMenu(Activity context,String[]subText){
-        super(context,R.layout.mylistsubmenu,subText);
-        this.context=context;
-        this.subText=subText;
+    CustomListAdapterSubMenu(Activity context, String[] subText) {
+        super(context, R.layout.mylistsubmenu, subText);
+        this.context = context;
+        this.subText = subText;
     }
 
     @NonNull
-    public View getView(int position,View view,@NonNull ViewGroup parent){
-        LayoutInflater inflater=context.getLayoutInflater();
-        View rowView=inflater.inflate(R.layout.mylistsubmenu,null,true);
+    public View getView(int position, View view, @NonNull ViewGroup parent) {
+        LayoutInflater inflater = context.getLayoutInflater();
+        View rowView = inflater.inflate(R.layout.mylistsubmenu, null, true);
 
-        TextView tv=rowView.findViewById(R.id.subMenuText);
+        TextView tv = rowView.findViewById(R.id.subMenuText);
         tv.setTypeface(MainActivity.typefaceMenuItems);
         tv.setText(subText[position]);
-        tv.setOnClickListener(new View.OnClickListener(){
+        tv.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
-                TextView tv2=(TextView)view;
-                String value=tv2.getText().toString();
-                int pos=MainActivity.globalSubTitles.indexOf(value);
-                String subURL=MainActivity.globalSubText.get(pos);
+            public void onClick(View view) {
+                TextView tv2 = (TextView)view;
+                String value = tv2.getText().toString();
+                int pos = MainActivity.globalSubTitles.indexOf(value);
+                String subURL = MainActivity.globalSubText.get(pos);
                 getSubPages(subURL);
             }
         });
         return rowView;
     }
 
-    private void getSubPages(String url){
+    private void getSubPages(String url) {
         gsp = new GetSubPages();
         gsp.execute(url);
     }
 
-    private void stopSubPages(){
+    private void stopSubPages() {
         gsp.cancel(true);
         gsp.isCancelled = true;
     }
 
     @SuppressWarnings("deprecation")
-    private class GetSubPages extends AsyncTask<String,Integer,String>{
+    private class GetSubPages extends AsyncTask<String, Integer, String> {
         private String urlStr;
         private Intent i;
-        private ProgressDialog progress=new ProgressDialog(context);
+        private ProgressDialog progress = new ProgressDialog(context);
         private boolean isCancelled = false;
-        protected void onPreExecute(){
+        protected void onPreExecute() {
             progress.setIndeterminate(true);
             progress.setTitle("Loading...");
             progress.setMessage("Please wait");
@@ -82,26 +83,53 @@ class CustomListAdapterSubMenu extends ArrayAdapter<String>{ //This class is the
             progress.show();
         }
         @Override
-        protected String doInBackground(String[]params){
-            urlStr=MainActivity.globalURL+params[0];
-            URL url;
-            try{url=new URL(urlStr);}catch(MalformedURLException ex){return"bad";} //Convert the String URL into an actual URL
-            try{MainActivity.docSub=Jsoup.parse(url,15000);}catch(IOException ex){return"bad";} //Try to download the URL (this only fails if the download is corrupted)
-            i=new Intent(context,SubPageActivity.class);
-            i.putExtra("url",urlStr);
-            if(isCancelled){
-                i = null;
-                return "bad";
+        protected String doInBackground(String[] params) {
+            if(!params[0].contains("://")) {
+                urlStr = MainActivity.globalURL + params[0];
+            } else {
+                if(params[0].contains("phone")) {
+                    urlStr = params[0].replace("phone://", "tel:");
+                } else {
+                    urlStr = params[0];
+                }
             }
-            context.startActivity(i);
-            return"good"; //Tell the post execution task that it worked
+            URL url;
+            if(!urlStr.contains("tel:")) {
+                try {
+                    url = new URL(urlStr); //Convert the String URL into an actual URL
+                } catch (MalformedURLException ex) {
+                    return "bad";
+                }
+                try {
+                    MainActivity.docSub = Jsoup.parse(url, 15000); //Try to download the URL (this only fails if the download is corrupted)
+                } catch (IOException ex) {
+                    return "bad";
+                }
+                i = new Intent(context, SubPageActivity.class);
+                i.putExtra("url", urlStr);
+                if (isCancelled) {
+                    i = null;
+                    return "bad";
+                }
+                context.startActivity(i);
+                return "good"; //Tell the post execution task that it worked
+            } else {
+                try {
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    intent.setData(Uri.parse(urlStr));
+                    context.startActivity(intent);
+                } catch(Exception ex) {
+                    return "bad";
+                }
+                return "good";
+            }
         }
-        protected void onPostExecute(String result){
-            if("good".equals(result)){
+        protected void onPostExecute(String result) {
+            if("good".equals(result)) {
                 progress.dismiss();
-            }else{
+            } else {
                 progress.dismiss();
-                AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(context);
+                AlertDialog.Builder dlgAlert = new AlertDialog.Builder(context);
                 dlgAlert.setMessage("There was an error during loading. Try again later.");
                 dlgAlert.setTitle("Oops! Sorry about that...");
                 dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {

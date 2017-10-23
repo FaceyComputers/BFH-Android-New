@@ -4,13 +4,14 @@ import android.app.Activity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-public class ArticleHolder extends RecyclerView.ViewHolder {
+class ArticleHolder extends RecyclerView.ViewHolder {
     private final Activity context;
     private boolean loaded = false;
 
@@ -18,7 +19,7 @@ public class ArticleHolder extends RecyclerView.ViewHolder {
     private final TextView extratxt;
     private final ImageView imageView;
 
-    public ArticleHolder(Activity CONTEXT, View itemView) {
+    ArticleHolder(Activity CONTEXT, View itemView) {
         super(itemView);
         context = CONTEXT;
         txtTitle = itemView.findViewById(R.id.itemTitle);
@@ -26,40 +27,42 @@ public class ArticleHolder extends RecyclerView.ViewHolder {
         imageView = itemView.findViewById(R.id.icon);
     }
 
-    public void bindArticle(String itemname,String itemdesc,String imgid){
-        String s=",,,";
-        String fixDesc=itemdesc.replaceAll(s,"\n\n");
-        fixDesc=fixDesc.replaceFirst("\n\n","");
-        if(fixDesc.contains(itemname)){
-            fixDesc=fixDesc.replaceAll(itemname,"");
+    void bindArticle(String itemname, String itemdesc, String imgid) {
+        String s = ",,,";
+        String fixDesc = itemdesc.replaceAll(s, "\n\n");
+        fixDesc = fixDesc.replaceFirst("\n\n", "");
+        if(fixDesc.contains(itemname)) {
+            fixDesc = fixDesc.replaceAll(itemname, "");
         }
 
         txtTitle.setTypeface(MainActivity.typeface);
         extratxt.setTypeface(MainActivity.typefaceBody);
 
-        if(!itemname.isEmpty()){
-            if(itemname.contains(":SCHOOLNOTICE:")){
-                String replaceNotice=itemname.replaceFirst(":SCHOOLNOTICE:","");
-                txtTitle.setTextColor(ContextCompat.getColor(context,R.color.colorNotice));
+        if(!itemname.isEmpty()) {
+            if(itemname.contains(":SCHOOLNOTICE:")) {
+                String replaceNotice = itemname.replaceFirst(":SCHOOLNOTICE:", "");
+                txtTitle.setTextColor(ContextCompat.getColor(context, R.color.colorNotice));
                 txtTitle.setText(replaceNotice.toUpperCase());
-                txtTitle.setBackgroundColor(ContextCompat.getColor(context,R.color.colorNoticeBkg));
-                extratxt.setBackgroundColor(ContextCompat.getColor(context,R.color.colorNoticeBkg));
-            }else{txtTitle.setText(itemname);}
-        }else{
+                txtTitle.setBackgroundColor(ContextCompat.getColor(context, R.color.colorNoticeBkg));
+                extratxt.setBackgroundColor(ContextCompat.getColor(context, R.color.colorNoticeBkg));
+            } else {
+                txtTitle.setText(itemname);
+            }
+        } else {
             txtTitle.setTextSize(0);
             txtTitle.setText("");
         }
 
-        fixDesc=fixDesc.trim();
-        String[]fixDescSplit=fixDesc.split(" ");
-        for(String line : fixDescSplit){
-            if(line.contains("mailto:")){
-                String[]lineSplit=line.split(":");
-                fixDesc=fixDesc.replace(line,lineSplit[lineSplit.length-1]);
+        fixDesc = fixDesc.trim();
+        String[] fixDescSplit = fixDesc.split(" ");
+        for(String line : fixDescSplit) {
+            if(line.contains("mailto:")) {
+                String[] lineSplit = line.split(":");
+                fixDesc = fixDesc.replace(line, lineSplit[lineSplit.length - 1]);
             }
         }
-        String nl=fixDesc+"\n";
-        nl=nl.replace("\n","<br />");
+        String nl = fixDesc + "\n";
+        nl = nl.replace("\n", "<br />");
         /*nl=nl.replace(",,b,,","<b>");
         nl=nl.replace(",,bb,,","<b />");
         nl=nl.replace(",,i,,","<i>");
@@ -69,25 +72,22 @@ public class ArticleHolder extends RecyclerView.ViewHolder {
         //extratxt.setMovementMethod(LinkMovementMethod.getInstance());
         //noinspection deprecation
         extratxt.setText(Html.fromHtml(nl));
-        System.out.println(imageView.getHeight());
         //extratxt.setText(nl);
         try {
             Picasso.with(context).load(imgid).into(imageView, new com.squareup.picasso.Callback(){
                 @Override
-                public void onSuccess(){
-                    if(!loaded){
-                        //MainActivity.updateItem(position);
+                public void onSuccess() {
+                    if(!loaded) {
                         loaded = true;
                     }
                 }
                 @Override
-                public void onError(){
-                    System.err.println("error");
+                public void onError() {
                     loaded = true;
                 }
             });
-        }catch(Exception ignored){
-            //We failed to load the image
+        } catch(Exception ignored) {
+            Log.w("ImageFailedToLoad", "An image failed to load properly");
         }
     }
 }

@@ -3,6 +3,13 @@
 #        Bev Facey Android App Changelog      #
 #                                             #
 ###############################################
+v0.0.39
+- Added Quicklinks submenu (incomplete)
+- Fixed spacing in articles on main page
+- Swapped System.out with Log.X
+- Improved downloading pages
+- Cleaned up code (at least 1100 lines of it...)
+
 v0.0.38
 - Switched from using a ListView to a RecyclerView
 - Images are now guaranteed to display correctly in articles
