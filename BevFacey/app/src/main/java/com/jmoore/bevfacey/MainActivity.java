@@ -383,13 +383,16 @@ public class MainActivity extends AppCompatActivity{
                 String articleTitle = getFromPattern(patternsTitle, aPrep); //Attempt to find a title
                 Elements Elmlinks = Jsoup.parse(aPrep).select("a"); //Elements list to store all the Links in the Article
                 List<String> absLinks = new ArrayList<>(); //This stores the "absolute" link, i.e. "https://www.example.com/website.htm"
+                List<String> linkTexts = new ArrayList<>();
                 for(Element link : Elmlinks) { //This loop handles links
                     String tmpLink = link.attr("abs:href");
+                    String tmpText = link.text();
                     if(tmpLink.isEmpty()) {
                         tmpLink = globalURL + link.attr("href");
                     }
                     aPrep = aPrep.replace(link.toString(), tmpLink); //Replace the raw HTML code links (<a href="example></a>) with the absolute link
                     absLinks.add(tmpLink); //Add the absolute link to the ArrayList for later use
+                    linkTexts.add(tmpText);
                 }
                 if(absLinks.size() > 1) {
                     for(int i = 0; i < absLinks.size(); i++) { //Sort through the links to find duplicates and remove them
@@ -401,6 +404,7 @@ public class MainActivity extends AppCompatActivity{
                 if(articleTitle.isEmpty()) { //Check if the article has a Title. If not, then it is an Image article
                     articleTitle = ""; //Just set the title blank. This is further dealt with in CustomListAdapter
                 }
+                Log.i("UMMMM","Here: " + aPrep);
                 //",,," is the placeholder for New Lines, which are dealt with in CustomListAdapter
                 aPrep = aPrep.replaceAll("<br>", ",,,"); //Replace breaks with a New Line placeholder
                 /*// Replace HTML Tags with cTags for the CustomListAdapter to deal with
@@ -411,7 +415,10 @@ public class MainActivity extends AppCompatActivity{
                 aPrep=aPrep.replace("<i>",",,i,,");
                 aPrep=aPrep.replace("</i>",",,ii,,");
                 aPrep=aPrep.replace("<u>",",,u,,");
-                aPrep=aPrep.replace("</u>",",,uu,,");*/
+                aPrep=aPrep.replace("</u>",",,uu,,");
+                aPrep = aPrep.replace("<a href=\"",",a,");
+                aPrep = aPrep.replace("\">",",aa,");
+                aPrep = aPrep.replace("</a>",",aaa,");*/
                 String pretty = Jsoup.clean(aPrep, "", Whitelist.none().addTags("br", "p"), new Document.OutputSettings().prettyPrint(true)); //Use JSoup to clean up the Article
                 String articleDescs = Jsoup.clean(pretty, "", Whitelist.none(), new Document.OutputSettings().prettyPrint(false)); //More cleaning
                 articleDescs = articleDescs.replaceAll("(\\r|\\n|\\r\\n)+", ",,,"); //Replace any New Lines with the New Line placeholder

@@ -25,3 +25,5 @@
 - When clicking a link, check if the link has a page in the app
 - Any link that has .png, .jpg, or .jpeg in it should open in a new Intent
 - Add twitter and facebook to quicklinks
+- Images in sub pages
+- Eteacher subpages

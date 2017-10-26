@@ -5,9 +5,11 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,24 +97,58 @@ class CustomListAdapterSubMenu extends ArrayAdapter<String> { //This class is th
             }
             URL url;
             if(!urlStr.contains("tel:")) {
-                try {
-                    url = new URL(urlStr); //Convert the String URL into an actual URL
-                } catch (MalformedURLException ex) {
-                    return "bad";
+                if(urlStr.contains("bevfacey.ca")) {
+
+                    try {
+                        url = new URL(urlStr); //Convert the String URL into an actual URL
+                    } catch (MalformedURLException ex) {
+                        return "bad";
+                    }
+                    try {
+                        MainActivity.docSub = Jsoup.parse(url, 15000); //Try to download the URL (this only fails if the download is corrupted)
+                    } catch (IOException ex) {
+                        return "bad";
+                    }
+                    i = new Intent(context, SubPageActivity.class);
+                    i.putExtra("url", urlStr);
+                    if (isCancelled) {
+                        i = null;
+                        return "bad";
+                    }
+                    context.startActivity(i);
+                    return "good"; //Tell the post execution task that it worked
+                } else {
+                    PackageManager pm = context.getPackageManager();
+                    if(urlStr.contains("powerschool")){
+                        if(isPackageInstalled("com.powerschool.portal",pm)){
+                            Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage("com.powerschool.portal");
+                            context.startActivity(launchIntent);
+                            return "good";
+                        } else {
+                            i = new Intent(Intent.ACTION_VIEW);
+                            i.setData(Uri.parse(urlStr));
+                            context.startActivity(i);
+                            return "good";
+                        }
+                    } else if(urlStr.contains("classroom")) {
+                        if(isPackageInstalled("com.google.android.apps.classroom",pm)){
+                            Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage("com.google.android.apps.classroom");
+                            context.startActivity(launchIntent);
+                            return "good";
+                        } else {
+                            i = new Intent(Intent.ACTION_VIEW);
+                            i.setData(Uri.parse(urlStr));
+                            context.startActivity(i);
+                            return "good";
+                        }
+                    }
+                    else {
+                        i = new Intent(Intent.ACTION_VIEW);
+                        i.setData(Uri.parse(urlStr));
+                        context.startActivity(i);
+                        return "good";
+                    }
                 }
-                try {
-                    MainActivity.docSub = Jsoup.parse(url, 15000); //Try to download the URL (this only fails if the download is corrupted)
-                } catch (IOException ex) {
-                    return "bad";
-                }
-                i = new Intent(context, SubPageActivity.class);
-                i.putExtra("url", urlStr);
-                if (isCancelled) {
-                    i = null;
-                    return "bad";
-                }
-                context.startActivity(i);
-                return "good"; //Tell the post execution task that it worked
             } else {
                 try {
                     Intent intent = new Intent(Intent.ACTION_DIAL);
@@ -139,6 +175,15 @@ class CustomListAdapterSubMenu extends ArrayAdapter<String> { //This class is th
                 });
                 dlgAlert.setCancelable(true);
                 dlgAlert.create().show();
+            }
+        }
+
+        private boolean isPackageInstalled(String packagename, PackageManager packageManager) {
+            try {
+                packageManager.getPackageInfo(packagename, 0);
+                return true;
+            } catch (PackageManager.NameNotFoundException e) {
+                return false;
             }
         }
     }

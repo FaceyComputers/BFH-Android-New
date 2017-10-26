@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -68,10 +70,17 @@ class ArticleHolder extends RecyclerView.ViewHolder {
         nl=nl.replace(",,i,,","<i>");
         nl=nl.replace(",,ii,,","<i />");
         nl=nl.replace(",,u,,","<u>");
-        nl=nl.replace(",,uu,,","<u />");*/
-        //extratxt.setMovementMethod(LinkMovementMethod.getInstance());
+        nl=nl.replace(",,uu,,","<u />");
+        Log.i("LINKTEXT",nl);
+        nl = nl.replace(",a,","<a href=\"");
+        nl = nl.replace(",aa,","\">");
+        nl = nl.replace(",aaa,","</a>");*/
+
         //noinspection deprecation
         extratxt.setText(Html.fromHtml(nl));
+        extratxt.setMovementMethod(LinkMovementMethod.getInstance());
+        extratxt.setLinksClickable(true);
+        extratxt.setAutoLinkMask(Linkify.ALL);
         //extratxt.setText(nl);
         try {
             Picasso.with(context).load(imgid).into(imageView, new com.squareup.picasso.Callback(){
