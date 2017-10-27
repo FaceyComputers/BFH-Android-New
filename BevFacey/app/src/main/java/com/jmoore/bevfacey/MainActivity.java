@@ -404,7 +404,6 @@ public class MainActivity extends AppCompatActivity{
                 if(articleTitle.isEmpty()) { //Check if the article has a Title. If not, then it is an Image article
                     articleTitle = ""; //Just set the title blank. This is further dealt with in CustomListAdapter
                 }
-                Log.i("UMMMM","Here: " + aPrep);
                 //",,," is the placeholder for New Lines, which are dealt with in CustomListAdapter
                 aPrep = aPrep.replaceAll("<br>", ",,,"); //Replace breaks with a New Line placeholder
                 /*// Replace HTML Tags with cTags for the CustomListAdapter to deal with
@@ -419,12 +418,12 @@ public class MainActivity extends AppCompatActivity{
                 aPrep = aPrep.replace("<a href=\"",",a,");
                 aPrep = aPrep.replace("\">",",aa,");
                 aPrep = aPrep.replace("</a>",",aaa,");*/
-                String pretty = Jsoup.clean(aPrep, "", Whitelist.none().addTags("br", "p"), new Document.OutputSettings().prettyPrint(true)); //Use JSoup to clean up the Article
-                String articleDescs = Jsoup.clean(pretty, "", Whitelist.none(), new Document.OutputSettings().prettyPrint(false)); //More cleaning
-                articleDescs = articleDescs.replaceAll("(\\r|\\n|\\r\\n)+", ",,,"); //Replace any New Lines with the New Line placeholder
-                articleDescs = articleDescs.replaceAll("<br>", ",,,"); //I don't think I need this but I'm too lazy to check
-                articleDescs = Jsoup.parse(articleDescs).text(); //Convert the article into the final usable format
-                articleTitle = Jsoup.parse(articleTitle).text(); //Remove any HTML tags from the title
+                //String pretty = Jsoup.clean(aPrep, "", Whitelist.none().addTags("br", "p"), new Document.OutputSettings().prettyPrint(true)); //Use JSoup to clean up the Article
+                //String articleDescs = Jsoup.clean(pretty, "", Whitelist.none(), new Document.OutputSettings().prettyPrint(false)); //More cleaning
+                aPrep = aPrep.replaceAll("(\\r|\\n|\\r\\n)+", ",,,"); //Replace any New Lines with the New Line placeholder
+                //articleDescs = articleDescs.replaceAll("<br>", ",,,"); //I don't think I need this but I'm too lazy to check
+                //articleDescs = Jsoup.parse(articleDescs).text(); //Convert the article into the final usable format
+                //articleTitle = Jsoup.parse(articleTitle).text(); //Remove any HTML tags from the title
                 /*if(absLinks.size()>1){
                     for(int i = 0; i < absLinks.size(); i++) {
                         articleDescs = articleDescs.replace(absLinks.get(i),"<a href=\""+absLinks.get(i)+"\">link</a>");
@@ -432,7 +431,7 @@ public class MainActivity extends AppCompatActivity{
                 }*/
                 articleImgURLs = globalURL + articleImgURLs; //Add any image URLs to the ArrayList
                 MainActivity.itemTitles.add(articleTitle); //Add the Title of the article to the ArrayList
-                MainActivity.itemDescs.add(articleDescs); //Add the content of the article to the ArrayList
+                MainActivity.itemDescs.add(aPrep); //Add the content of the article to the ArrayList
                 MainActivity.itemPicURLS.add(articleImgURLs); //Add the Image URLs of the article to the ArrayList
             }
         }
