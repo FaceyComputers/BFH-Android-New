@@ -7,5 +7,7 @@
     android:weightSum="1"
     android:layout_centerHorizontal="true"
     android:id="@+id/articleLayout"
-    app:stackFromEnd="true">
+    app:stackFromEnd="true"
+    android:clickable="true"
+    android:focusable="true">
 </LinearLayout>

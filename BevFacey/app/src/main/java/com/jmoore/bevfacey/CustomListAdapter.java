@@ -28,6 +28,8 @@ class CustomListAdapter extends RecyclerView.Adapter<ArticleHolder> { //This cla
     @Override
     public ArticleHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.article_item_layout, parent, false);
+        view.setClickable(true);
+        view.setFocusable(true);
         return new ArticleHolder(this.context, view);
     }
 

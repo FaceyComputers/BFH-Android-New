@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -64,7 +65,7 @@ class ArticleHolder extends RecyclerView.ViewHolder {
 
         if(content.contains("<image alt")) {
             try {
-                Picasso.with(context).load(imgid).into(imageView, new com.squareup.picasso.Callback(){
+                Picasso.with(context).load(imgid).into(imageView, new com.squareup.picasso.Callback() {
                     @Override
                     public void onSuccess() {
                         if(!loaded) {
@@ -82,16 +83,25 @@ class ArticleHolder extends RecyclerView.ViewHolder {
             }
         }
 
-        TextView textView = new TextView(context);
-        textView.setLayoutParams(new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        textView.setAutoLinkMask(Linkify.ALL);
-        textView.setLinksClickable(true);
-        textView.setLinkTextColor(ContextCompat.getColor(context, R.color.colorLinks));
-        textView.setText(Html.fromHtml(content));
-        textView.setMovementMethod(LinkMovementMethod.getInstance());
-        textView.setLinksClickable(true);
-        textView.setAutoLinkMask(Linkify.ALL);
+        Spanned result;
+        if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            result = Html.fromHtml("<a href=\"http://www.google.com\">GOOGLE</a>", Html.FROM_HTML_MODE_LEGACY);
+        } else {
+            result = Html.fromHtml("<a href=\"http://www.google.com\">GOOGLE</a>");
+        }
+
+        WebView textView = new WebView(context);
+        textView.loadData(content, "text/html; charset=utf-8", "UTF-8");
+        textView.getSettings().setLoadsImagesAutomatically(true);
+        //textView.setLayoutParams(new LinearLayout.LayoutParams(
+                //ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        //textView.setLinkTextColor(ContextCompat.getColor(context, R.color.colorLinks));
+        //textView.setAutoLinkMask(Linkify.ALL);
+        //textView.setText(result);
+        //Linkify.addLinks(textView,Linkify.ALL);
+        //textView.setLinksClickable(true);
+        //textView.setClickable(true);
+        //textView.setMovementMethod(LinkMovementMethod.getInstance());
 
         layout.addView(textView);
 

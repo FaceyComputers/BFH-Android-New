@@ -3,7 +3,13 @@
 #        Bev Facey Android App Changelog      #
 #                                             #
 ###############################################
-v.0.0.40
+v0.0.41
+- Switched from a TextView to a WebView.
+- Because of the previous line, Hyperlinks work finally. And formatting works (sort of).
+- Images are still broken
+- Major performance issues, so that's fun
+
+v0.0.40
 - When clicking certain Quicklink items, selection now opens in it's respective app (if it's installed) or opens link in browser
 - Broke lots of stuff
 - Removing HTML parsing since TextViews can handle HTML directly

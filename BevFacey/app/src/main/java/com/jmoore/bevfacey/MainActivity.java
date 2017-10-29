@@ -391,7 +391,7 @@ public class MainActivity extends AppCompatActivity {
                     if(tmpLink.isEmpty()) {
                         tmpLink = globalURL + link.attr("href");
                     }
-                    aPrep = aPrep.replace(link.toString(), tmpLink); //Replace the raw HTML code links (<a href="example></a>) with the absolute link
+                    //aPrep = aPrep.replace(link.toString(), tmpLink); //Replace the raw HTML code links (<a href="example></a>) with the absolute link
                     absLinks.add(tmpLink); //Add the absolute link to the ArrayList for later use
                     linkTexts.add(tmpText);
                 }
