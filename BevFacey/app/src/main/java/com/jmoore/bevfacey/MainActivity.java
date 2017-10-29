@@ -1,5 +1,6 @@
 package com.jmoore.bevfacey;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,7 +19,6 @@ import android.widget.TextView;
 import org.jsoup.nodes.Document;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
-import org.jsoup.safety.Whitelist;
 import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -38,7 +38,7 @@ import org.apache.commons.lang3.*;
  */
 
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
     public static Document docHome; //JSoup Document storing the main webpage
     public static Document docETeachers; //JSoup Document storing the ETeacher links
@@ -46,7 +46,11 @@ public class MainActivity extends AppCompatActivity{
     public static ArrayList<String> itemTitles = new ArrayList<>(); //Array that will store Title values for the Adapter
     public static ArrayList<String> itemDescs = new ArrayList<>(); //Descriptions for Adapter
     public static ArrayList<String> itemPicURLS = new ArrayList<>(); //URLs of images for Adapter
-    public static String globalURL = "http://www.bevfacey.ca"; //URL prefix for images
+
+    //Test 0.0.41 (this will hopefully replace the above 3 lines)
+    public static ArrayList<String> articleContent = new ArrayList<>();
+
+    public static final String globalURL = "http://www.bevfacey.ca"; //URL prefix for images
     public static boolean loaded = false; //Is the app finished loading the Main page and ETeacher page
     public static String[] menuItemTitles = {"Quicklinks", "About", "ETeachers", "Programs", "Parents",
             "Students", "Athletics", "Guidance", "Sustainability"}; //Items to use in the Nav menu
@@ -332,13 +336,15 @@ public class MainActivity extends AppCompatActivity{
             return whatToReturn;
         }
     }
+
     public static String getFromPatternStaticArray(String[] patterns, String theText) { //This extracts Strings in between two other Strings
         Pattern pattern = Pattern.compile(Pattern.quote(patterns[0]) + "(.*?)" + Pattern.quote(patterns[1]));
         Matcher m = pattern.matcher(theText);
-        String whatToReturn = "";
+        StringBuilder whatToReturnBuilder = new StringBuilder();
         while(m.find()) {
-            whatToReturn=whatToReturn + ",.," + (m.group(1));
+            whatToReturnBuilder.append(",.,").append(m.group(1));
         }
+        String whatToReturn = whatToReturnBuilder.toString();
         whatToReturn = whatToReturn.replaceFirst(",.,", "");
         return whatToReturn;
     }
@@ -362,23 +368,18 @@ public class MainActivity extends AppCompatActivity{
                 }
                 noticeText = noticeText.replace("District Notice", ""); //Remove District Notice from the paragraph
                 noticeText = noticeText.replace("School Notice", ""); //Remove School Notice from the paragraph
-                /*// Replace HTML Tags with cTags for the CustomListAdapter to deal with
-                noticeText=noticeText.replace("<b>",",,b,,");
-                noticeText=noticeText.replace("</b>",",,bb,,");
-                noticeText=noticeText.replace("<strong>",",,b,,");
-                noticeText=noticeText.replace("</strong>",",,bb,,");
-                noticeText=noticeText.replace("<i>",",,i,,");
-                noticeText=noticeText.replace("</i>",",,ii,,");
-                noticeText=noticeText.replace("<u>",",,u,,");
-                noticeText=noticeText.replace("</u>",",,uu,,");*/
                 MainActivity.itemTitles.add(Jsoup.parse(":SCHOOLNOTICE:" + noticeTitle).text()); //Add the Title as the first item in the ArrayList
                 MainActivity.itemDescs.add(noticeText); //Add the Content as the first item the ArrayList
                 MainActivity.itemPicURLS.add(""); //There is no image so this is just blank
+
+                MainActivity.articleContent.add(":SCHOOL_NOTICE:" + aPrep);
             }
         } else { //If the ID is not 0, it's the articles
             String[] patternsTitle = {"<h2 class=\"article-title\">", "</h2>"}; //Pattern for finding Titles of text-based articles
             String[] patternsImgURLs = {"<img alt=\"\" src=\"", "\">"}; //Pattern for finding image URLs
             for(String aPrep : prep) { //Loop through each Article
+                MainActivity.articleContent.add(aPrep);
+
                 String articleImgURLs = getFromPattern(patternsImgURLs, aPrep); //First, get the image URL if there is one (we remove this URL later on)
                 String articleTitle = getFromPattern(patternsTitle, aPrep); //Attempt to find a title
                 Elements Elmlinks = Jsoup.parse(aPrep).select("a"); //Elements list to store all the Links in the Article
@@ -404,26 +405,8 @@ public class MainActivity extends AppCompatActivity{
                 if(articleTitle.isEmpty()) { //Check if the article has a Title. If not, then it is an Image article
                     articleTitle = ""; //Just set the title blank. This is further dealt with in CustomListAdapter
                 }
-                //",,," is the placeholder for New Lines, which are dealt with in CustomListAdapter
                 aPrep = aPrep.replaceAll("<br>", ",,,"); //Replace breaks with a New Line placeholder
-                /*// Replace HTML Tags with cTags for the CustomListAdapter to deal with
-                aPrep=aPrep.replace("<b>",",,b,,");
-                aPrep=aPrep.replace("</b>",",,bb,,");
-                aPrep=aPrep.replace("<strong>",",,b,,");
-                aPrep=aPrep.replace("</strong>",",,bb,,");
-                aPrep=aPrep.replace("<i>",",,i,,");
-                aPrep=aPrep.replace("</i>",",,ii,,");
-                aPrep=aPrep.replace("<u>",",,u,,");
-                aPrep=aPrep.replace("</u>",",,uu,,");
-                aPrep = aPrep.replace("<a href=\"",",a,");
-                aPrep = aPrep.replace("\">",",aa,");
-                aPrep = aPrep.replace("</a>",",aaa,");*/
-                //String pretty = Jsoup.clean(aPrep, "", Whitelist.none().addTags("br", "p"), new Document.OutputSettings().prettyPrint(true)); //Use JSoup to clean up the Article
-                //String articleDescs = Jsoup.clean(pretty, "", Whitelist.none(), new Document.OutputSettings().prettyPrint(false)); //More cleaning
                 aPrep = aPrep.replaceAll("(\\r|\\n|\\r\\n)+", ",,,"); //Replace any New Lines with the New Line placeholder
-                //articleDescs = articleDescs.replaceAll("<br>", ",,,"); //I don't think I need this but I'm too lazy to check
-                //articleDescs = Jsoup.parse(articleDescs).text(); //Convert the article into the final usable format
-                //articleTitle = Jsoup.parse(articleTitle).text(); //Remove any HTML tags from the title
                 /*if(absLinks.size()>1){
                     for(int i = 0; i < absLinks.size(); i++) {
                         articleDescs = articleDescs.replace(absLinks.get(i),"<a href=\""+absLinks.get(i)+"\">link</a>");
@@ -441,10 +424,12 @@ public class MainActivity extends AppCompatActivity{
         String[] itemTitlesArray = MainActivity.itemTitles.toArray(new String[0]); //Convert the Title ArrayList into a regular String array
         String[] itemDescsArray = MainActivity.itemDescs.toArray(new String[0]); //Convert the content ArrayList into a regular String array
         String[] itemPicURLSarray = MainActivity.itemPicURLS.toArray(new String[0]); //Convert the Image URLs ArrayList into a regular String array
-        adapter = new CustomListAdapter(this, itemTitlesArray, itemDescsArray, itemPicURLSarray); //Add the arrays to a custom adapter
-        RecyclerView list = (RecyclerView)findViewById(R.id.mainlist); //Get the ID of our ListView on the main Activity
-        ImageView bannerIV = (ImageView)findViewById(R.id.bannerImage); //Get the ID of our Banner image
-        TextView navBIV = (TextView)findViewById(R.id.navButton); //Get the ID of the navigation button (which is ironically not a button but a textview)
+        String[] articleContentArray = MainActivity.articleContent.toArray(new String[0]);
+        adapter = new CustomListAdapter(this, itemTitlesArray, itemDescsArray, itemPicURLSarray, articleContentArray); //Add the arrays to a custom adapter
+
+        RecyclerView list = findViewById(R.id.mainlist); //Get the ID of our ListView on the main Activity
+        ImageView bannerIV = findViewById(R.id.bannerImage); //Get the ID of our Banner image
+        TextView navBIV = findViewById(R.id.navButton); //Get the ID of the navigation button (which is ironically not a button but a textview)
         navBIV.setTypeface(MainActivity.typefaceMenuItems); //Set the navigation button typeface to the menu typeface
         navBIV.setText(R.string.navigation); //I dearly hope this doesn't need explaining
         //We don't want our ListView height to be more than the screen since that causes for items to be cut off.
@@ -459,16 +444,17 @@ public class MainActivity extends AppCompatActivity{
         list.addItemDecoration(shadowItemDecorator);
         list.setHasFixedSize(false);
         list.setPadding(0, 0, 0, margin);
+        list.setItemViewCacheSize(0);
         list.setAdapter(adapter); //Set the ListView adapter to our custom adapter, which holds the information
     }
 
     public void expandMenu(View view) { //This method expands the navigation menu
-        ListView navView = (ListView)findViewById(R.id.navList); //Access the ListView so we can add a CustomListAdapter
+        ListView navView = findViewById(R.id.navList); //Access the ListView so we can add a CustomListAdapter
         if(view.getId() == (findViewById(R.id.navButton)).getId()) { //Check if the view is the Nav button
             if(navView.getVisibility() == View.GONE) { //Is the menu visible?
                 CustomListAdapterMenu adapter = new CustomListAdapterMenu(this, menuItemTitles, menuItemTitles); //Create the items to add to the menu
-                ImageView bannerIV = (ImageView)findViewById(R.id.bannerImage); //This is meant for getting the height of the banner so we can make the menu fit on screen
-                TextView navBIV = (TextView)findViewById(R.id.navButton); //Same as above but for the navigation button
+                ImageView bannerIV = findViewById(R.id.bannerImage); //This is meant for getting the height of the banner so we can make the menu fit on screen
+                TextView navBIV = findViewById(R.id.navButton); //Same as above but for the navigation button
                 int margin = bannerIV.getHeight() + navBIV.getHeight(); //The margin is used to make sure the menu isn't cut off at the bottom of the screen
                 navView.setPadding(0, 0, 0, margin); //Apply the margin to the menu
                 navView.setAdapter(adapter); //Add all the items from the adapter to the menu
@@ -479,6 +465,7 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
+    @SuppressLint("StaticFieldLeak") //Yes. I know. This is terrible. But the darn thing breaks without it
     private class GetThePage extends AsyncTask<String, Integer, String> { //This class downloads the main webpage using JSoup
         private Intent splashIntent = null; //The Intent for the splash page
         protected void onPreExecute() { //This is done before the background task executes
