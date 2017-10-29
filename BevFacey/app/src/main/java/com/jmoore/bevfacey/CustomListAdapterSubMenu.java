@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -141,8 +140,7 @@ class CustomListAdapterSubMenu extends ArrayAdapter<String> { //This class is th
                             context.startActivity(i);
                             return "good";
                         }
-                    }
-                    else {
+                    } else {
                         i = new Intent(Intent.ACTION_VIEW);
                         i.setData(Uri.parse(urlStr));
                         context.startActivity(i);
@@ -178,9 +176,9 @@ class CustomListAdapterSubMenu extends ArrayAdapter<String> { //This class is th
             }
         }
 
-        private boolean isPackageInstalled(String packagename, PackageManager packageManager) {
+        private boolean isPackageInstalled(String packageName, PackageManager packageManager) {
             try {
-                packageManager.getPackageInfo(packagename, 0);
+                packageManager.getPackageInfo(packageName, 0);
                 return true;
             } catch (PackageManager.NameNotFoundException e) {
                 return false;

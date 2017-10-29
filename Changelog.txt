@@ -3,6 +3,15 @@
 #        Bev Facey Android App Changelog      #
 #                                             #
 ###############################################
+v0.0.42
+- Removed tons of garbage code
+- No more duplicated articles
+- Because of the previous line, performance is much better
+- Added Error dialog on Splash page (might crash)
+- Fixed minor issues
+- Removed old method of article title/text handling
+- Still no images
+
 v0.0.41
 - Switched from a TextView to a WebView.
 - Because of the previous line, Hyperlinks work finally. And formatting works (sort of).

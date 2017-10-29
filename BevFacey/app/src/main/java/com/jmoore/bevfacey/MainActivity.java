@@ -1,8 +1,6 @@
 package com.jmoore.bevfacey;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
@@ -24,11 +22,11 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.commons.lang3.*;
 
 
 /** Bev Facey High School official app
@@ -43,15 +41,10 @@ public class MainActivity extends AppCompatActivity {
     public static Document docHome; //JSoup Document storing the main webpage
     public static Document docETeachers; //JSoup Document storing the ETeacher links
     public static Document docSub; //JSoup Document for other classes to write to (declaring here allows for it to be reused)
-    public static ArrayList<String> itemTitles = new ArrayList<>(); //Array that will store Title values for the Adapter
-    public static ArrayList<String> itemDescs = new ArrayList<>(); //Descriptions for Adapter
-    public static ArrayList<String> itemPicURLS = new ArrayList<>(); //URLs of images for Adapter
-
-    //Test 0.0.41 (this will hopefully replace the above 3 lines)
     public static ArrayList<String> articleContent = new ArrayList<>();
 
     public static final String globalURL = "http://www.bevfacey.ca"; //URL prefix for images
-    public static boolean loaded = false; //Is the app finished loading the Main page and ETeacher page
+    public static int loadedStatus = 0; //Is the app finished loading the Main page and ETeacher page? 0=no, 1=success, -1=failed
     public static String[] menuItemTitles = {"Quicklinks", "About", "ETeachers", "Programs", "Parents",
             "Students", "Athletics", "Guidance", "Sustainability"}; //Items to use in the Nav menu
     public static Typeface typeface; //Default typeface
@@ -92,6 +85,9 @@ public class MainActivity extends AppCompatActivity {
     //the item at that same index.
     public static List<String> globalSubTitles = new ArrayList<>();
     public static List<String> globalSubText = new ArrayList<>();
+
+    //Patterns
+    public static final String[] patternLink = {"<a href=\"", "\">"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) { //Android default method
@@ -153,7 +149,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void aboutSub(Element elm) {
         Elements aboutClasses = elm.select("li");
-        String[] patternLink = {"<a href=\"", "\">"};
         String[] patternTitle = {"<b>", "</b>"};
         for(Element el : aboutClasses) {
             String elString = el.toString();
@@ -169,7 +164,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void programsSub(Element elm) {
         Elements aboutClasses = elm.select("li");
-        String[] patternLink = {"<a href=\"", "\">"};
         String[] patternTitle = {"<b>", "</b>"};
         for(Element el : aboutClasses) {
             String elString = el.toString();
@@ -185,7 +179,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void parentsSub(Element elm) {
         Elements aboutClasses = elm.select("li");
-        String[] patternLink = {"<a href=\"", "\">"};
         String[] patternTitle = {"<b>", "</b>"};
         for(Element el : aboutClasses) {
             String elString = el.toString();
@@ -201,7 +194,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void studentsSub(Element elm) {
         Elements aboutClasses = elm.select("li");
-        String[] patternLink = {"<a href=\"", "\">"};
         String[] patternTitle = {"<b>", "</b>"};
         for(Element el : aboutClasses) {
             String elString = el.toString();
@@ -217,7 +209,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void athleticsSub(Element elm) {
         Elements aboutClasses = elm.select("li");
-        String[] patternLink = {"<a href=\"", "\">"};
         String[] patternTitle = {"<b>", "</b>"};
         for(Element el : aboutClasses) {
             String elString = el.toString();
@@ -233,7 +224,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void guidanceSub(Element elm) {
         Elements aboutClasses = elm.select("li");
-        String[] patternLink = {"<a href=\"", "\">"};
         String[] patternTitle = {"<b>", "</b>"};
         for(Element el : aboutClasses) {
             String elString = el.toString();
@@ -309,7 +299,7 @@ public class MainActivity extends AppCompatActivity {
         showContentMainPage(); //Lastly, display the list on the UI
     }
 
-    public String getFromPattern(String[] patterns, String theText) { //This extracts Strings in between two other Strings
+    /*public String getFromPattern(String[] patterns, String theText) { //This extracts Strings in between two other Strings
         Pattern pattern = Pattern.compile(Pattern.quote(patterns[0]) + "(.*?)" + Pattern.quote(patterns[1]));
         Matcher m = pattern.matcher(theText);
         String whatToReturn = "";
@@ -317,7 +307,7 @@ public class MainActivity extends AppCompatActivity {
             whatToReturn = (m.group(1));
         }
         return whatToReturn;
-    }
+    }*/
 
     public static String getFromPatternStatic(String[] patterns, String theText) { //This extracts Strings in between two other Strings
         Pattern pattern = Pattern.compile(Pattern.quote(patterns[0]) + "(.*?)" + Pattern.quote(patterns[1]));
@@ -351,81 +341,17 @@ public class MainActivity extends AppCompatActivity {
 
     public void prepareForDisplay(int id, String[] prep) { //Prepare the raw data arrays into usable formats
         if(id == 0) { //ID 0 is schoolNotice
-            String[] patternsTitle = {"<h3 class=\"notice-subtitle\">", "</h3>"}; //Pattern to use for finding the Title
             for(String aPrep : prep) {
-                String noticeTitle = getFromPattern(patternsTitle, aPrep); //Use the pattern above to find the Title
-                String noticeText = aPrep.replaceAll("(\\r|\\n|\\r\\n)+", ",,,"); //Replace any New Lines with the New Line placeholder
-                noticeText = noticeText.replaceFirst(",,,", "");
-                noticeText = noticeText.replaceFirst(",,,", "");
-                noticeText = Jsoup.parse(noticeText).text(); //Remove any HTML tags from the content
-                noticeText = noticeText.replace(noticeTitle, ""); //Remove the title from the paragraph
-                if(noticeTitle.isEmpty()) { //Handles if the notice title is empty
-                    if(noticeText.toLowerCase().contains("district notice")) {
-                        noticeTitle = "District Notice";
-                    } else if(noticeText.toLowerCase().contains("school notice")) {
-                        noticeTitle = "School Notice";
-                    }
-                }
-                noticeText = noticeText.replace("District Notice", ""); //Remove District Notice from the paragraph
-                noticeText = noticeText.replace("School Notice", ""); //Remove School Notice from the paragraph
-                MainActivity.itemTitles.add(Jsoup.parse(":SCHOOLNOTICE:" + noticeTitle).text()); //Add the Title as the first item in the ArrayList
-                MainActivity.itemDescs.add(noticeText); //Add the Content as the first item the ArrayList
-                MainActivity.itemPicURLS.add(""); //There is no image so this is just blank
-
                 MainActivity.articleContent.add(":SCHOOL_NOTICE:" + aPrep);
             }
         } else { //If the ID is not 0, it's the articles
-            String[] patternsTitle = {"<h2 class=\"article-title\">", "</h2>"}; //Pattern for finding Titles of text-based articles
-            String[] patternsImgURLs = {"<img alt=\"\" src=\"", "\">"}; //Pattern for finding image URLs
-            for(String aPrep : prep) { //Loop through each Article
-                MainActivity.articleContent.add(aPrep);
-
-                String articleImgURLs = getFromPattern(patternsImgURLs, aPrep); //First, get the image URL if there is one (we remove this URL later on)
-                String articleTitle = getFromPattern(patternsTitle, aPrep); //Attempt to find a title
-                Elements Elmlinks = Jsoup.parse(aPrep).select("a"); //Elements list to store all the Links in the Article
-                List<String> absLinks = new ArrayList<>(); //This stores the "absolute" link, i.e. "https://www.example.com/website.htm"
-                List<String> linkTexts = new ArrayList<>();
-                for(Element link : Elmlinks) { //This loop handles links
-                    String tmpLink = link.attr("abs:href");
-                    String tmpText = link.text();
-                    if(tmpLink.isEmpty()) {
-                        tmpLink = globalURL + link.attr("href");
-                    }
-                    //aPrep = aPrep.replace(link.toString(), tmpLink); //Replace the raw HTML code links (<a href="example></a>) with the absolute link
-                    absLinks.add(tmpLink); //Add the absolute link to the ArrayList for later use
-                    linkTexts.add(tmpText);
-                }
-                if(absLinks.size() > 1) {
-                    for(int i = 0; i < absLinks.size(); i++) { //Sort through the links to find duplicates and remove them
-                        if(StringUtils.countMatches(aPrep, absLinks.get(i)) > 1) { //Checks to see if there is more than one of each link
-                            aPrep = aPrep.replaceFirst(absLinks.get(i), ""); //Replace the duplicate (we want to remove the first one) with a blank
-                        }
-                    }
-                }
-                if(articleTitle.isEmpty()) { //Check if the article has a Title. If not, then it is an Image article
-                    articleTitle = ""; //Just set the title blank. This is further dealt with in CustomListAdapter
-                }
-                aPrep = aPrep.replaceAll("<br>", ",,,"); //Replace breaks with a New Line placeholder
-                aPrep = aPrep.replaceAll("(\\r|\\n|\\r\\n)+", ",,,"); //Replace any New Lines with the New Line placeholder
-                /*if(absLinks.size()>1){
-                    for(int i = 0; i < absLinks.size(); i++) {
-                        articleDescs = articleDescs.replace(absLinks.get(i),"<a href=\""+absLinks.get(i)+"\">link</a>");
-                    }
-                }*/
-                articleImgURLs = globalURL + articleImgURLs; //Add any image URLs to the ArrayList
-                MainActivity.itemTitles.add(articleTitle); //Add the Title of the article to the ArrayList
-                MainActivity.itemDescs.add(aPrep); //Add the content of the article to the ArrayList
-                MainActivity.itemPicURLS.add(articleImgURLs); //Add the Image URLs of the article to the ArrayList
-            }
+            MainActivity.articleContent.addAll(Arrays.asList(prep));
         }
     }
 
     public void showContentMainPage() { //This finalizes the information to display and displays it
-        String[] itemTitlesArray = MainActivity.itemTitles.toArray(new String[0]); //Convert the Title ArrayList into a regular String array
-        String[] itemDescsArray = MainActivity.itemDescs.toArray(new String[0]); //Convert the content ArrayList into a regular String array
-        String[] itemPicURLSarray = MainActivity.itemPicURLS.toArray(new String[0]); //Convert the Image URLs ArrayList into a regular String array
         String[] articleContentArray = MainActivity.articleContent.toArray(new String[0]);
-        adapter = new CustomListAdapter(this, itemTitlesArray, itemDescsArray, itemPicURLSarray, articleContentArray); //Add the arrays to a custom adapter
+        adapter = new CustomListAdapter(this, articleContentArray); //Add the arrays to a custom adapter
 
         RecyclerView list = findViewById(R.id.mainlist); //Get the ID of our ListView on the main Activity
         ImageView bannerIV = findViewById(R.id.bannerImage); //Get the ID of our Banner image
@@ -500,20 +426,11 @@ public class MainActivity extends AppCompatActivity {
         }
         protected void onPostExecute(String result) { //This runs after doInBackground has finished
             if("good".equals(result)) { //If it was successful, then continue
-                loaded = true;
+                loadedStatus = 1;
                 createArrays(); //Start the manipulation of the website data
                 createSubArrays();
             } else {
-                AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(getApplicationContext());
-                dlgAlert.setMessage("There was an error during loading. Try again later.");
-                dlgAlert.setTitle("Oops! Sorry about that...");
-                dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                dlgAlert.setCancelable(true);
-                //dlgAlert.create().show(); // Need to fix this. Crashes app if no internet connectivity
+                loadedStatus = -1;
             }
         }
     }

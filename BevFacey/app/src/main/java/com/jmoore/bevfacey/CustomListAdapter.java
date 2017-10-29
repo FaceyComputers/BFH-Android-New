@@ -7,21 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 class CustomListAdapter extends RecyclerView.Adapter<ArticleHolder> { //This class is the list of Information
-
     private Activity context;
-    private String[]itemname;
-    private String[]imgid;
-    private String[]itemdesc;
-
     private String[] content;
 
-    CustomListAdapter(Activity context, String[]itemname, String[]itemdesc, String[]imgid, String[] content) {
+    CustomListAdapter(Activity context, String[] content) {
         setHasStableIds(true);
         this.context = context;
-        this.itemname = itemname;
-        this.itemdesc = itemdesc;
-        this.imgid = imgid;
-
         this.content = content;
     }
 
@@ -35,7 +26,7 @@ class CustomListAdapter extends RecyclerView.Adapter<ArticleHolder> { //This cla
 
     @Override
     public void onBindViewHolder(ArticleHolder holder, int position){
-        holder.bindArticle(itemname[position], itemdesc[position], imgid[position], content[position]);
+        holder.bindArticle(content[position]);
     }
 
     @Override

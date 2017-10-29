@@ -1,5 +1,7 @@
 package com.jmoore.bevfacey;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -21,7 +23,7 @@ public class Splash extends AppCompatActivity {
         } catch(PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        TextView versionTV = (TextView)findViewById(R.id.versionTextView);
+        TextView versionTV = findViewById(R.id.versionTextView);
         String v = "v" + version + "  c" + code;
         versionTV.setText(v);
         new WaitForLoaded().execute();
@@ -31,12 +33,23 @@ public class Splash extends AppCompatActivity {
         @Override
         protected String doInBackground(String[] params) {
             //noinspection StatementWithEmptyBody
-            while(!MainActivity.loaded){}
+            while(MainActivity.loadedStatus == 0){}
             return "done";
         }
         protected void onPostExecute(String result) {
-            if("done".equals(result)) {
+            if("done".equals(result) && MainActivity.loadedStatus == 1) {
                 Splash.this.finish();
+            } else {
+                AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(getApplicationContext());
+                dlgAlert.setMessage("There was an error during loading. Try again later.");
+                dlgAlert.setTitle("Oops! Sorry about that...");
+                dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                dlgAlert.setCancelable(true);
+                dlgAlert.create().show();
             }
         }
     }

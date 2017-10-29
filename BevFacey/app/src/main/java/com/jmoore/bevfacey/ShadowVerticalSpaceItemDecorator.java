@@ -10,7 +10,7 @@ import android.view.View;
 class ShadowVerticalSpaceItemDecorator extends RecyclerView.ItemDecoration {
     private Drawable divider;
 
-    ShadowVerticalSpaceItemDecorator(Context context, int resId){
+    ShadowVerticalSpaceItemDecorator(Context context, int resId) {
         this.divider = ContextCompat.getDrawable(context, resId);
     }
 
