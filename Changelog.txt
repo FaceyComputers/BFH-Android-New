@@ -3,11 +3,14 @@
 #        Bev Facey Android App Changelog      #
 #                                             #
 ###############################################
+v0.0.43
+- Fixed images in articles
+
 v0.0.42
 - Removed tons of garbage code
 - No more duplicated articles
 - Because of the previous line, performance is much better
-- Added Error dialog on Splash page (might crash)
+- Added Error dialog on Splash page (definitely crashes)
 - Fixed minor issues
 - Removed old method of article title/text handling
 - Still no images
