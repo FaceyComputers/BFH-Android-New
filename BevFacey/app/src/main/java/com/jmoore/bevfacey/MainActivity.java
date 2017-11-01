@@ -1,6 +1,7 @@
 package com.jmoore.bevfacey;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
@@ -88,6 +89,8 @@ public class MainActivity extends AppCompatActivity {
 
     //Patterns
     public static final String[] patternLink = {"<a href=\"", "\">"};
+
+    public static Activity context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) { //Android default method
@@ -299,16 +302,6 @@ public class MainActivity extends AppCompatActivity {
         showContentMainPage(); //Lastly, display the list on the UI
     }
 
-    /*public String getFromPattern(String[] patterns, String theText) { //This extracts Strings in between two other Strings
-        Pattern pattern = Pattern.compile(Pattern.quote(patterns[0]) + "(.*?)" + Pattern.quote(patterns[1]));
-        Matcher m = pattern.matcher(theText);
-        String whatToReturn = "";
-        while(m.find()) {
-            whatToReturn = (m.group(1));
-        }
-        return whatToReturn;
-    }*/
-
     public static String getFromPatternStatic(String[] patterns, String theText) { //This extracts Strings in between two other Strings
         Pattern pattern = Pattern.compile(Pattern.quote(patterns[0]) + "(.*?)" + Pattern.quote(patterns[1]));
         Matcher m = pattern.matcher(theText);
@@ -327,19 +320,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public static String getFromPatternStaticArray(String[] patterns, String theText) { //This extracts Strings in between two other Strings
-        Pattern pattern = Pattern.compile(Pattern.quote(patterns[0]) + "(.*?)" + Pattern.quote(patterns[1]));
-        Matcher m = pattern.matcher(theText);
-        StringBuilder whatToReturnBuilder = new StringBuilder();
-        while(m.find()) {
-            whatToReturnBuilder.append(",.,").append(m.group(1));
-        }
-        String whatToReturn = whatToReturnBuilder.toString();
-        whatToReturn = whatToReturn.replaceFirst(",.,", "");
-        return whatToReturn;
-    }
-
     public void prepareForDisplay(int id, String[] prep) { //Prepare the raw data arrays into usable formats
+        context = this;
         if(id == 0) { //ID 0 is schoolNotice
             for(String aPrep : prep) {
                 MainActivity.articleContent.add(":SCHOOL_NOTICE:" + aPrep);

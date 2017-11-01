@@ -18,12 +18,10 @@
         android:scaleType="fitXY"
         app:srcCompat="@drawable/inappbanner"/>
 
-    <ListView
+    <LinearLayout
         android:id="@+id/subContent"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_row="1"
-        android:dividerHeight="15dp"
-        android:divider="@color/colorOffWhite"
         android:clipToPadding="true"/>
 </android.widget.GridLayout>

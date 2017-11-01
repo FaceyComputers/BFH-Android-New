@@ -97,7 +97,6 @@ class CustomListAdapterSubMenu extends ArrayAdapter<String> { //This class is th
             URL url;
             if(!urlStr.contains("tel:")) {
                 if(urlStr.contains("bevfacey.ca")) {
-
                     try {
                         url = new URL(urlStr); //Convert the String URL into an actual URL
                     } catch (MalformedURLException ex) {

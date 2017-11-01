@@ -33,6 +33,11 @@ class ArticleHolder extends RecyclerView.ViewHolder {
             float scale = webView.getScale();
             int size = (int)(width / scale);
 
+            if(content.contains(":SCHOOL_NOTICE:")) {
+                content = "<body bgcolor=\"#fff2c4\">" + content + "</body>";
+                content = content.replace(":SCHOOL_NOTICE:", "");
+            }
+
             webView.getSettings().setLoadsImagesAutomatically(true);
             webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
             webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);

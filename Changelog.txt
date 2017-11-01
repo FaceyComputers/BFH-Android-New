@@ -3,6 +3,11 @@
 #        Bev Facey Android App Changelog      #
 #                                             #
 ###############################################
+v0.0.45
+- Major changes to sub pages
+- Alerts work properly
+- Ready for release!
+
 v0.0.44
 - Images work better than before. Sort of...
 - Images with links are now clickable
