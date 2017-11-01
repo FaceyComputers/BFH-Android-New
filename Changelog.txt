@@ -3,6 +3,12 @@
 #        Bev Facey Android App Changelog      #
 #                                             #
 ###############################################
+v1.0.0
+- Enabled Javascript in WebViews
+- Banner in subpages acts as back button
+- Download links work properly now
+- Removed uneeded libraries
+
 v0.0.45
 - Major changes to sub pages
 - Alerts work properly

@@ -1,15 +1,16 @@
 package com.jmoore.bevfacey;
 
 import android.app.Activity;
-import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 
 import java.util.regex.Pattern;
@@ -25,6 +26,7 @@ class ArticleHolder extends RecyclerView.ViewHolder {
         layout = itemView.findViewById(R.id.articleLayout);
     }
 
+    @SuppressWarnings("deprecation")
     void bindArticle(String content) {
         if(!loaded) {
             WebView webView = new WebView(context);
@@ -49,10 +51,23 @@ class ArticleHolder extends RecyclerView.ViewHolder {
                     return (event.getAction() == MotionEvent.ACTION_MOVE);
                 }
             });
+            webView.setWebViewClient(new WebViewClient() {
+                @SuppressWarnings("deprecation")
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    if(url != null && url.startsWith("/")) {
+                        view.getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://bevfacey.ca" + url)));
+                        return true;
+                    } else {
+                        view.getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+                        return true;
+                    }
+                }
+            });
 
+            content = content.replaceAll(Pattern.quote("a href=\"/"), "a href=\"http://bevfacey.ca/");
             content = content.replaceAll(Pattern.quote("img alt=\"") + "(.*?)" +
                     Pattern.quote("\" src=\"/"), "img alt=\"\" style=\"margin: 0; " +
-                    "padding: 0\" width=" + size + "px src=\"https://bevfacey.ca/");
+                    "padding: 0\" width=" + size + "px src=\"http://bevfacey.ca/");
 
             webView.loadData(content, "text/html; charset=utf-8", "UTF-8");
 
