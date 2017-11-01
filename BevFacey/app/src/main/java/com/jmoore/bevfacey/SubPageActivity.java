@@ -84,7 +84,7 @@ public class SubPageActivity extends AppCompatActivity {
             }
         });
 
-        content = content.replaceAll(Pattern.quote("a href=\"/"), "a href=\"bevfacey.ca");
+        content = content.replaceAll(Pattern.quote("a href=\"/"), "a href=\"http://bevfacey.ca/");
         content = content.replaceAll(Pattern.quote(" alt=\"") + "(.*?)" + Pattern.quote("\""),"");
         content = content.replaceAll(Pattern.quote("img src=\""), "img style=\"margin: 0; padding: 0\" width=\"" + size + "px\" src=\"http://bevfacey.ca");
 

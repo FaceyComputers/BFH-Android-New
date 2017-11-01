@@ -92,10 +92,15 @@ public class MainActivity extends AppCompatActivity {
 
     public static Activity context;
 
+    /**
+     * Runs when the app is opened
+     *
+     * @param savedInstanceState Reference Android documentation
+     */
     @Override
-    protected void onCreate(Bundle savedInstanceState) { //Android default method
-        super.onCreate(savedInstanceState); //Android default statement
-        setContentView(R.layout.activity_main); //Android default statement
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
         AssetManager am = getApplicationContext().getAssets(); //Allows for creating Typefaces using Assets
         typeface = Typeface.createFromAsset(am, String.format(Locale.CANADA, "fonts/%s", "goodtimegrotesk.ttf")); //Default Typeface
         typefaceBody = Typeface.createFromAsset(am, String.format(Locale.CANADA, "fonts/%s", "latoregular.ttf")); //Typeface for body items
@@ -104,6 +109,9 @@ public class MainActivity extends AppCompatActivity {
         new GetThePage().execute(); //Execute the AsyncTask used to retrieve info from the website
     }
 
+    /**
+     * Add links and titles to the Quicklinks menu
+     */
     private void addQuicklinks() {
         subQuicklinksTitles.add("Powerschool");
         subQuicklinksTitles.add("Google Classroom");
@@ -118,7 +126,12 @@ public class MainActivity extends AppCompatActivity {
         subQuicklinksText.add("http://bevfacey.ca/parents/daily-bulletin");
     }
 
-    public String[] soup2string(Elements elms) { //Converts JSoup Elements into String arrays
+    /**
+     * Convert JSoup Elements to a String array
+     * @param elms The JSoup Elements to be converted
+     * @return A string array containing the converted JSoup Elements
+     */
+    private String[] soup2string(Elements elms) {
         Object[] objArray = elms.toArray(); //First, convert the Elements into an Object array
         String[] strArray = new String[objArray.length]; //This will hold the String values of the Elements
         for(int i = 0; i < strArray.length; i++) { //For Loop to convert each Object/Element into a String
@@ -127,7 +140,10 @@ public class MainActivity extends AppCompatActivity {
         return strArray; //Return the complete String array
     }
 
-    public void createSubArrays() { //Creates the sub menus
+    /**
+     * Create the arrays for sub menus
+     */
+    private void createSubArrays() {
         Elements navElms = MainActivity.docHome.select("nav.primary-navigation"); //Find the website navigation bar
         Elements liElms = navElms.select("li.children"); //Store all the website expandable menus
         for(Element elm : liElms) {
@@ -150,7 +166,11 @@ public class MainActivity extends AppCompatActivity {
         addGlobal(); //Add all the items to the global arrays
     }
 
-    public void aboutSub(Element elm) {
+    /**
+     * Create the sub menu
+     * @param elm JSoup Element containing the HTML for the menu
+     */
+    private void aboutSub(Element elm) {
         Elements aboutClasses = elm.select("li");
         String[] patternTitle = {"<b>", "</b>"};
         for(Element el : aboutClasses) {
@@ -165,7 +185,11 @@ public class MainActivity extends AppCompatActivity {
         subAboutLength = subAboutTitles.size();
     }
 
-    public void programsSub(Element elm) {
+    /**
+     * Create the sub menu
+     * @param elm JSoup Element containing the HTML for the menu
+     */
+    private void programsSub(Element elm) {
         Elements aboutClasses = elm.select("li");
         String[] patternTitle = {"<b>", "</b>"};
         for(Element el : aboutClasses) {
@@ -180,7 +204,11 @@ public class MainActivity extends AppCompatActivity {
         subProgramsLength = subProgramsTitles.size();
     }
 
-    public void parentsSub(Element elm) {
+    /**
+     * Create the sub menu
+     * @param elm JSoup Element containing the HTML for the menu
+     */
+    private void parentsSub(Element elm) {
         Elements aboutClasses = elm.select("li");
         String[] patternTitle = {"<b>", "</b>"};
         for(Element el : aboutClasses) {
@@ -195,7 +223,11 @@ public class MainActivity extends AppCompatActivity {
         subParentsLength = subParentsTitles.size();
     }
 
-    public void studentsSub(Element elm) {
+    /**
+     * Create the sub menu
+     * @param elm JSoup Element containing the HTML for the menu
+     */
+    private void studentsSub(Element elm) {
         Elements aboutClasses = elm.select("li");
         String[] patternTitle = {"<b>", "</b>"};
         for(Element el : aboutClasses) {
@@ -210,7 +242,11 @@ public class MainActivity extends AppCompatActivity {
         subStudentsLength = subStudentsTitles.size();
     }
 
-    public void athleticsSub(Element elm) {
+    /**
+     * Create the sub menu
+     * @param elm JSoup Element containing the HTML for the menu
+     */
+    private void athleticsSub(Element elm) {
         Elements aboutClasses = elm.select("li");
         String[] patternTitle = {"<b>", "</b>"};
         for(Element el : aboutClasses) {
@@ -225,7 +261,11 @@ public class MainActivity extends AppCompatActivity {
         subAthleticsLength = subAthleticsTitles.size();
     }
 
-    public void guidanceSub(Element elm) {
+    /**
+     * Create the sub menu
+     * @param elm JSoup Element containing the HTML for the menu
+     */
+    private void guidanceSub(Element elm) {
         Elements aboutClasses = elm.select("li");
         String[] patternTitle = {"<b>", "</b>"};
         for(Element el : aboutClasses) {
@@ -240,7 +280,10 @@ public class MainActivity extends AppCompatActivity {
         subGuidanceLength = subGuidanceTitles.size();
     }
 
-    public void eTeachersSub() {
+    /**
+     * Create the sub menu
+     */
+    private void eTeachersSub() {
         Elements pickElms = MainActivity.docETeachers.select("div.main-content");
         Elements teachersElms = pickElms.select("option");
         String[] patternETlink = {"value=\"", "\">"};
@@ -257,7 +300,10 @@ public class MainActivity extends AppCompatActivity {
         subETeachersLength = subETeachersTitles.size();
     }
 
-    public void addGlobal() { //Populate the Global arrays with the other arrays
+    /**
+     * Add all the menu links and titles to the global arrays
+     */
+    private void addGlobal() {
         globalSubTitles.addAll(subQuicklinksTitles);
         globalSubTitles.addAll(subAboutTitles);
         globalSubTitles.addAll(subETeachersTitles);
@@ -277,13 +323,16 @@ public class MainActivity extends AppCompatActivity {
         globalSubText.addAll(subGuidanceText);
     }
 
-    public void createArrays() { //This method creates arrays from the content in the JSoup Document
+    /**
+     * Create arrays for JSoup Elements (i.e. the website articles)
+     */
+    private void createArrays() {
         String[] schoolNotice; //If there is no school notice then this is empty...
         try { //... and we need a try/catch to see if there is a notice
             Elements schoolNoticeElements = MainActivity.docHome.select("div.school.notice"); //Search the doc for a notice
             schoolNotice = soup2string(schoolNoticeElements); //Convert the Elements into an array
-            if(schoolNotice.length == 0) {
-                throw new Exception();
+            if(schoolNotice.length == 0) { //The array is empty, so no notices...
+                throw new Exception(); //Throw an exception so we don't have a "null" array that would cause issues
             }
         } catch(Exception noSchoolNoticeException) {
             Log.w("NoSchoolNotice", "No School or District notices found");
@@ -302,7 +351,13 @@ public class MainActivity extends AppCompatActivity {
         showContentMainPage(); //Lastly, display the list on the UI
     }
 
-    public static String getFromPatternStatic(String[] patterns, String theText) { //This extracts Strings in between two other Strings
+    /**
+     * Extract a String from between two other Strings
+     * @param patterns Always length 2. Contains the start and end values to get a String from
+     * @param theText The String to extract text from
+     * @return Return the extracted String
+     */
+    private static String getFromPatternStatic(String[] patterns, String theText) {
         Pattern pattern = Pattern.compile(Pattern.quote(patterns[0]) + "(.*?)" + Pattern.quote(patterns[1]));
         Matcher m = pattern.matcher(theText);
         String whatToReturn = "";
@@ -320,8 +375,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void prepareForDisplay(int id, String[] prep) { //Prepare the raw data arrays into usable formats
-        context = this;
+    /**
+     * Add all the articles to content lists
+     * @param id This is either 0. A school notice. Or 1. An article
+     * @param prep The list of content
+     */
+    private void prepareForDisplay(int id, String[] prep) {
         if(id == 0) { //ID 0 is schoolNotice
             for(String aPrep : prep) {
                 MainActivity.articleContent.add(":SCHOOL_NOTICE:" + aPrep);
@@ -331,8 +390,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void showContentMainPage() { //This finalizes the information to display and displays it
-        String[] articleContentArray = MainActivity.articleContent.toArray(new String[0]);
+    /**
+     * Display all the UI elements and scale everything
+     */
+    private void showContentMainPage() {
+        context = this;
+        String[] articleContentArray = MainActivity.articleContent.toArray(new String[0]); //Change our ArrayList into an Array
         adapter = new CustomListAdapter(this, articleContentArray); //Add the arrays to a custom adapter
 
         RecyclerView list = findViewById(R.id.mainlist); //Get the ID of our ListView on the main Activity
@@ -340,25 +403,32 @@ public class MainActivity extends AppCompatActivity {
         TextView navBIV = findViewById(R.id.navButton); //Get the ID of the navigation button (which is ironically not a button but a textview)
         navBIV.setTypeface(MainActivity.typefaceMenuItems); //Set the navigation button typeface to the menu typeface
         navBIV.setText(R.string.navigation); //I dearly hope this doesn't need explaining
+
         //We don't want our ListView height to be more than the screen since that causes for items to be cut off.
-        //To counter this, we get the height of the banner and the nav button and set the ListView padding to that value.
+        //To counter this, we get the height of the banner and the nav button and set the View padding to that value.
         int margin = bannerIV.getHeight() + navBIV.getHeight();
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        int verticalSpacing = 5;
+        int verticalSpacing = 5; //Please do not change this, things may break or look weird
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this); //Allow the View to use a  LinearLayout
         VerticalSpaceItemDecorator itemDecorator = new VerticalSpaceItemDecorator(verticalSpacing);
         ShadowVerticalSpaceItemDecorator shadowItemDecorator = new ShadowVerticalSpaceItemDecorator(this, R.drawable.drop_shadow);
-        list.setLayoutManager(layoutManager);
-        list.addItemDecoration(itemDecorator);
-        list.addItemDecoration(shadowItemDecorator);
-        list.setHasFixedSize(false);
-        list.setPadding(0, 0, 0, margin);
-        list.setItemViewCacheSize(0);
-        list.setAdapter(adapter); //Set the ListView adapter to our custom adapter, which holds the information
+
+        list.setLayoutManager(layoutManager);           // PLEASE
+        list.addItemDecoration(itemDecorator);          // DO
+        list.addItemDecoration(shadowItemDecorator);    // NOT
+        list.setHasFixedSize(false);                    // CHANGE
+        list.setPadding(0, 0, 0, margin);// ANY
+        list.setItemViewCacheSize(0);                   // OF
+        list.setAdapter(adapter);                       // THIS
     }
 
-    public void expandMenu(View view) { //This method expands the navigation menu
+    /**
+     * Open the menu when a user taps the nav button
+     * @param view This will always be the navigation button
+     */
+    public void expandMenu(View view) {
         ListView navView = findViewById(R.id.navList); //Access the ListView so we can add a CustomListAdapter
-        if(view.getId() == (findViewById(R.id.navButton)).getId()) { //Check if the view is the Nav button
+        if(view.getId() == (findViewById(R.id.navButton)).getId()) { //Check if the view is the Nav button (it always will be)
             if(navView.getVisibility() == View.GONE) { //Is the menu visible?
                 CustomListAdapterMenu adapter = new CustomListAdapterMenu(this, menuItemTitles, menuItemTitles); //Create the items to add to the menu
                 ImageView bannerIV = findViewById(R.id.bannerImage); //This is meant for getting the height of the banner so we can make the menu fit on screen
@@ -374,12 +444,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @SuppressLint("StaticFieldLeak") //Yes. I know. This is terrible. But the darn thing breaks without it
-    private class GetThePage extends AsyncTask<String, Integer, String> { //This class downloads the main webpage using JSoup
+    private class GetThePage extends AsyncTask<String, Integer, String> { //This class downloads the main web page using JSoup
         private Intent splashIntent = null; //The Intent for the splash page
+
         protected void onPreExecute() { //This is done before the background task executes
             splashIntent = new Intent(getApplicationContext(), Splash.class); //First create the Intent for the splash page...
             startActivity(splashIntent); //... Then display it
         }
+
         @Override //Required for every networking AsyncTask
         protected String doInBackground(String[] params) { //Do the task in the background so we don't freeze the UI thread
             URL urlHome; //Initialize the URL variable
