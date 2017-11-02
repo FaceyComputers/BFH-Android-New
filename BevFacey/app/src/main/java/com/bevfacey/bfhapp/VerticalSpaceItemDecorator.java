@@ -1,4 +1,4 @@
-package com.jmoore.bevfacey;
+package com.bevfacey.bfhapp;
 
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;

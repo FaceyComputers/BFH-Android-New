@@ -1,4 +1,4 @@
-package com.jmoore.bevfacey;
+package com.bevfacey.bfhapp;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;

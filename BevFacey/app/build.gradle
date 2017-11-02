@@ -6,7 +6,7 @@ android {
     compileSdkVersion 26
     buildToolsVersion "26.0.2"
     defaultConfig {
-        applicationId "com.jmoore.bevfacey"
+        applicationId 'com.bevfacey.bfhapp'
         minSdkVersion 21
         targetSdkVersion 26
         versionCode 46
@@ -24,6 +24,8 @@ android {
         }
     }
     useLibrary('org.apache.http.legacy')
+    productFlavors {
+    }
 }
 
 dependencies {

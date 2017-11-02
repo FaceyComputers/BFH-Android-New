@@ -1,4 +1,4 @@
-package com.jmoore.bevfacey;
+package com.bevfacey.bfhapp;
 
 import android.content.Context;
 import android.graphics.Canvas;
