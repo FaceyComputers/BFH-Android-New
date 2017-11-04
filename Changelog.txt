@@ -3,6 +3,11 @@
 #        Bev Facey Android App Changelog      #
 #                                             #
 ###############################################
+v1.1.0
+- Added back button icon to banner in sub pages
+- Added ETeacher subpages
+- Some links now open within the app
+
 v1.0.0
 - Enabled Javascript in WebViews
 - Banner in subpages acts as back button

@@ -91,6 +91,8 @@ public class MainActivity extends AppCompatActivity {
     public static final String[] patternLink = {"<a href=\"", "\">"};
 
     public static Activity context;
+    public static int margin;
+    public static ListView navView;
 
     /**
      * Runs when the app is opened
@@ -407,6 +409,7 @@ public class MainActivity extends AppCompatActivity {
         //We don't want our ListView height to be more than the screen since that causes for items to be cut off.
         //To counter this, we get the height of the banner and the nav button and set the View padding to that value.
         int margin = bannerIV.getHeight() + navBIV.getHeight();
+        MainActivity.margin = margin;
         int verticalSpacing = 5; //Please do not change this, things may break or look weird
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this); //Allow the View to use a  LinearLayout
@@ -427,7 +430,7 @@ public class MainActivity extends AppCompatActivity {
      * @param view This will always be the navigation button
      */
     public void expandMenu(View view) {
-        ListView navView = findViewById(R.id.navList); //Access the ListView so we can add a CustomListAdapter
+        navView = findViewById(R.id.navList); //Access the ListView so we can add a CustomListAdapter
         if(view.getId() == (findViewById(R.id.navButton)).getId()) { //Check if the view is the Nav button (it always will be)
             if(navView.getVisibility() == View.GONE) { //Is the menu visible?
                 CustomListAdapterMenu adapter = new CustomListAdapterMenu(this, menuItemTitles, menuItemTitles); //Create the items to add to the menu

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:columnCount="1"
-    tools:context="com.jmoore.bevfacey.MainActivity"
+    tools:context="com.bevfacey.bfhapp.MainActivity"
     android:id="@+id/gridid">
 
     <ImageView

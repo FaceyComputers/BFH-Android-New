@@ -77,6 +77,7 @@ class CustomListAdapterMenu extends ArrayAdapter<String> {//This class is the li
                         int height = tv2.getHeight();
                         lv.setAdapter(new CustomListAdapterSubMenu(context, getNormalArrays(MainActivity.subAboutTitles)));
                         lv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (height * MainActivity.subAboutLength) - height / 2));
+                        //lv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (screenH - margin) + (px * MainActivity.subAboutLength)));
                         lv.setVisibility(View.VISIBLE);
                     } else {
                         lv.setVisibility(View.GONE);

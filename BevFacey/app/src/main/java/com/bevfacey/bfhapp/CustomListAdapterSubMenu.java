@@ -35,14 +35,16 @@ class CustomListAdapterSubMenu extends ArrayAdapter<String> { //This class is th
         LayoutInflater inflater = context.getLayoutInflater();
         View rowView = inflater.inflate(R.layout.mylistsubmenu, null, true);
 
+        String label = subText[position];
+        final int internalPosition = position;
+
         TextView tv = rowView.findViewById(R.id.subMenuText);
         tv.setTypeface(MainActivity.typefaceMenuItems);
-        tv.setText(subText[position]);
+        tv.setText(label);
         tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TextView tv2 = (TextView)view;
-                String value = tv2.getText().toString();
+                String value = subText[internalPosition];
                 int pos = MainActivity.globalSubTitles.indexOf(value);
                 String subURL = MainActivity.globalSubText.get(pos);
                 getSubPages(subURL);
@@ -51,7 +53,7 @@ class CustomListAdapterSubMenu extends ArrayAdapter<String> { //This class is th
         return rowView;
     }
 
-    private void getSubPages(String url) {
+    public void getSubPages(String url) {
         gsp = new GetSubPages();
         gsp.execute(url);
     }

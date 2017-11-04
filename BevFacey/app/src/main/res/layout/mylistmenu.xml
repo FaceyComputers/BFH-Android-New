@@ -7,16 +7,18 @@
     android:alwaysDrawnWithCache="true"
     android:drawingCacheQuality="high"
     android:persistentDrawingCache="scrolling">
+
     <TextView
         android:id="@+id/menuText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView"
         android:background="@color/colorMenuForeground"
         android:gravity="center"
-        android:textAppearance="?android:attr/textAppearanceLarge"
         android:padding="15dp"
-        android:textColor="@color/colorWhite"/>
+        android:text="TextView"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/colorWhite" />
+
     <ListView
         android:id="@+id/subMenuItem"
         android:layout_width="match_parent"

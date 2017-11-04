@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.jmoore.bevfacey.SubPageActivity"
+    tools:context="com.bevfacey.bfhapp.SubPageActivity"
     android:id="@+id/subLayout"
     android:columnCount="1">
 
@@ -16,7 +16,7 @@
         android:adjustViewBounds="true"
         android:padding="-30dp"
         android:scaleType="fitXY"
-        app:srcCompat="@drawable/inappbanner"/>
+        app:srcCompat="@drawable/inappbannerwithbackbutton"/>
 
     <LinearLayout
         android:id="@+id/subContent"
