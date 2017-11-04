@@ -12,4 +12,4 @@ Low, Medium, High, Extreme
 *(Enter what you expected to happen, i.e. "Calendar should have been displayed")*
 
 ## Extended description
-*(Enter a detailed, precise description of the problem that occured, and any extra items you may want to add)*
+*(Enter a detailed, precise description of the problem that occurred (such as what page the problem was on), and any extra items you may want to add)*
