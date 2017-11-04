@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -76,7 +77,7 @@ public class SubPageActivity extends AppCompatActivity {
         WebViewClient webViewClient = new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.toLowerCase().contains("bevfacey.ca") && !(!url.toLowerCase().contains("download") || !url.toLowerCase().contains("uploads"))) {
+                if (url.toLowerCase().contains("bevfacey.ca") && !url.toLowerCase().contains("download") && !url.toLowerCase().contains("uploads")) {
                     getSubPages(url);
                     return true;
                 } else {
@@ -111,6 +112,7 @@ public class SubPageActivity extends AppCompatActivity {
         webView.setVerticalScrollBarEnabled(true);
         webView.setHorizontalScrollBarEnabled(false);
         webView.setWebViewClient(webViewClient);
+        webView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         content = content.replaceAll(Pattern.quote("a href=\"/"), "a href=\"http://bevfacey.ca/");
         content = content.replaceAll(Pattern.quote(" alt=\"") + "(.*?)" + Pattern.quote("\""), "");
@@ -119,6 +121,7 @@ public class SubPageActivity extends AppCompatActivity {
         webView.loadData(content, "text/html; charset=utf-8", "UTF-8");
 
         layout.addView(webView);
+        //layout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
     }
 
     private void getSubPages(String url) {

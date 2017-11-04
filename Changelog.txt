@@ -3,6 +3,9 @@
 #        Bev Facey Android App Changelog      #
 #                                             #
 ###############################################
+v1.1.1
+- Fixed ETeacher subpages not opening in app
+
 v1.1.0
 - Added back button icon to banner in sub pages
 - Added ETeacher subpages
