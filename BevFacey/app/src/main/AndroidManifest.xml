@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.bevfacey.bfhapp">
+    package="com.bevfacey.bfhnew">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name="com.bevfacey.bfhnew.MainActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -37,11 +37,11 @@
                 -->
             </intent-filter>
         </activity>
-        <activity android:name=".Splash"
+        <activity android:name="com.bevfacey.bfhnew.Splash"
             android:configChanges="orientation"
             android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".SubPageActivity"
+        <activity android:name="com.bevfacey.bfhnew.SubPageActivity"
             android:screenOrientation="portrait"
             android:configChanges="orientation">
         </activity>

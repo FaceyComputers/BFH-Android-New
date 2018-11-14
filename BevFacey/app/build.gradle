@@ -6,7 +6,7 @@ android {
     compileSdkVersion 26
     buildToolsVersion '28.0.3'
     defaultConfig {
-        applicationId 'com.bevfacey.bfhapp'
+        applicationId 'com.bevfacey.bfhnew'
         minSdkVersion 21
         targetSdkVersion 26
         versionCode 49
