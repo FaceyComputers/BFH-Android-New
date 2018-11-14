@@ -22,9 +22,9 @@ import java.net.URL;
 import java.util.List;
 
 //      0                   1                       2                   3               4
-//R.drawable.about  R.drawable.eteachers  R.drawable.programs  R.drawable.parents  R.drawable.students
-//          5                   6                       7
-// R.drawable.athletics  R.drawable.guidance  R.drawable.sustainability
+//R.drawable.about  R.drawable.athletics  R.drawable.parents  R.drawable.programs  R.drawable.students
+//          5                   6
+// R.drawable.student_services  R.drawable.learning_commons
 
 class CustomListAdapterMenu extends ArrayAdapter<String> {//This class is the list of Information
     private final Activity context;
@@ -86,8 +86,8 @@ class CustomListAdapterMenu extends ArrayAdapter<String> {//This class is the li
                     ListView lv = rowView.findViewById(R.id.subMenuItem);
                     if(lv.getVisibility() == View.GONE) {
                         int height = tv2.getHeight();
-                        lv.setAdapter(new CustomListAdapterSubMenu(context, getNormalArrays(MainActivity.subETeachersTitles)));
-                        lv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (height * MainActivity.subETeachersLength) - height * 2));
+                        lv.setAdapter(new CustomListAdapterSubMenu(context, getNormalArrays(MainActivity.subAthleticsTitles)));
+                        lv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (height * MainActivity.subAthleticsLength) - height * 2));
                         lv.setVisibility(View.VISIBLE);
                     } else {
                         lv.setVisibility(View.GONE);
@@ -96,8 +96,8 @@ class CustomListAdapterMenu extends ArrayAdapter<String> {//This class is the li
                     ListView lv = rowView.findViewById(R.id.subMenuItem);
                     if(lv.getVisibility() == View.GONE) {
                         int height = tv2.getHeight();
-                        lv.setAdapter(new CustomListAdapterSubMenu(context, getNormalArrays(MainActivity.subProgramsTitles)));
-                        lv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (height * MainActivity.subProgramsLength) - height / 2));
+                        lv.setAdapter(new CustomListAdapterSubMenu(context, getNormalArrays(MainActivity.subParentsTitles)));
+                        lv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (height * MainActivity.subParentsLength) - height / 2));
                         lv.setVisibility(View.VISIBLE);
                     } else {
                         lv.setVisibility(View.GONE);
@@ -106,8 +106,8 @@ class CustomListAdapterMenu extends ArrayAdapter<String> {//This class is the li
                     ListView lv = rowView.findViewById(R.id.subMenuItem);
                     if(lv.getVisibility() == View.GONE) {
                         int height = tv2.getHeight();
-                        lv.setAdapter(new CustomListAdapterSubMenu(context, getNormalArrays(MainActivity.subParentsTitles)));
-                        lv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (height * MainActivity.subParentsLength) - height / 2));
+                        lv.setAdapter(new CustomListAdapterSubMenu(context, getNormalArrays(MainActivity.subProgramsTitles)));
+                        lv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (height * MainActivity.subProgramsLength) - height / 2));
                         lv.setVisibility(View.VISIBLE);
                     } else {
                         lv.setVisibility(View.GONE);
@@ -126,8 +126,8 @@ class CustomListAdapterMenu extends ArrayAdapter<String> {//This class is the li
                     ListView lv = rowView.findViewById(R.id.subMenuItem);
                     if(lv.getVisibility() == View.GONE) {
                         int height = tv2.getHeight();
-                        lv.setAdapter(new CustomListAdapterSubMenu(context, getNormalArrays(MainActivity.subAthleticsTitles)));
-                        lv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (height * MainActivity.subAthleticsLength) - height / 2));
+                        lv.setAdapter(new CustomListAdapterSubMenu(context, getNormalArrays(MainActivity.subStudentServicesTitles)));
+                        lv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (height * MainActivity.subStudentServicesLength) - height / 2));
                         lv.setVisibility(View.VISIBLE);
                     } else {
                         lv.setVisibility(View.GONE);
@@ -136,15 +136,15 @@ class CustomListAdapterMenu extends ArrayAdapter<String> {//This class is the li
                     ListView lv = rowView.findViewById(R.id.subMenuItem);
                     if(lv.getVisibility() == View.GONE) {
                         int height = tv2.getHeight();
-                        lv.setAdapter(new CustomListAdapterSubMenu(context, getNormalArrays(MainActivity.subGuidanceTitles)));
-                        lv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (height * MainActivity.subGuidanceLength) - height / 2));
+                        lv.setAdapter(new CustomListAdapterSubMenu(context, getNormalArrays(MainActivity.subLearningCommonsTitles)));
+                        lv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (height * MainActivity.subLearningCommonsLength) - height / 2));
                         lv.setVisibility(View.VISIBLE);
                     } else {
                         lv.setVisibility(View.GONE);
                     }
-                } else if(title.equals(MainActivity.menuItemTitles[8])) {
-                    getSubPages("/facey-sustainability");
-                }
+                } //else if(title.equals(MainActivity.menuItemTitles[8])) {
+                    //getSubPages("/facey-sustainability");
+                //}
             }
         });
         return rowView;

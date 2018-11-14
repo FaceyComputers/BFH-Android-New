@@ -46,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String globalURL = "http://www.bevfacey.ca"; //URL prefix for images
     public static int loadedStatus = 0; //Is the app finished loading the Main page and ETeacher page? 0=no, 1=success, -1=failed
-    public static String[] menuItemTitles = {"Quicklinks", "About", "ETeachers", "Programs", "Parents",
-            "Students", "Athletics", "Guidance", "Sustainability"}; //Items to use in the Nav menu
+    public static String[] menuItemTitles = {"Quicklinks", "About", "Athletics", "Parents", "Programs",
+            "Students", "Student Services", "Learning Commons"}; //Items to use in the Nav menu
     public static Typeface typeface; //Default typeface
     public static Typeface typefaceBody; //Typeface for body sections
     public static Typeface typefaceMenuItems; //Typeface for menu items
@@ -60,8 +60,10 @@ public class MainActivity extends AppCompatActivity {
     public static int subParentsLength;
     public static int subStudentsLength;
     public static int subAthleticsLength;
-    public static int subGuidanceLength;
-    public static int subETeachersLength;
+    public static int subStudentServicesLength;
+    public static int subLearningCommonsLength;
+    //public static int subGuidanceLength;
+    //public static int subETeachersLength;
 
     //These hold the information for Titles and Links of submenu items
     public static List<String> subQuicklinksTitles = new ArrayList<>();
@@ -76,10 +78,14 @@ public class MainActivity extends AppCompatActivity {
     public static List<String> subStudentsText = new ArrayList<>();
     public static List<String> subAthleticsTitles = new ArrayList<>();
     public static List<String> subAthleticsText = new ArrayList<>();
-    public static List<String> subGuidanceTitles = new ArrayList<>();
-    public static List<String> subGuidanceText = new ArrayList<>();
-    public static List<String> subETeachersTitles = new ArrayList<>();
-    public static List<String> subETeachersText = new ArrayList<>();
+    public static List<String> subLearningCommonsTitles = new ArrayList<>();
+    public static List<String> subLearningCommonsText = new ArrayList<>();
+    public static List<String> subStudentServicesTitles = new ArrayList<>();
+    public static List<String> subStudentServicesText = new ArrayList<>();
+    //public static List<String> subGuidanceTitles = new ArrayList<>();
+    //public static List<String> subGuidanceText = new ArrayList<>();
+    //public static List<String> subETeachersTitles = new ArrayList<>();
+    //public static List<String> subETeachersText = new ArrayList<>();
 
     //These hold the info for every sub menu. For example, when a sub item is pressed it gets
     //the text value and finds the index of that value in this list. Then it gets the link for
@@ -160,11 +166,13 @@ public class MainActivity extends AppCompatActivity {
                 studentsSub(elm);
             } else if(elmString.toLowerCase().contains("athletics")) {
                 athleticsSub(elm);
-            } else if(elmString.toLowerCase().contains("guidance")) {
-                guidanceSub(elm);
+            } else if(elmString.toLowerCase().contains("student services")) {
+                student_servicesSub(elm);
+            } else if(elmString.toLowerCase().contains("learning commons")) {
+                learning_commonsSub(elm);
             }
         }
-        eTeachersSub(); //This adds all the teachers to the ETeacher sub menu
+        //eTeachersSub(); //This adds all the teachers to the ETeacher sub menu
         addGlobal(); //Add all the items to the global arrays
     }
 
@@ -267,7 +275,45 @@ public class MainActivity extends AppCompatActivity {
      * Create the sub menu
      * @param elm JSoup Element containing the HTML for the menu
      */
-    private void guidanceSub(Element elm) {
+    private void learning_commonsSub(Element elm) {
+        Elements aboutClasses = elm.select("li");
+        String[] patternTitle = {"<b>", "</b>"};
+        for(Element el : aboutClasses) {
+            String elString = el.toString();
+            String link = MainActivity.getFromPatternStatic(patternLink, elString);
+            String title = MainActivity.getFromPatternStatic(patternTitle, elString);
+            subLearningCommonsTitles.add(Jsoup.parse(title).text());
+            subLearningCommonsText.add(link);
+        }
+        subLearningCommonsTitles.remove(0);
+        subLearningCommonsText.remove(0);
+        subLearningCommonsLength = subLearningCommonsTitles.size();
+    }
+
+    /**
+     * Create the sub menu
+     * @param elm JSoup Element containing the HTML for the menu
+     */
+    private void student_servicesSub(Element elm) {
+        Elements aboutClasses = elm.select("li");
+        String[] patternTitle = {"<b>", "</b>"};
+        for(Element el : aboutClasses) {
+            String elString = el.toString();
+            String link = MainActivity.getFromPatternStatic(patternLink, elString);
+            String title = MainActivity.getFromPatternStatic(patternTitle, elString);
+            subStudentServicesTitles.add(Jsoup.parse(title).text());
+            subStudentServicesText.add(link);
+        }
+        subStudentServicesTitles.remove(0);
+        subStudentServicesText.remove(0);
+        subStudentServicesLength = subStudentServicesTitles.size();
+    }
+
+    /**
+     * Create the sub menu
+     * @param elm JSoup Element containing the HTML for the menu
+     */
+    /*private void guidanceSub(Element elm) {
         Elements aboutClasses = elm.select("li");
         String[] patternTitle = {"<b>", "</b>"};
         for(Element el : aboutClasses) {
@@ -280,12 +326,12 @@ public class MainActivity extends AppCompatActivity {
         subGuidanceTitles.remove(0);
         subGuidanceText.remove(0);
         subGuidanceLength = subGuidanceTitles.size();
-    }
+    }*/
 
     /**
      * Create the sub menu
      */
-    private void eTeachersSub() {
+    /*private void eTeachersSub() {
         Elements pickElms = MainActivity.docETeachers.select("div.main-content");
         Elements teachersElms = pickElms.select("option");
         String[] patternETlink = {"value=\"", "\">"};
@@ -300,7 +346,7 @@ public class MainActivity extends AppCompatActivity {
         subETeachersTitles.remove(0);
         subETeachersText.remove(0);
         subETeachersLength = subETeachersTitles.size();
-    }
+    }*/
 
     /**
      * Add all the menu links and titles to the global arrays
@@ -308,21 +354,26 @@ public class MainActivity extends AppCompatActivity {
     private void addGlobal() {
         globalSubTitles.addAll(subQuicklinksTitles);
         globalSubTitles.addAll(subAboutTitles);
-        globalSubTitles.addAll(subETeachersTitles);
+        //globalSubTitles.addAll(subETeachersTitles);
         globalSubTitles.addAll(subProgramsTitles);
         globalSubTitles.addAll(subParentsTitles);
         globalSubTitles.addAll(subStudentsTitles);
         globalSubTitles.addAll(subAthleticsTitles);
-        globalSubTitles.addAll(subGuidanceTitles);
+        //globalSubTitles.addAll(subGuidanceTitles);
+        globalSubTitles.addAll(subStudentServicesTitles);
+        globalSubTitles.addAll(subLearningCommonsTitles);
+
         //Text (links in this case)
         globalSubText.addAll(subQuicklinksText);
         globalSubText.addAll(subAboutText);
-        globalSubText.addAll(subETeachersText);
+        //globalSubText.addAll(subETeachersText);
         globalSubText.addAll(subProgramsText);
         globalSubText.addAll(subParentsText);
         globalSubText.addAll(subStudentsText);
         globalSubText.addAll(subAthleticsText);
-        globalSubText.addAll(subGuidanceText);
+        //globalSubText.addAll(subGuidanceText);
+        globalSubText.addAll(subStudentServicesText);
+        globalSubText.addAll(subLearningCommonsText);
     }
 
     /**
