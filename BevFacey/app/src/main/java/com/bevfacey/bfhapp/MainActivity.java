@@ -515,21 +515,21 @@ public class MainActivity extends AppCompatActivity {
             } catch(MalformedURLException ex) {
                 return "bad";
             }
-            try {
+            /*try {
                 urlETeachers = new URL("http://www.bevfacey.ca/eteachers"); //Convert the String URL into an actual URL
             } catch(MalformedURLException ex) {
                 return "bad";
-            }
+            }*/
             try {
                 MainActivity.docHome = Jsoup.parse(urlHome, 15000); //Try to download the URL
             } catch(IOException ex) {
                 return "bad";
             }
-            try {
+            /*try {
                 MainActivity.docETeachers = Jsoup.parse(urlETeachers, 15000); //Try to download the URL
             } catch(IOException ex) {
                 return "bad";
-            }
+            }*/
             return"good"; //Tell the post execution task that it worked
         }
         protected void onPostExecute(String result) { //This runs after doInBackground has finished
